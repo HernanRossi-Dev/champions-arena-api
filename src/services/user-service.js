@@ -1,12 +1,11 @@
 'use strict';
 
 import mongoose from 'mongoose';
-import uuid from 'uuid';
 import lodash from 'lodash';
 import { SendTempPassword } from '../utils/temp-password-helper.js';
 import { DefaultCharactersV3 } from '../mock-data/Default-Characters-V3.js';
-import { NotFoundError, MongoDBError } from '../errors';
-import { UserDB, CharacterDB } from '../data-access';
+import { NotFoundError, MongoDBError } from '../errors/index.js';
+import { UserDB, CharacterDB } from '../data-access/index.js';
 
 const cloneDeep = lodash.cloneDeep;
 

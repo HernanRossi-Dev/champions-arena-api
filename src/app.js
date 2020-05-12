@@ -43,7 +43,7 @@ const initServer = () => {
     }
   };
 
-  app.use(expressOptions);
+  // app.use(expressOptions);
   app.use(bodyParser.json());
   
   app.listen(process.env.PORT || 8080, () => {

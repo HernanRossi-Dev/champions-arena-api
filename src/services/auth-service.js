@@ -1,25 +1,24 @@
 'use strict'
 
-import request from "request";
 import jwks from 'jwks-rsa';
 import jwt from 'express-jwt';
-import axios from "axios";
+import request from 'request';
 
 const authenticate = async () => {
-  const options = {
-    method: 'POST',
-    url: 'https://thearena.auth0.com/oauth/token',
-    headers: { 'content-type': 'application/json' },
-    body: '{"client_id":"KuhIFt8Blg4CChqebw13Snf6XSwXz5Cf","client_secret":"QBIZeiYeH_tIMp2GXcGTuVdmMRXfQd_YLmkd947zsFMsEQxlQGw4SGsVQZyBXDIy","audience":"https://thecampaignArena.com","grant_type":"client_credentials"}'
-  };
+  const options = { method: 'POST',
+  url: 'https://dev-qf368xa5.auth0.com/oauth/token',
+  headers: { 'content-type': 'application/json' },
+  body: '{"client_id":"D9Q8oFzgxOvpCTCFxR0mNGZJ9x6sgzq5","client_secret":"faeq5zuIcrZ4EwJskdVQ_c4tx33vsbh-qDtYqLVuC8RbmrK3CakNr8bvBRpBVc3N","audience":"champions-arena","grant_type":"client_credentials"}' };
 
-  let response;
-  try {
-    response = await axios(options);
-    return response;
-  } catch (err) {
-      console.error('Error getting authentication: ', err.message);
-  }
+  return new Promise((resolve, reject) => {
+    request(options, (error, response, body) => {
+      if (!error && response.statusCode == 200) {
+        resolve(body);
+      } else {
+        reject(error);
+      }
+    })
+  });
 };
 
 const authError = (err, req, res, next) => {
@@ -28,21 +27,18 @@ const authError = (err, req, res, next) => {
   }
 };
 
-const jwtCheck = () => {
-  const jwtCheck = jwt({
-    credentialsRequired: false,
+const jwtCheck = jwt({
     secret: jwks.expressJwtSecret({
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 5,
-      jwksUri: 'https://thearena.auth0.com/.well-known/jwks.json'
+      jwksUri: 'https://dev-qf368xa5.auth0.com/.well-known/jwks.json'
     }),
-    audience: 'https://thecampaignArena.com',
-    issuer: 'https://thearena.auth0.com/',
+    audience: 'champions-arena',
+    issuer: 'https://dev-qf368xa5.auth0.com/',
     algorithms: ['RS256']
-  });
-  return jwtCheck;
-};
+});
+
 
 export default {
   authenticate,

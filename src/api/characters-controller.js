@@ -2,8 +2,8 @@
 
 import express from 'express';
 import CharacterService from '../services/character-service.js';
-import { NotFoundError, MongoDBError } from '../errors';
-import { jwtCheck } from '../services/auth-service.js';
+import { NotFoundError, MongoDBError } from '../errors/index.js';
+import AuthServices from '../services/auth-service.js';
 
 const router = express.Router();
 
@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
 });
 
 //Authenticate for following routes
-router.use(jwtCheck());
+router.use(AuthServices.jwtCheck);
 
 router.put('/:id', async (req, res) => {
   const { id } = req.params;

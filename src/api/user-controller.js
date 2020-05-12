@@ -2,8 +2,8 @@
 
 import express from 'express';
 import UserService from '../services/user-service.js';
-import { NotFoundError, MongoDBError } from '../errors';
-import { jwtCheck } from '../services/auth-service.js';
+import { NotFoundError, MongoDBError } from '../errors/index.js';
+import AuthServices from '../services/auth-service.js';
 
 const router = express.Router();
 
@@ -21,7 +21,7 @@ router.get('/:id', async (req, res) => {
 });
 
 //Authenticate for following routes
-router.use(jwtCheck());
+router.use(AuthServices.jwtCheck);
 
 router.get('/', async (req, res) => {
   const { query } = req;

@@ -2,8 +2,8 @@
 
 import mongoose from 'mongoose';
 import CharacterFilters from '../utils/character-filters.js';
-import { CharacterDB } from '../data-access';
-import { NotFoundError, MongoDBError } from '../errors';
+import { CharacterDB } from '../data-access/index.js';
+import { NotFoundError, MongoDBError } from '../errors/index.js';
 
 const getCharacter = async (id) => {
     const characterId = new mongoose.Types.ObjectId(id);
