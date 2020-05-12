@@ -3,10 +3,9 @@
 import nodemailer from 'nodemailer';
 import generator from 'generate-password';
 import passwordHash from 'password-hash';
-import getMongoConnection from './MongoConnection.js';
+import getMongoConnection from './mongo-connection.js';
 
-
-export const SendTempPassword = async (server, users) => {
+export const SendTempPassword = async (users) => {
   if (users.length < 1) {
     throw new Error('No user found.');
   }

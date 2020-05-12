@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "docker-deploy": "docker-compose up",
-    "start": "NODE_ENV=production node app.js",
-    "start-dev": "NODE_ENV=development node app.js",
-    "start-dev-win": " SET NODE_ENV=development & node app.js",
+    "start": "NODE_ENV=production node ./src/app.js",
+    "start-dev": "NODE_ENV=development node ./src/app.js",
+    "start-dev-win": " SET NODE_ENV=development & node ./src/app.js",
     "node-component": "mocha --timeout 10000 __test__/component/*.js --exit"
   },
   "engines": {
@@ -18,10 +18,11 @@
   "license": "ISC",
   "dependencies": {
     "auth0-api-jwt-rsa-validation": "0.0.3",
-    "axios": "^0.18.0",
+    "axios": "^0.19.2",
     "body-parser": "^1.18.2",
     "compression": "^1.7.3",
     "config": "^3.3.1",
+    "cors": "^2.8.5",
     "express": "^4.16.3",
     "express-jwt": "^5.3.1",
     "generate-password": "^1.4.0",

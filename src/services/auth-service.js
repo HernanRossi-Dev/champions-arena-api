@@ -3,8 +3,9 @@
 import request from "request";
 import jwks from 'jwks-rsa';
 import jwt from 'express-jwt';
+import axios from "axios";
 
-const authenticate = (req, res) => {
+const authenticate = async () => {
   const options = {
     method: 'POST',
     url: 'https://thearena.auth0.com/oauth/token',
@@ -12,9 +13,13 @@ const authenticate = (req, res) => {
     body: '{"client_id":"KuhIFt8Blg4CChqebw13Snf6XSwXz5Cf","client_secret":"QBIZeiYeH_tIMp2GXcGTuVdmMRXfQd_YLmkd947zsFMsEQxlQGw4SGsVQZyBXDIy","audience":"https://thecampaignArena.com","grant_type":"client_credentials"}'
   };
 
-  request(options, (error, response, body) => {
-    res.json(response);
-  });
+  let response;
+  try {
+    response = await axios(options);
+    return response;
+  } catch (err) {
+      console.error('Error getting authentication: ', err.message);
+  }
 };
 
 const authError = (err, req, res, next) => {
