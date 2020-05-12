@@ -12,15 +12,10 @@ const cloneDeep = lodash.cloneDeep;
 
 const getUser = async (query) => {
     const filter = {};
-    if (query.name) {
-      filter.name = query.name;
-    }
-    if (query.email) {
-      filter.email = query.email;
-    }
-    if (query._id) {
-      filter._id = query._id;
-    }
+    const filterParams = ['name', 'email', '_id'];
+    filterParams.forEach((param) => {
+        if (query[param]) filter[param] = query[param];
+    });
     const result = await UserDB.getUser(filter);
      
     if (!result) {
@@ -31,12 +26,10 @@ const getUser = async (query) => {
 
 const getUsers = async (query) => {
     const filter = {};
-    if (query.name) {
-      filter.name = query.name;
-    }
-    if (query.email) {
-      filter.email = query.email;
-    }
+    const filterParams = ['name', 'email'];
+    filterParams.forEach((param) => {
+        if (query[param]) filter[param] = query[param];
+    });
   
     const result = await UserDB.getUsers(filter);
     if (result.length < 1) {
@@ -46,7 +39,6 @@ const getUsers = async (query) => {
     if (query.sendEmail) {
         await SendTempPassword(result);
     }
-
     return result;
 };
 
@@ -58,7 +50,6 @@ const createUser = async (user) => {
     });
 
     user.created = new Date();
-
     const result = await UserDB.createUser(user, defaultCharacters);
 
     if (!result) {
@@ -68,9 +59,7 @@ const createUser = async (user) => {
 };
 
 const deleteUser = async (name) => {
-
     const result = await UserDB.deleteUser(name);
-
     if (!result || result.n !== 1) {
         throw new NotFoundError();
     }

@@ -67,23 +67,20 @@ const deleteCharacter = async (id) => {
 
 const deleteCharacters = async (query) => {
   const filter = {};
-  if (query.user) {
-    filter.user = query.user;
-  }
-  if (query.class) {
-    filter.class = query.class;
-  }
-  if (req.query.ancestry) {
-    filter.ancestry = query.ancestry;
-  }
+  const filterParams = ['user', 'class', 'ancestry'];
+  filterParams.forEach((param) => {
+    if (query[param]) filter[param] = query[param];
+  });
+
+
   if (query.level_lte || query.level_gte) {
     filter.level = {};
-  }
-  if (query.level_lte) {
-    filter.level.$lte = parseInt(query.level_lte, 10);
-  }
-  if (query.level_gte) {
-    filter.level.$gte = parseInt(query.level_gte, 10);
+    if (query.level_lte) {
+      filter.level.$lte = parseInt(query.level_lte, 10);
+    }
+    if (query.level_gte) {
+      filter.level.$gte = parseInt(query.level_gte, 10);
+    }
   }
  
   const result = await CharacterDB.deleteCharacters(filter);
