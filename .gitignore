@@ -1,0 +1,12 @@
+.vscode/settings.json
+node_modules/
+.idea
+package-lock.json
+yarn.lock
+dist/
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+yarn.lock

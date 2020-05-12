@@ -1,0 +1,51 @@
+{
+  "name": "champions-arena-api",
+  "version": "3.0.0",
+  "description": "A Pathfinder character creation and campaign companion",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "docker-deploy": "docker-compose up",
+    "start": "NODE_ENV=production node app.js",
+    "start-dev": "NODE_ENV=development node app.js",
+    "start-dev-win": " SET NODE_ENV=development & node app.js",
+    "node-component": "mocha --timeout 10000 __test__/component/*.js --exit"
+  },
+  "engines": {
+    "node": "14.x.x"
+  },
+  "author": "Hernan Rossi",
+  "license": "ISC",
+  "dependencies": {
+    "auth0-api-jwt-rsa-validation": "0.0.3",
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.2",
+    "compression": "^1.7.3",
+    "config": "^3.3.1",
+    "express": "^4.16.3",
+    "express-jwt": "^5.3.1",
+    "generate-password": "^1.4.0",
+    "helmet": "^3.12.0",
+    "hover": "^3.0.0-alpha.6",
+    "jsonwebtoken": "^8.2.1",
+    "jwks-rsa": "^1.2.1",
+    "lodash": "^4.17.11",
+    "mongodb": "^3.0.7",
+    "mongoose": "^5.9.13",
+    "nodemailer": "^4.6.4",
+    "nodemon": "^1.18.9",
+    "password-hash": "^1.2.2",
+    "request": "^2.88.0",
+    "source-map-support": "^0.5.10",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
+    "faker": "^4.1.0",
+    "jest": "^24.7.1",
+    "mocha": "^5.2.0",
+    "query-string": "^6.0.0",
+    "sinon": "^7.3.1"
+  }
+}

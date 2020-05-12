@@ -1,0 +1,12 @@
+version: '2.3'
+services:
+  web:
+    container_name: championsarena
+    build:
+      context: .
+      dockerfile: dockerfile.prod
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+    ports:
+      - 80:8080
