@@ -14,8 +14,8 @@ const getUser = async (id) => {
 const getUsers = async (filter) => {
   const db = await getMongoConnection();
   return await db.collection('users')
-  .find(filter)
-  .toArray();
+    .find(filter)
+    .toArray();
 };
 
 const createUser = async (user, defaultCharacters) => {
@@ -31,15 +31,15 @@ const createUser = async (user, defaultCharacters) => {
     .next();
 };
 
-const updateUser= async (id, user) => {
+const updateUser = async (id, user) => {
   const db = await getMongoConnection();
   await db.collection("users")
-  .updateOne({ _id: id }, { $set: user });
-  
+    .updateOne({ _id: id }, { $set: user });
+
   return await db.collection("users")
-  .find({ _id: id })
-  .limit(1)
-  .next();
+    .find({ _id: id })
+    .limit(1)
+    .next();
 };
 
 const deleteUser = async (name) => {

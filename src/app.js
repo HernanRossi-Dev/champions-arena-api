@@ -33,19 +33,8 @@ const initServer = () => {
     setEnvironmentDecoding();
   }
 
-  const expressOptions = {
-    dotfiles: 'ignore',
-    etag: false,
-    index: false,
-    maxAge: '1d',
-    setHeaders: (res) => {
-      res.set('x-timestamp', Date.now());
-    }
-  };
-
-  // app.use(expressOptions);
   app.use(bodyParser.json());
-  
+
   app.listen(process.env.PORT || 8080, () => {
     console.log('App started on port 8080.');
   });
