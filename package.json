@@ -9,7 +9,7 @@
     "start": "NODE_ENV=production node ./src/app.js",
     "start-dev": "NODE_ENV=development node ./src/app.js",
     "start-dev-win": " SET NODE_ENV=development & node ./src/app.js",
-    "node-component": "mocha --timeout 10000 test/component/*.mjs --exit"
+    "node-component": "mocha --timeout 3000 test/component/*.js --exit"
   },
   "engines": {
     "node": "14.x.x"

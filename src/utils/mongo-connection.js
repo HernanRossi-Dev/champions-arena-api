@@ -10,7 +10,7 @@ const getMongoConnection = async () => {
         return mongoConnection;
     }
 
-    const mongoClient = await mongoose.connect(config.mongoDBUrl, { useNewUrlParser: false });
+    const mongoClient = await mongoose.connect(config.mongoDBUrl, { useNewUrlParser: true });
     mongoConnection = mongoClient.connection;
     mongoConnection.on('error', console.error.bind(console, 'MongoDB connection error:'));
     return mongoConnection

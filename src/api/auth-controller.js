@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   const response = await AuthService.authenticate();
-  res.status(200).json(response).end();
+  res.status(200).json(response);
 });
 
 export default router;

@@ -38,12 +38,15 @@ describe('Character', () => {
         })
     })
 
-    describe('Get Character:', () => {
-        it('Get character/id should responsd status 422 with invalid id format', async () => {
+    describe.only('Get Character:', () => {
+        it('Get character/id should respond status 422 with invalid id format', async () => {
             const charId = uuidv4();
             const response = await testApp.get(`/api/characters/${charId}`);
+            console.log('In test: ', response.status);
+            console.log('In test: ', response.body);
             response.status.should.equal(422);
         })
+
         it('Get character/id should response status 404 when character not found', async () => {
             const charId = new ObjectId();
             const response = await testApp.get(`/api/characters/${charId}`);
