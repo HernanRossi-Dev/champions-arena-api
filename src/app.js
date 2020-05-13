@@ -56,3 +56,5 @@ initServer();
 app.use('/api/authenticate', AuthRoutes);
 app.use('/api/characters', CharacterRoutes);
 app.use('/api/users', UserRoutes);
+
+export default app;

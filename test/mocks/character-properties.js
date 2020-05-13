@@ -1,4 +1,4 @@
-exports.charProps = {
+const CharacterProperties = {
     types: ['NPC', 'Player'],
     classes: ['Barbarian', 'Alchemist', 'Bard', 'Cleric', 'Druid',
     'Fighter', 'Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Wizard' ],
@@ -6,6 +6,6 @@ exports.charProps = {
     genders: ['Male', 'Female', 'Other'],
     alignments: ['Lawful Good',	'Neutral Good',	'Chaotic Good', 'Lawful Neutral',
     'Neutral',	'Chaotic Neutral', 'Lawful Evil', 'Neutral Evil', 'Chaotic Evil'],  
-
 }
- 
+
+export default CharacterProperties;

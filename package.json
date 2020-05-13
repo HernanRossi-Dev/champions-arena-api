@@ -9,7 +9,7 @@
     "start": "NODE_ENV=production node ./src/app.js",
     "start-dev": "NODE_ENV=development node ./src/app.js",
     "start-dev-win": " SET NODE_ENV=development & node ./src/app.js",
-    "node-component": "mocha --timeout 10000 __test__/component/*.js --exit"
+    "node-component": "mocha --timeout 10000 test/component/*.mjs --exit"
   },
   "engines": {
     "node": "14.x.x"
@@ -26,27 +26,27 @@
     "express": "^4.16.3",
     "express-jwt": "^5.3.1",
     "generate-password": "^1.4.0",
-    "helmet": "^3.12.0",
+    "helmet": "^3.22.0",
     "hover": "^3.0.0-alpha.6",
     "jsonwebtoken": "^8.2.1",
     "jwks-rsa": "^1.8.0",
     "lodash": "^4.17.11",
-    "mongodb": "^3.0.7",
+    "mongodb": "^3.5.7",
     "mongoose": "^5.9.13",
-    "nodemailer": "^4.6.4",
+    "nodemailer": "^6.4.6",
     "nodemon": "^1.18.9",
     "password-hash": "^1.2.2",
     "request": "^2.88.2",
     "source-map-support": "^0.5.10",
-    "uuid": "^3.3.2"
+    "uuid": "^8.0.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "chai-http": "^4.2.1",
+    "chai-http": "^4.3.0",
     "faker": "^4.1.0",
-    "jest": "^24.7.1",
-    "mocha": "^5.2.0",
+    "jest": "^26.0.1",
+    "mocha": "^7.1.2",
     "query-string": "^6.0.0",
-    "sinon": "^7.3.1"
+    "sinon": "^9.0.0"
   }
 }
