@@ -16,7 +16,7 @@ router.get('/:id', async (req, res) => {
     if (err instanceof NotFoundError) {
       res.status(404).json({ message: `No User found: ${id}` });
     } else {
-      res.status(500).json({ message: `Internal Server Error: ${err}` });
+      res.status(500).json({ message: `Internal Server Error: ${err.message}` });
     }
   }
 });
@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
     if (err instanceof NotFoundError) {
       res.status(404).json({ message: `No Users found: ${id}` });
     } else {
-      res.status(500).json({ message: `Internal Server Error: ${err}` });
+      res.status(500).json({ message: `Internal Server Error: ${err.message}` });
     }
   }
 });
@@ -47,7 +47,7 @@ router.post('/', async (req, res) => {
     if (err instanceof MongoDBError) {
       res.status(404).json({ message: `Failed to create user`, body });
     } else {
-      res.status(500).json({ message: `Internal Server Error: ${err}` });
+      res.status(500).json({ message: `Internal Server Error: ${err.message}` });
     }
   }
 });
@@ -61,7 +61,7 @@ router.delete('/:name', async (req, res) => {
     if (err instanceof NotFoundError) {
       res.status(404).json({ message: `Failed to delete user`, body });
     } else {
-      res.status(500).json({ message: `Internal Server Error: ${err}` });
+      res.status(500).json({ message: `Internal Server Error: ${err.message}` });
     }
   }
 });

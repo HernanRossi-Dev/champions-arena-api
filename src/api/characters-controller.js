@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
     if (err instanceof NotFoundError) {
       res.status(404).json({ message: `No characters found` });
     } else {
-      res.status(500).json({ message: `Internal Server Error: ${err}` });
+      res.status(500).json({ message: `Internal Server Error: ${err.message}` });
     }
   }
 });
@@ -48,7 +48,7 @@ router.put('/:id', async (req, res) => {
     if (err instanceof NotFoundError) {
       res.status(err.status).json({ message: `No characters found` });
     } else {
-      res.status(500).json({ message: `Internal Server Error: ${err}` });
+      res.status(500).json({ message: `Internal Server Error: ${err.message}` });
     }
   }
 });
@@ -62,7 +62,7 @@ router.post('/', async (req, res) => {
     if (err instanceof MongoDBError) {
       res.status(err.status).json({ message: err.message });
     } else {
-      res.status(500).json({ message: `Internal Server Error: ${err}` });
+      res.status(500).json({ message: `Internal Server Error: ${err.message}` });
     }
   }
 });
@@ -76,7 +76,7 @@ router.delete('/:id', async (req, res) => {
     if (err instanceof MongoDBError) {
       res.status(err.status).json({ message: `Character delete failed: ${err.message}` });
     } else {
-      res.status(500).json({ message: `Internal Server Error: ${err}` });
+      res.status(500).json({ message: `Internal Server Error: ${err.message}` });
     }
   }
 });
@@ -90,7 +90,7 @@ router.delete('/', async (req, res) => {
     if (err instanceof MongoDBError) {
       res.status(err.status).json({ message: `Characters delete failed: ${err.message}` });
     } else {
-      res.status(500).json({ message: `Internal Server Error: ${err}` });
+      res.status(500).json({ message: `Internal Server Error: ${err.messagerr}` });
     }
   }
 });
