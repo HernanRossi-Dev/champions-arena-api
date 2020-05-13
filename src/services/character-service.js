@@ -1,19 +1,17 @@
 'use strict'
 
-import mongoose from 'mongoose';
+import mongodb from 'mongodb';
 import CharacterFilters from '../utils/character-filters.js';
 import { CharacterDB } from '../data-access/index.js';
 import { NotFoundError, MongoDBError } from '../errors/index.js';
 
+const ObjectId = mongodb.ObjectID;
+
 const getCharacter = async (id) => {
-    const characterId = new mongoose.Types.ObjectId(id);
-
-    const character = await CharacterDB.getCharacter(characterId);
-
+    const character = await CharacterDB.getCharacter(id);
     if (!character) {
         throw new NotFoundError();
     }
-
     return character;
 };
 
@@ -36,10 +34,8 @@ const getCharacters = async (query) => {
 };
 
 const updateCharacter = async (id, character) => {
-    let characterId;
     delete character._id;
-    characterId = new mongoose.Types.ObjectId(id);
-    const result = await CharacterDB.updateCharacter(characterId, character);
+    const result = await CharacterDB.updateCharacter(id, character);
     if (!result) {
         throw new NotFoundError();
     }
@@ -56,9 +52,7 @@ const createCharacter = async (character) => {
 };
 
 const deleteCharacter = async (id) => {
-    const characterId = new mongoose.Types.ObjectId(id);
-    const { result } = await CharacterDB.deleteCharacter(characterId);
-
+    const { result } = await CharacterDB.deleteCharacter(id);
     if (result.n !== 1) {
       throw new MongoDBError();
     } 
@@ -72,7 +66,6 @@ const deleteCharacters = async (query) => {
     if (query[param]) filter[param] = query[param];
   });
 
-
   if (query.level_lte || query.level_gte) {
     filter.level = {};
     if (query.level_lte) {
@@ -84,11 +77,9 @@ const deleteCharacters = async (query) => {
   }
  
   const result = await CharacterDB.deleteCharacters(filter);
-
   if (!result) {
     throw new MongoDBError();
   }
-  
   return result;
 };
 

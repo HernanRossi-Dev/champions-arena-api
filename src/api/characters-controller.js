@@ -1,23 +1,28 @@
 'use strict'
 
 import express from 'express';
+import mongodb from 'mongodb';
 import CharacterService from '../services/character-service.js';
 import { NotFoundError, MongoDBError } from '../errors/index.js';
 import AuthServices from '../services/auth-service.js';
+const ObjectId = mongodb.ObjectID;
 
 const router = express.Router();
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
+  if (!ObjectId.isValid(id)) {
+    return res.status(422).send(`Invalid character id format: ${id}`);
+  }
+
   try {
     const result = await CharacterService.getCharacter(id);
     res.status(200).json(result);
   } catch (err) {
     if (err instanceof NotFoundError) {
-      res.status(404).json({ message: `No character found: ${id}` });
-    } else {
-      res.status(500).json({ message: `Internal Server Error: ${err}` });
+      return res.status(err.status).json({ message: `No character found: ${id}` });
     }
+    res.status(500).json({ message: `Internal Server Error: ${err.message}` });
   }
 });
 
@@ -28,28 +33,29 @@ router.get('/', async (req, res) => {
     res.status(200).json(result);
   } catch (err) {
     if (err instanceof NotFoundError) {
-      res.status(404).json({ message: `No characters found` });
-    } else {
-      res.status(500).json({ message: `Internal Server Error: ${err.message}` });
+      return res.status(err.status).json({ message: `No characters found` });
     }
+    res.status(500).json({ message: `Internal Server Error: ${err.message}` });
   }
 });
 
-//Authenticate for following routes
 router.use(AuthServices.jwtCheck);
 
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const { character } = req.body;
+  if (!ObjectId.isValid(id)) {
+    return res.status(422).send(`Invalid character id format: ${id}`);
+  }
+
   try {
     const result = await CharacterService.updateCharacter(id, character);
     res.status(200).json(result);
   } catch (err) {
     if (err instanceof NotFoundError) {
-      res.status(err.status).json({ message: `No characters found` });
-    } else {
-      res.status(500).json({ message: `Internal Server Error: ${err.message}` });
+      return res.status(err.status).json({ message: `No characters found` });
     }
+    res.status(500).json({ message: `Internal Server Error: ${err.message}` });
   }
 });
 
@@ -60,24 +66,26 @@ router.post('/', async (req, res) => {
     res.status(200).json(result);
   } catch (err) {
     if (err instanceof MongoDBError) {
-      res.status(err.status).json({ message: err.message });
-    } else {
-      res.status(500).json({ message: `Internal Server Error: ${err.message}` });
+      return res.status(err.status).json({ message: err.message });
     }
+    res.status(500).json({ message: `Internal Server Error: ${err.message}` });
   }
 });
 
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
+  if (!ObjectId.isValid(id)) {
+    return res.status(422).send(`Invalid character id format: ${id}`);
+  }
+
   try {
     const result = await CharacterService.deleteCharacter(id);
     res.status(200).json({ message: 'Character delete success', result });
   } catch (err) {
     if (err instanceof MongoDBError) {
-      res.status(err.status).json({ message: `Character delete failed: ${err.message}` });
-    } else {
-      res.status(500).json({ message: `Internal Server Error: ${err.message}` });
+      return res.status(err.status).json({ message: `Character delete failed: ${err.message}` });
     }
+    res.status(500).json({ message: `Internal Server Error: ${err.message}` });
   }
 });
 
@@ -88,10 +96,9 @@ router.delete('/', async (req, res) => {
     res.status(200).json({ message: 'Characters delete success', result });
   } catch (err) {
     if (err instanceof MongoDBError) {
-      res.status(err.status).json({ message: `Characters delete failed: ${err.message}` });
-    } else {
-      res.status(500).json({ message: `Internal Server Error: ${err.messagerr}` });
+      return res.status(err.status).json({ message: `Characters delete failed: ${err.message}` });
     }
+    res.status(500).json({ message: `Internal Server Error: ${err.messagerr}` });
   }
 });
 

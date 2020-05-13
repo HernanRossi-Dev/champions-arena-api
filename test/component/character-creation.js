@@ -2,7 +2,6 @@
 process.env.NODE_ENV = 'test';
 
 import mongoose from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
 import CreateCharacterMock from '../mocks/create-character-mock.js';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
@@ -38,12 +37,10 @@ describe('Character', () => {
         })
     })
 
-    describe.only('Get Character:', () => {
+    describe('Get Character:', () => {
         it('Get character/id should respond status 422 with invalid id format', async () => {
-            const charId = uuidv4();
+            const charId = 234234234234234242342342;
             const response = await testApp.get(`/api/characters/${charId}`);
-            console.log('In test: ', response.status);
-            console.log('In test: ', response.body);
             response.status.should.equal(422);
         })
 
@@ -113,7 +110,7 @@ describe('Character', () => {
             await mongoose.createConnection(mongoDBUrl, { useNewUrlParser: true });
             const newName = faker.name.firstName();
             jsonRes.name = newName;
-            const newID = uuidv4();
+            const newID = new ObjectId();
             jsonRes.level = 2;
             jsonRes.XP = 500;
             const updateResponse = await testApp.put(`/api/characters/${newID}`).send(jsonRes);
@@ -137,7 +134,7 @@ describe('Character', () => {
         })
     
         it('Delete Character with invalid id should response status 422.', async () => {
-            const newID = uuidv4();;
+            const newID = new ObjectId();;
             const deleteResponse = await testApp.delete(`/api/characters/${newID}`);
             deleteResponse.status.should.equal(422);
         })

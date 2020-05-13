@@ -4,13 +4,18 @@ import express from 'express';
 import UserService from '../services/user-service.js';
 import { NotFoundError, MongoDBError } from '../errors/index.js';
 import AuthServices from '../services/auth-service.js';
+import mongodb from 'mongodb';
 
+const ObjectId = mongodb.ObjectID;
 const router = express.Router();
 
 router.get('/:id', async (req, res) => {
-  const { query } = req;
+  const { id } = req.params;
+  if (!ObjectId.isValid(id)) {
+    return res.status(422).send(`Invalid user id format: ${id}`);
+  }
   try {
-    const result = await UserService.getUser(query);
+    const result = await UserService.getUser(id);
     res.status(200).json({ user: result });
   } catch (err) {
     if (err instanceof NotFoundError) {
@@ -21,7 +26,6 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-//Authenticate for following routes
 router.use(AuthServices.jwtCheck);
 
 router.get('/', async (req, res) => {
@@ -31,7 +35,7 @@ router.get('/', async (req, res) => {
     res.status(200).json({ users: result });
   } catch (err) {
     if (err instanceof NotFoundError) {
-      res.status(404).json({ message: `No Users found: ${id}` });
+      res.status(404).json({ message: `No Users found: ${query}` });
     } else {
       res.status(500).json({ message: `Internal Server Error: ${err.message}` });
     }
@@ -49,6 +53,24 @@ router.post('/', async (req, res) => {
     } else {
       res.status(500).json({ message: `Internal Server Error: ${err.message}` });
     }
+  }
+});
+
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { user } = req.body;
+  if (!ObjectId.isValid(id)) {
+    return res.status(422).send(`Invalid user id format: ${id}`);
+  }
+
+  try {
+    const result = await UserService.updateUser(id, user);
+    res.status(200).json(result);
+  } catch (err) {
+    if (err instanceof NotFoundError) {
+      return res.status(err.status).json({ message: `No user found` });
+    }
+    res.status(500).json({ message: `Internal Server Error: ${err.message}` });
   }
 });
 
