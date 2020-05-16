@@ -10,7 +10,6 @@ const getUser = async (id) => {
     .next();
 };
 
-
 const getUsers = async (filter) => {
   const db = await getMongoConnection();
   return await db.collection('users')

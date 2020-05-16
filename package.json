@@ -17,6 +17,7 @@
   "author": "Hernan Rossi",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^14.0.1",
     "auth0-api-jwt-rsa-validation": "0.0.3",
     "axios": "^0.19.2",
     "body-parser": "^1.18.2",
@@ -39,6 +40,8 @@
     "password-hash": "^1.2.2",
     "request": "^2.88.2",
     "source-map-support": "^0.5.10",
+    "tslint": "^6.1.2",
+    "typescript": "^3.9.2",
     "uuid": "^8.0.0"
   },
   "devDependencies": {
