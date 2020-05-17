@@ -6,10 +6,13 @@
   "type": "module",
   "scripts": {
     "docker-deploy": "docker-compose up",
-    "start": "NODE_ENV=production node ./src/app.js",
-    "start-dev": "NODE_ENV=development node ./src/app.js",
-    "start-dev-win": " SET NODE_ENV=development & node ./src/app.js",
-    "node-component": "mocha --timeout 3000 test/component/*.js --exit"
+    "start": "set NODE_ENV=production&& node ./src/app.js",
+    "start-dev": "set NODE_ENV=development&& node ./src/app.js",
+    "start-dev-win": "set NODE_ENV=development & node ./src/app.js",
+    "build": "tsc",
+    "build:watch": "onchange 'src/**/*.ts' -- npm run build",
+    "test": "jest --coverage",
+    "view:coverage": "serve coverage/lcov-report"
   },
   "engines": {
     "node": "14.x.x"
@@ -17,9 +20,11 @@
   "author": "Hernan Rossi",
   "license": "ISC",
   "dependencies": {
+    "@types/jest": "^25.2.2",
     "@types/node": "^14.0.1",
     "auth0-api-jwt-rsa-validation": "0.0.3",
     "axios": "^0.19.2",
+    "babel-jest": "^26.0.1",
     "body-parser": "^1.18.2",
     "compression": "^1.7.3",
     "config": "^3.3.1",
@@ -40,6 +45,9 @@
     "password-hash": "^1.2.2",
     "request": "^2.88.2",
     "source-map-support": "^0.5.10",
+    "supertest": "^4.0.2",
+    "ts-jest": "^26.0.0",
+    "ts-node": "^8.10.1",
     "tslint": "^6.1.2",
     "typescript": "^3.9.2",
     "uuid": "^8.0.0"

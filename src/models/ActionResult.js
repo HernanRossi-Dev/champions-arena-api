@@ -1,6 +1,6 @@
 'use strict'
 
-class ActionResult {
+export default class ActionResult {
     constructor(data = null, error = null, message = '') {
         this._status = 'Processed';
         this._errors = [error];
@@ -28,5 +28,3 @@ class ActionResult {
         return this._message;
     }
 }
-
-export default ActionsResult;

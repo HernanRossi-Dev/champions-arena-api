@@ -10,8 +10,7 @@
     "target": "es2015"
   },
   "include": [
-    "src",
-    "test",
-    "config"
-  ]
+    "src/",
+  ],
+  "exclude": ["node_modules", "test/"]
 }

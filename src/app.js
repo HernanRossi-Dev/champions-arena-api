@@ -13,25 +13,7 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 
-const setEnvironmentDecoding = () => {
-  app.get('*.js', (req, res, next) => {
-    req.url = `${req.url}.gz`;
-    res.set('Content-Encoding', 'gzip');
-    res.set('Content-Type', 'text/javascript');
-    next();
-  });
-  app.get('*.css', (req, res, next) => {
-    req.url = `${req.url}.gz`;
-    res.set('Content-Encoding', 'gzip');
-    res.set('Content-Type', 'text/css');
-    next();
-  });
-}
-
 const initServer = () => {
-  if (process.env.NODE_ENV && process.env.NODE_ENV.trim() !== 'development') {
-    setEnvironmentDecoding();
-  }
 
   app.use(bodyParser.json());
 

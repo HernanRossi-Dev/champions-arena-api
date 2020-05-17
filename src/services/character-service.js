@@ -1,12 +1,9 @@
 'use strict'
 
-import mongodb from 'mongodb';
 import CharacterFilters from '../utils/character-filters.js';
 import { CharacterDB } from '../data-access/index.js';
 import ActionResult from '../models/ActionResult.js';
 import { MongoDBError, NotFoundError } from '../errors/index.js';
-
-const ObjectId = mongodb.ObjectID;
 
 const getCharacter = async (id) => {
   const data = await CharacterDB.getCharacter(id);
@@ -17,7 +14,7 @@ const getCharacter = async (id) => {
 };
 
 const getCharacters = async (query) => {
-  const filter = {}, result = {};
+  const filter = {};
   Object.keys(query).forEach((key) => {
     const value = query[key];
     const addFilter = CharacterFilters[key](value, filter);
