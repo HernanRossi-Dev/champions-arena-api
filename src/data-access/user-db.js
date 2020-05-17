@@ -2,12 +2,10 @@
 
 import getMongoConnection from '../utils/mongo-connection.js';
 
-const getUser = async (id) => {
+const getUser = async (_id) => {
   const db = await getMongoConnection();
   return await db.collection('users')
-    .find({ _id: id })
-    .limit(1)
-    .next();
+    .findOne({ _id });
 };
 
 const getUsers = async (filter) => {
@@ -19,24 +17,24 @@ const getUsers = async (filter) => {
 
 const createUser = async (user, defaultCharacters) => {
   const db = await getMongoConnection();
-  await db.collection('characters').insertMany(defaultCharacters);
-
   const newUser = await db.collection('users')
     .insertOne(user);
 
-  return await db.collection('users')
-    .find({ _id: newUser.insertedId })
-    .limit(1)
-    .next();
+  try {
+    await db.collection('characters').insertMany(defaultCharacters);
+  } catch (err) {
+    console.err('Failed to create default characters for new user.');
+  }
+  return newUser;
 };
 
-const updateUser = async (id, user) => {
+const updateUser = async (_id, user) => {
   const db = await getMongoConnection();
   await db.collection("users")
-    .updateOne({ _id: id }, { $set: user });
+    .updateOne({ _id }, { $set: user });
 
   return await db.collection("users")
-    .find({ _id: id })
+    .find({ _id })
     .limit(1)
     .next();
 };
