@@ -1,3 +1,5 @@
+#This project is in process of being refactored to use TypeScript and not launchable yet
+
 --Dependencies-- 
     Node version 14+
     yarn
