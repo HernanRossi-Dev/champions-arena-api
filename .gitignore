@@ -4,6 +4,8 @@ node_modules/
 package-lock.json
 yarn.lock
 dist/
+coverage/
+.vscode/
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
