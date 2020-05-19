@@ -1,4 +1,4 @@
-export default interface Filter {
+type CharFilter = {
   user?: string,
   class?: string,
   ancestry?: string,
@@ -7,3 +7,5 @@ export default interface Filter {
     $gte?: number
   }
 }
+
+export default CharFilter
