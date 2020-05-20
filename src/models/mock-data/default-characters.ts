@@ -1,5 +1,5 @@
 import { ObjectID } from "mongodb";
-import { ICharacter } from "../models/interfaces";
+import { ICharacter } from "../interfaces";
 
 export const DefaultCharacters: ICharacter[] = [
   {
