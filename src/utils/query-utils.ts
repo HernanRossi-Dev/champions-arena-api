@@ -1,11 +1,11 @@
-import { CharQuery, CharFilter } from './index'
+import { CharQueryType, CharFilterType } from '../models'
 
-const processCharacterFilter = (query: CharQuery): CharFilter => {
-  const filter: CharFilter = {}
+const processCharacterFilter = (query: CharQueryType): CharFilterType => {
+  const filter: CharFilterType = {}
   const filterParams = ['user', 'class', 'ancestry']
   filterParams.forEach((key: string) => {
-    if (query[key as keyof CharQuery]) {
-      filter[key as keyof CharFilter] = query[key as keyof CharQuery]
+    if (query[key as keyof CharQueryType]) {
+      filter[key as keyof CharFilterType] = query[key as keyof CharQueryType]
     }
   })
   if (query.level_lte || query.level_gte) {

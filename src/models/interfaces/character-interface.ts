@@ -3,7 +3,7 @@ import { ObjectID } from "mongodb"
 export default interface ICharacter {
   created?: Date
   user: string
-  _id: ObjectID
+  _id: ObjectID | string
   basics: {
     name: string,
     player: string,

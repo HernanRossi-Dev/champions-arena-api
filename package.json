@@ -47,6 +47,7 @@
     "generate-password": "^1.4.0",
     "helmet": "^3.22.0",
     "hover": "^3.0.0-alpha.6",
+    "immutable": "^4.0.0-rc.12",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.2.1",
     "jwks-rsa": "^1.8.0",

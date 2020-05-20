@@ -22,14 +22,9 @@ UserSchema.statics.fullName = function() {
   return this.firstName + ' ' + this.lastName
 }
 
-export interface IUserModel extends IUser, Document {
-  firstName: string
-  lastName?: string
-  password?: string
+export interface IUserDocument extends IUser, Document {
   _id: ObjectID | string
-  email: string
   insertedId?: string
-  created?: Date
 }
 
-export const UserModel: Model<IUserModel> = model<IUserModel>('users', UserSchema)
+export const UserModel: Model<IUserDocument> = model<IUserDocument>('users', UserSchema)

@@ -1,29 +1,21 @@
-import getMongoConnection from '../utils/mongo-connection'
-import { CharFilter } from '../utils'
-import { CharacterModel } from '../models'
-import { ICharacter } from '../models/interfaces'
-import { ICharacterDoc } from '../models/mongoose-models';
+import { CharacterModel, CharFilterType, ICharacter } from '../models'
 
 const getCharacter = async (_id: string) => {
-  return CharacterModel.findOne({ _id })
+  return await CharacterModel.findOne({ _id })
 };
 
-const getCharacters = async (filter: CharFilter) => {
-  const db = await getMongoConnection();
-  return await db.collection('characters')
-    .find(filter)
-    .toArray();
+const getCharacters = async (filter: CharFilterType) => {
+  return await CharacterModel.find(filter)
 };
 
 const updateCharacter = async (_id: string, character: ICharacter) => {
-  const db = await getMongoConnection();
-  return await db.collection("characters")
-    .updateOne({ _id }, { $set: character });
+  delete character._id
+  await CharacterModel.update({ _id }, character, { upsert: true })
 };
 
-const createCharacter = async (character: ICharacter): Promise<ICharacterDoc> => {
+const createCharacter = async (character: ICharacter) => {
   const newCharacter = await CharacterModel.create(character)
-  return newCharacter.save()
+  return await newCharacter.save()
 };
 
 const createCharacters = async (characters: ICharacter[]) => {
@@ -34,7 +26,7 @@ const deleteCharacter = async (_id: string) => {
   return await CharacterModel.deleteOne({ _id })
 };
 
-const deleteCharacters = async (filter: CharFilter) => {
+const deleteCharacters = async (filter: CharFilterType) => {
   return await CharacterModel.deleteMany(filter)
 };
 
