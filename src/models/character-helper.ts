@@ -3,7 +3,7 @@ import { ICharacter } from "./interfaces";
 
 export class CharacterClass implements ICharacter {
   user: string
-  _id: ObjectID
+  _id: ObjectID | string
   basics: {
     name: string,
     player: string,
@@ -64,15 +64,15 @@ export class CharacterClass implements ICharacter {
   ancestryProps: {
     ancestry: string,
     size: string,
-    speed: number,
-    languages: string,
+    speed: number | string,
+    languages: string[],
     ancestryTraits: string[],
     attributes: object
   }
   backgroundProps: {
     background: string,
-    selectBoost: string[],
-    freeAbilityBoost: number,
+    selectBoost?: string[],
+    freeAbilityBoost?: number,
     skillFeat: string,
     loreSkill: string,
   }
@@ -86,7 +86,8 @@ export class CharacterClass implements ICharacter {
     armor: object,
     signatureSkills: string[],
     classFeatures: string[],
-    items: string[],
+    items?: string[],
+    spells?: object
   }
   characterTraits: object
   characterNotes: string
