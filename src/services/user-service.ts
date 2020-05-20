@@ -12,7 +12,7 @@ const cloneDeep = lodash.cloneDeep
 
 const getUser = async (id: string, query: UserQuery): Promise<ActionResult> => {
   const result = await UserDB.getUser(id)
-  if (!Object.keys(result).length) {
+  if (!result?._id) {
     return new ActionResult({}, `Get user failed: ${id}`, new NotFoundError())
   }
   if (query.sendEmail) {
@@ -24,7 +24,7 @@ const getUser = async (id: string, query: UserQuery): Promise<ActionResult> => {
 const getUsers = async (query: UserQuery): Promise<ActionResult> => {
   const filter: UserFilter = {}
   const filterParams = ['name', 'email', '_id']
-  filterParams.forEach((param) => {
+  filterParams.map((param) => {
     if (query[param as keyof UserQuery]) {
       filter[param as keyof UserFilter] = query[param as keyof UserQuery]
     }
@@ -45,9 +45,14 @@ const createUser = async (user: IUser): Promise<ActionResult> => {
   })
 
   user.created = new Date()
-  const result = await UserDB.createUser(user, defaultCharacters)
+  const result = await UserDB.createUser(user)
   if (!result.insertedId) {
     return new ActionResult(result, 'Create user failed.', new MongoDBError())
+  }
+  try {
+    await CharacterDB.createCharacters(defaultCharacters)
+  } catch (err) {
+    console.error('Failed to insert default characters.')
   }
   return new ActionResult(result, 'Create user success.')
 }

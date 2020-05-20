@@ -1,7 +1,9 @@
-import { CharacterModel } from './characters'
-import { UserModel } from './users'
+import { CharacterModel, ICharacterDoc } from './characters-schema'
+import { UserModel, IUserDoc } from './users-schema'
 
 export {
   CharacterModel,
+  ICharacterDoc,
+  IUserDoc,
   UserModel
 }

@@ -6,7 +6,7 @@ import { ICharacter } from '../models/interfaces'
 
 const getCharacter = async (id: string): Promise<ActionResult> => {
   const result = await CharacterDB.getCharacter(id)
-  if (!Object.keys(result).length) {
+  if (!result?._id) {
     return new ActionResult({}, `Get character failed: ${id}`, new NotFoundError())
   }
   return new ActionResult(result, `Get character success: ${id}`)

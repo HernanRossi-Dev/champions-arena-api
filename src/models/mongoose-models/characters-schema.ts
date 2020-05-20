@@ -100,7 +100,7 @@ const CharacterSchema: Schema = new Schema({
   feats: Object,
 })
 
-interface ICharacterDoc extends Document {
+export interface ICharacterDoc extends Document {
   user: string,
   _id: ObjectID,
   basics: {
