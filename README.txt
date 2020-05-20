@@ -6,11 +6,13 @@
 
 Run locally using dev build without compression (Build much faster): 
   run: yarn
+    compile TypeScript into JavaScript: yarn build
     start server in a terminal: npm run start-dev
     goto localhost:8080
 
 Run locally using production build: 
   run: yarn
+    compile TypeScript into JavaScript: yarn build
     start server in a terminal: npm run start
     goto localhost:8080
 
