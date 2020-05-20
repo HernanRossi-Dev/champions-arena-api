@@ -1,6 +1,7 @@
 import { CharQueryType, CharFilterType } from '../models'
+import { CharacterFilters } from '.'
 
-const processCharacterFilter = (query: CharQueryType): CharFilterType => {
+const processDeleteCharacterFilter = (query: CharQueryType): CharFilterType => {
   const filter: CharFilterType = {}
   const filterParams = ['user', 'class', 'ancestry']
   filterParams.forEach((key: string) => {
@@ -20,6 +21,17 @@ const processCharacterFilter = (query: CharQueryType): CharFilterType => {
   return filter
 }
 
+const processFindCharacterFilter = (query: CharQueryType): CharFilterType => {
+  const filter: CharFilterType = Object.keys(query)
+    .reduce<CharFilterType>((acc: object, key: string): object => {
+      const value = query[key as keyof CharQueryType]
+      const addFilter = CharacterFilters[key](value, filter)
+      return Object.assign(acc, addFilter)
+    }, {})
+    return filter
+}
+
 export {
-  processCharacterFilter
+  processFindCharacterFilter,
+  processDeleteCharacterFilter
 }

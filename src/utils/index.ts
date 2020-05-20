@@ -1,10 +1,11 @@
 import getMongoConnection from './mongo-connection'
 import SendTempPassword from './temp-password-helper'
 import CharacterFilters from './filter-helpers'
-import { processCharacterFilter } from './query-utils'
+import { processDeleteCharacterFilter, processFindCharacterFilter } from './query-utils'
 
 export {
-  processCharacterFilter,
+  processDeleteCharacterFilter,
+  processFindCharacterFilter,
   getMongoConnection,
   SendTempPassword,
   CharacterFilters,

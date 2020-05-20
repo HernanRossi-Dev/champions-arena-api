@@ -1,4 +1,3 @@
-import { getMongoConnection } from '../utils'
 import { IUser, UserFilterType, UserModel } from '../models'
 
 const getUser = async (_id: string) => {
@@ -6,10 +5,7 @@ const getUser = async (_id: string) => {
 }
 
 const getUsers = async (filter: UserFilterType) => {
-  const db = await getMongoConnection()
-  return await db.collection('users')
-    .find(filter)
-    .toArray()
+  return await UserModel.find(filter)
 }
 
 const createUser = async (user: IUser) => {
@@ -18,9 +14,8 @@ const createUser = async (user: IUser) => {
 }
 
 const updateUser = async (_id: string, user: IUser) => {
-  const db = await getMongoConnection()
-  return await db.collection("users")
-    .updateOne({ _id }, { $set: user })
+  delete user._id
+  return await UserModel.update({ _id }, user, { upsert: true })
 }
 
 const deleteUser = async (name: string) => {

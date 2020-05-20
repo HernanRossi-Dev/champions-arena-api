@@ -1,6 +1,6 @@
 import { CharacterDB } from '../data-access'
 import { MongoDBError, NotFoundError } from '../errors'
-import { CharacterFilters, processCharacterFilter } from '../utils'
+import { processFindCharacterFilter, processDeleteCharacterFilter } from '../utils'
 import { ActionResult, CharQueryType, CharFilterType, ICharacter } from '../models'
 
 const getCharacter = async (id: string): Promise<ActionResult> => {
@@ -12,20 +12,15 @@ const getCharacter = async (id: string): Promise<ActionResult> => {
 }
 
 const getCharacters = async (query: CharQueryType): Promise<ActionResult> => {
-  const filter: CharFilterType = Object.keys(query).reduce<object>((acc: object, key: string): object => {
-    const value = query[key as keyof CharQueryType]
-    const addFilter = CharacterFilters[key](value, filter)
-    return Object.assign(acc, addFilter)
-  }, {})
-
+  const filter: CharFilterType = processFindCharacterFilter(query)
   const result = await CharacterDB.getCharacters(filter)
   if (!result.length) {
-    return new ActionResult(result, 'Failed to fetch characters.', new NotFoundError())
+    return new ActionResult([], 'Failed to fetch characters.', new NotFoundError())
   }
   return new ActionResult(result, 'Get characters success.')
 }
 
-const updateCharacter = async (id: string, character: ICharacter) : Promise<ActionResult> => {
+const updateCharacter = async (id: string, character: ICharacter): Promise<ActionResult> => {
   delete character._id
   const result = await CharacterDB.updateCharacter(id, character)
   if (!result.modifiedCount) {
@@ -52,7 +47,7 @@ const deleteCharacter = async (id: string): Promise<ActionResult> => {
 }
 
 const deleteCharacters = async (query: CharQueryType): Promise<ActionResult> => {
-  const filter: CharFilterType = processCharacterFilter(query)
+  const filter: CharFilterType = processDeleteCharacterFilter(query)
   const result = await CharacterDB.deleteCharacters(filter)
   if (!result.deletedCount) {
     return new ActionResult(result, 'Failed to delete characters.', new NotFoundError())
