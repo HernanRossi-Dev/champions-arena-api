@@ -3,7 +3,7 @@ import ActionResult from './action-result'
 import { CharacterClass } from './character-helper'
 import { IUser, ICharacter } from './interfaces'
 import { CharFilterType, CharQueryType, UserQueryType, UserFilterType } from './types'
-
+import { DefaultCharacters } from  './mock-data'
 export {
   CharacterModel,
   UserModel,
@@ -14,5 +14,6 @@ export {
   CharFilterType,
   CharQueryType,
   UserFilterType,
-  UserQueryType
+  UserQueryType,
+  DefaultCharacters
 }

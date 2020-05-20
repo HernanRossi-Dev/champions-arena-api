@@ -1,4 +1,4 @@
-import { CharQueryType, CharFilterType } from '../models'
+import { CharQueryType, CharFilterType, UserQueryType, UserFilterType } from '../models'
 import { CharacterFilters } from '.'
 
 const processDeleteCharacterFilter = (query: CharQueryType): CharFilterType => {
@@ -31,7 +31,20 @@ const processFindCharacterFilter = (query: CharQueryType): CharFilterType => {
     return filter
 }
 
+const processFindUserFilter = (query: UserQueryType): UserFilterType => {
+  const filter: UserFilterType = {}
+  const filterParams = ['firstName', 'lastName', 'email', '_id']
+  filterParams.map((param) => {
+    if (query[param as keyof UserQueryType]) {
+      const newFilterParam : string = query[param as keyof UserFilterType]!
+      filter[param as keyof UserFilterType] = newFilterParam
+    }
+  })
+  return filter
+}
+
 export {
   processFindCharacterFilter,
-  processDeleteCharacterFilter
+  processDeleteCharacterFilter,
+  processFindUserFilter
 }

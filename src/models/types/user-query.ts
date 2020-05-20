@@ -1,10 +1,9 @@
-import { ObjectID } from "mongodb"
-
 type UserQueryType = {
-  sendEmail?: boolean | string
-  name?: string
+  sendEmail?: boolean
+  firstName?: string
+  lastName?: string
   email?: string
-  _id?: string | ObjectID
+  _id?: string
 }
 
 export default UserQueryType

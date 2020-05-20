@@ -1,9 +1,8 @@
-import { ObjectID } from "mongodb"
-
 type UserFilterType = {
-  name?: string,
-  email?: string,
-  _id?: string | ObjectID
+  firstName?: string
+  lastName?: string
+  email?: string
+  _id?: string
 }
 
 export default UserFilterType
