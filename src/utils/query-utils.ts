@@ -33,7 +33,7 @@ const processFindCharacterFilter = (query: CharQueryType): CharFilterType => {
 
 const processFindUserFilter = (query: UserQueryType): UserFilterType => {
   const filter: UserFilterType = {}
-  const filterParams = ['firstName', 'lastName', 'email', '_id']
+  const filterParams = ['firstName', 'lastName', 'email', '_id', 'userName']
   filterParams.map((param) => {
     if (query[param as keyof UserQueryType]) {
       const newFilterParam : string = query[param as keyof UserFilterType]!

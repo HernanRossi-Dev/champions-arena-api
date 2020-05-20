@@ -1,4 +1,5 @@
 type UserQueryType = {
+  userName?: string
   sendEmail?: boolean
   firstName?: string
   lastName?: string
