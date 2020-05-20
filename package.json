@@ -3,7 +3,6 @@
   "version": "3.0.0",
   "description": "A Pathfinder character creation and campaign companion",
   "private": true,
-  "type": "module",
   "scripts": {
     "docker-deploy": "docker-compose up",
     "start": "set NODE_ENV=production&& node ./dist/app.js",
