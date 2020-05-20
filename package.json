@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "docker-deploy": "docker-compose up",
-    "start": "set NODE_ENV=production&& node ./dist/src/app.js",
-    "start-dev": "set NODE_ENV=development&& node ./dist/src/app.js",
-    "start-dev-win": "set NODE_ENV=development & node ./dist/src/app.js",
+    "start": "set NODE_ENV=production&& node ./dist/app.js",
+    "start-dev": "set NODE_ENV=development&& node ./dist/app.js",
+    "start-dev-win": "set NODE_ENV=development & node ./dist/app.js",
     "build": "tsc",
     "test": "jest --forceExit --coverage --verbose",
     "view:coverage": "serve coverage/lcov-report"
