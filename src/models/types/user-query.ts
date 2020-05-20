@@ -1,10 +1,10 @@
 import { ObjectID } from "mongodb"
 
-type UserQuery = {
+type UserQueryType = {
   sendEmail?: boolean | string
   name?: string
   email?: string
   _id?: string | ObjectID
 }
 
-export default UserQuery
+export default UserQueryType

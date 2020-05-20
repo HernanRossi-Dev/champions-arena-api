@@ -1,4 +1,4 @@
-type CharFilter = {
+type CharFilterType = {
   user?: string
   class?: string
   ancestry?: string
@@ -9,4 +9,4 @@ type CharFilter = {
   name?: string
 }
 
-export default CharFilter
+export default CharFilterType

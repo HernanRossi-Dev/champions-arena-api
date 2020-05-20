@@ -1,18 +1,35 @@
 import { Document, model, Model, Schema } from 'mongoose'
 import { ObjectID } from 'mongodb'
+import { IUser } from '../interfaces'
 
-const UserSchema: Schema = new Schema({
-  userName: String,
-  password: String,
-  email: String,
+const UserSchema = new Schema({
+  firstName: {
+    type: String,
+    required: true
+  },
+  lastName: String,
+  password: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
 })
 
-export interface IUserDoc extends Document {
-  userName: string
-  password: string
-  email: string
-  _id: ObjectID | string
-  insertedId?: string
+UserSchema.statics.fullName = function() {
+  return this.firstName + ' ' + this.lastName
 }
 
-export const UserModel: Model<IUserDoc> = model<IUserDoc>('users', UserSchema)
+export interface IUserModel extends IUser, Document {
+  firstName: string
+  lastName?: string
+  password?: string
+  _id: ObjectID | string
+  email: string
+  insertedId?: string
+  created?: Date
+}
+
+export const UserModel: Model<IUserModel> = model<IUserModel>('users', UserSchema)

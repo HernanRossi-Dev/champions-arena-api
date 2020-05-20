@@ -1,4 +1,4 @@
-type CharQuery = {
+type CharQueryType = {
   user?: string
   class?: string
   ancestry?: string
@@ -6,4 +6,4 @@ type CharQuery = {
   level_gte?: string
 }
 
-export default CharQuery
+export default CharQueryType
