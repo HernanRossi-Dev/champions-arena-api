@@ -4,7 +4,7 @@ import { SendTempPassword } from '../utils'
 import { NotFoundError, MongoDBError } from '../errors/index'
 import { ActionResult } from '../models'
 import { UserDB, CharacterDB } from '../data-access/index'
-import { UserQuery, UserFilter } from '../utils/types'
+import { UserQuery, UserFilter, CharFilter } from '../utils/types'
 import { IUser, ICharacter } from '../models/interfaces'
 import { DefaultCharacters } from '../mock-data'
 
@@ -24,7 +24,7 @@ const getUser = async (id: string, query: UserQuery): Promise<ActionResult> => {
 const getUsers = async (query: UserQuery): Promise<ActionResult> => {
   const filter: UserFilter = {}
   const filterParams = ['name', 'email', '_id']
-  filterParams.reduce((param) => {
+  filterParams.forEach((param) => {
     if (query[param as keyof UserQuery]) {
       filter[param as keyof UserFilter] = query[param as keyof UserQuery]
     }
@@ -61,14 +61,13 @@ const updateUser = async (id: string, user: IUser): Promise<ActionResult> => {
   return new ActionResult(result)
 }
 
-
 const deleteUser = async (name: string): Promise<ActionResult> => {
   const result = await UserDB.deleteUser(name)
   if (!result.deletedCount) {
     return new ActionResult(result, `Failed to delete user: ${name}`, new NotFoundError())
   }
 
-  const filter: UserFilter = { name }
+  const filter: CharFilter = { name }
   const deleteChars = await CharacterDB.deleteCharacters(filter)
   return new ActionResult(deleteChars, `Delete User Success: ${name}`)
 }
