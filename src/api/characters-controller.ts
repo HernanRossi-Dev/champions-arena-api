@@ -3,8 +3,8 @@ import mongodb from 'mongodb'
 import CharacterService from '../services/character-service'
 import AuthServices from '../services/auth-service'
 import { ActionResult } from '../models'
-const ObjectId = mongodb.ObjectID
 
+const ObjectId = mongodb.ObjectID
 const router = Router()
 
 router.get('/:id', async (req: Request, res: Response) => {

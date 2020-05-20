@@ -1,7 +1,8 @@
 import { CharacterDB } from '../data-access'
 import { MongoDBError, NotFoundError } from '../errors'
 import { CharQuery, CharFilter, CharacterFilters, processCharacterFilter } from '../utils'
-import { ICharacter, ActionResult } from '../models'
+import { ActionResult } from '../models'
+import { ICharacter } from '../models/interfaces'
 
 const getCharacter = async (id: string): Promise<ActionResult> => {
   const result = await CharacterDB.getCharacter(id)

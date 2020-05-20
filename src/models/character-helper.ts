@@ -1,18 +1,19 @@
 import { ObjectID } from "mongodb";
+import { ICharacter } from "./interfaces";
 
-export abstract class Character {
+export class CharacterClass implements ICharacter {
   user: string
   _id: ObjectID
   basics: {
-    name: String,
-    player: String,
-    LVL: String,
-    XP: String,
-    homeland: String,
-    type: String,
-    alignment: String,
-    deity: String,
-    abilityBoost: String
+    name: string,
+    player: string,
+    LVL: string | number,
+    XP: string,
+    homeland: string,
+    type: string,
+    alignment: string,
+    deity: string,
+    abilityBoost: string
   }
   appearance: {
     age: string,
@@ -42,6 +43,7 @@ export abstract class Character {
     WIS: string,
     STR: string,
     FORT: string,
+    WILL: string
     REFLEX: string,
     TOUCHAC: string,
     AC: string,
@@ -84,7 +86,7 @@ export abstract class Character {
     armor: object,
     signatureSkills: string[],
     classFeatures: string[],
-    items: object,
+    items: string[],
   }
   characterTraits: object
   characterNotes: string
@@ -92,13 +94,13 @@ export abstract class Character {
   skillFeats: string
   spells: object
   actions: {
-    string: string,
+    stride: string,
     melee: string[],
     ranged: string[],
   }
   feats: object
 
-  constructor(character: Character) {
+  constructor(character: ICharacter) {
     this.user = character.user
     this._id = character._id
     this.basics = character.basics
@@ -114,18 +116,11 @@ export abstract class Character {
     this.skillsModifiers = character.skillsModifiers
     this.skillFeats = character.skillFeats
     this.spells = character.spells ? character.spells : {}
-    this.actions = character.actions ? character.actions : { string: '', melee: [], ranged: [] }
+    this.actions = character.actions ? character.actions : { stride: '', melee: [], ranged: [] }
     this.feats = character.feats ? character.feats : {}
   }
-}
-
-export class CharacterHandler extends Character {
-
-  constructor(character: Character) {
-    super(character)
-  }
   
-  public getProperties(): Character {
+  public getProperties(): ICharacter {
     return {
       user: this.user,
       _id: this._id,

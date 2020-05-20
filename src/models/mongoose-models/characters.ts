@@ -7,7 +7,7 @@ const CharacterSchema: Schema = new Schema({
   basics: {
     name: String,
     player: String,
-    LVL: String,
+    LVL: String || Number,
     XP: String,
     homeland: String,
     type: String,
@@ -42,6 +42,7 @@ const CharacterSchema: Schema = new Schema({
     WIS: String,
     STR: String,
     FORT: String,
+    WILL: String,
     REFLEX: String,
     TOUCHAC: String,
     AC: String,
@@ -84,7 +85,7 @@ const CharacterSchema: Schema = new Schema({
     armor: Object,
     signatureSkills: Array,
     classFeatures: Array,
-    items: Object,
+    items: Array,
   },
   characterTraits: Object,
   characterNotes: String,
@@ -92,26 +93,26 @@ const CharacterSchema: Schema = new Schema({
   skillFeats: String,
   spells: Object,
   actions: {
-    string: String,
+    stride: String,
     melee: Array,
     ranged: Array,
   },
   feats: Object,
 })
 
-export interface ICharacter extends Document {
+interface ICharacterDoc extends Document {
   user: string,
   _id: ObjectID,
   basics: {
-    name: String,
-    player: String,
-    LVL: String,
-    XP: String,
-    homeland: String,
-    type: String,
-    alignment: String,
-    deity: String,
-    abilityBoost: String
+    name: string,
+    player: string,
+    LVL: string | number,
+    XP: string,
+    homeland: string,
+    type: string,
+    alignment: string,
+    deity: string,
+    abilityBoost: string
   },
   appearance: {
     age: string,
@@ -140,6 +141,7 @@ export interface ICharacter extends Document {
     WIS: string,
     STR: string,
     FORT: string,
+    WILL: string,
     REFLEX: string,
     TOUCHAC: string,
     AC: string,
@@ -182,7 +184,7 @@ export interface ICharacter extends Document {
     armor: object,
     signatureSkills: string[],
     classFeatures: string[],
-    items: object,
+    items: string[],
   },
   characterTraits: object,
   characterNotes: string,
@@ -190,7 +192,7 @@ export interface ICharacter extends Document {
   skillFeats: string,
   spells: object,
   actions: {
-    string: string,
+    stride: string,
     melee: string[],
     ranged: string[],
   },
@@ -198,4 +200,4 @@ export interface ICharacter extends Document {
   created: Date
 }
 
-export const CharacterModel: Model<ICharacter> = model<ICharacter>('characters', CharacterSchema)
+export const CharacterModel: Model<ICharacterDoc> = model<ICharacterDoc>('characters', CharacterSchema)

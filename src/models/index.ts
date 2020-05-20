@@ -1,10 +1,10 @@
-import { ICharacter, CharacterModel} from './Characters'
-import { IUser, UserModel } from './Users'
-import ActionResult from './ActionResult'
+import { UserModel, CharacterModel } from './mongoose-models'
+import ActionResult from './action-result'
+import { CharacterClass } from './character-helper'
+
 export {
-    ICharacter,
-    CharacterModel,
-    IUser,
-    UserModel,
-    ActionResult
+  CharacterModel,
+  UserModel,
+  ActionResult,
+  CharacterClass
 }

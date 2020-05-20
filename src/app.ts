@@ -3,7 +3,8 @@ import bodyParser from 'body-parser'
 import SourceMapSupport from 'source-map-support'
 import cors from 'cors'
 import helmet from 'helmet'
-import { CharacterRoutes, UserRoutes, AuthRoutes } from './api/index'
+import { CharacterRoutes, UserRoutes, AuthRoutes } from './api'
+import { getMongoConnection } from './utils'
 
 SourceMapSupport.install()
 
@@ -22,6 +23,14 @@ const initServer = () => {
   })
 }
 
+const initMongoDB = async () => {
+  try {
+    await getMongoConnection()
+  } catch(err) {
+    console.error('Failed to connect to mongodb.')
+  }
+}
+initMongoDB()
 initServer()
 
 export default app
