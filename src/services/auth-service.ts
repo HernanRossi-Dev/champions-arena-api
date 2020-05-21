@@ -1,20 +1,22 @@
 import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
 import request from 'request'
+import config from 'config'
 import { Request, Response } from 'express'
 import { validateUser } from '../utils'
+import { AuthError } from '../errors'
 
 const authenticate = async (email: string, password: string) => {
+  const body = `{"client_id":"${config.get("auth0.client_id")}","client_secret":"${config.get("auth0.client_secret")}","audience":"${config.get("auth0.audience")}","grant_type":"client_credentials"}`
   const options = {
     method: 'POST',
     url: 'https://dev-qf368xa5.auth0.com/oauth/token',
     headers: { 'content-type': 'application/json' },
-    body: '{"client_id":"D9Q8oFzgxOvpCTCFxR0mNGZJ9x6sgzq5","client_secret":"faeq5zuIcrZ4EwJskdVQ_c4tx33vsbh-qDtYqLVuC8RbmrK3CakNr8bvBRpBVc3N","audience":"champions-arena","grant_type":"client_credentials"}'
+    body
   }
-
   const isValid = await validateUser(email, password)
   if (!isValid) {
-    return false
+    throw new AuthError()
   }
   return new Promise((resolve, reject) => {
     request(options, (error, response, body) => {

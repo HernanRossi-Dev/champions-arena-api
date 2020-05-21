@@ -3,19 +3,18 @@ import UserService from '../services/user-service'
 import AuthServices from '../services/auth-service'
 import mongodb from 'mongodb'
 import { Request, Response, Router } from 'express'
-import { ActionResult } from '../models'
+import { ActionResult, UserQueryType } from '../models'
 
 const ObjectId = mongodb.ObjectID
 const router = Router()
 
 router.get('/:id', async (req: Request, res: Response) => {
   const { id } = req.params
-  const { query } = req
   if (!ObjectId.isValid(id)) {
     return res.status(422).send(`Invalid user id format: ${id}`)
   }
   try {
-    const result: ActionResult = await UserService.getUserById(id, query)
+    const result: ActionResult = await UserService.getUserById(id)
     res.status(200).json({data: result.data, message: result.message, errors: result.errors})
   } catch (err) {
     res.status(500).json({ message: `Internal Server Error: ${err.message}` })
@@ -25,7 +24,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 router.use(AuthServices.jwtCheck)
 
 router.get('/', async (req: Request, res: Response) => {
-  const { query } = req
+  const query = <UserQueryType>req
   try {
     const result: ActionResult = await UserService.getUserDetails(query)
     res.status(200).json({data: result.data, message: result.message, errors: result.errors})

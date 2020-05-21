@@ -8,13 +8,10 @@ import { IUser, ICharacter, DefaultCharacters, ActionResult } from '../models'
 
 const cloneDeep = lodash.cloneDeep
 
-const getUserById = async (id: string, query: UserQueryType): Promise<ActionResult> => {
+const getUserById = async (id: string): Promise<ActionResult> => {
   const result = await UserDB.getUserById(id)
   if (!result?._id) {
     return new ActionResult({}, `Get user failed: ${id}`, new NotFoundError())
-  }
-  if (query.sendEmail) {
-    await SendTempPassword(result)
   }
   return new ActionResult(result, `Get user success: ${id}`)
 }
@@ -22,8 +19,11 @@ const getUserById = async (id: string, query: UserQueryType): Promise<ActionResu
 const getUserDetails = async (query: UserQueryType): Promise<ActionResult> => {
   const filter: UserFilterType = processFindUserFilter(query)
   const result = await UserDB.getUserDetails(filter)
-  if (!result.length) {
-    return new ActionResult(result, 'Failed to fetch users.', new NotFoundError())
+  if (!result?._id) {
+    return new ActionResult({}, 'Failed to fetch users.', new NotFoundError())
+  }
+  if (query.sendEmail) {
+    await SendTempPassword(result)
   }
   return new ActionResult(result, 'Get users success.')
 }

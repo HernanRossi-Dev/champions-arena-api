@@ -5,6 +5,7 @@ type UserQueryType = {
   lastName?: string
   email?: string
   _id?: string
+  password?: string
 }
 
 export default UserQueryType
