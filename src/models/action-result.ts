@@ -1,3 +1,5 @@
+import { isUser } from '../utils/user-utils'
+import { IUser } from './interfaces'
 export default class ActionResult {
   private _status: string
   private _errors: Error[]
@@ -6,9 +8,18 @@ export default class ActionResult {
 
   constructor(databaseResult: object, message: string = '', error?: Error) {
     this._status = 'Processed'
-    this._data = databaseResult
+    this._data = this.processData(databaseResult)
     this._message = message
     this._errors = error ? [error] : []
+  }
+
+  private processData(databaseResult: object) {
+    if (isUser(databaseResult)) {
+      const userObj = <IUser>databaseResult
+      userObj.password = undefined
+      return userObj
+    }
+    return databaseResult
   }
 
   get data(): object {

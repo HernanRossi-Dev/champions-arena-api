@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb"
+
 type CharFilterType = {
   user?: string
   class?: string

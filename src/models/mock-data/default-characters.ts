@@ -1,10 +1,11 @@
-import { ObjectID } from "mongodb";
 import { ICharacter } from "../interfaces";
+import { Types } from 'mongoose'
 
+const ObjectId = Types.ObjectId
 export const DefaultCharacters: ICharacter[] = [
   {
     user: 'DM',
-    _id: new ObjectID(),
+    _id: new ObjectId(),
     basics: {
       name: 'Merisiel',
       player: 'DM',
@@ -150,7 +151,7 @@ export const DefaultCharacters: ICharacter[] = [
   },
   {
     user: 'DM',
-    _id: new ObjectID(),
+    _id: new ObjectId(),
     basics: {
       name: 'Ezren',
       player: 'DM',
@@ -290,7 +291,7 @@ export const DefaultCharacters: ICharacter[] = [
   },
   {
     user: 'DM',
-    _id: new ObjectID(),
+    _id: new ObjectId(),
     basics: {
       name: 'Fumbus',
       player: 'DM',
@@ -417,7 +418,7 @@ export const DefaultCharacters: ICharacter[] = [
   },
   {
     user: 'DM',
-    _id: new ObjectID(),
+    _id: new ObjectId(),
     basics: {
       name: 'Kyra',
       player: 'DM',
@@ -556,7 +557,7 @@ export const DefaultCharacters: ICharacter[] = [
   },
   {
     user: 'DM',
-    _id: new ObjectID(),
+    _id: new ObjectId(),
     basics: {
       name: 'Valeros',
       player: 'DM',

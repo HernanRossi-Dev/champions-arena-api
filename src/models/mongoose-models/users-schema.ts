@@ -1,9 +1,9 @@
 import { Document, model, Model, Schema } from 'mongoose'
-import { ObjectID } from 'mongodb'
+import { ObjectID, ObjectId } from 'mongodb'
 import { IUser } from '../interfaces'
 
 const UserSchema = new Schema({
-  UserName: {
+  userName: {
     type: String,
     required: true
   },
@@ -28,7 +28,7 @@ UserSchema.statics.fullName = function() {
 
 export interface IUserDocument extends IUser, Document {
   _id: ObjectID | string
-  insertedId?: string
+  insertedId?: string | ObjectId
 }
 
 export const UserModel: Model<IUserDocument> = model<IUserDocument>('users', UserSchema)

@@ -4,11 +4,11 @@ class MongoDBError extends Error {
   message: string
   status: number
 
-  constructor() {
+  constructor(message?: string) {
     super()
     this.name = "MongoDBError"
     this.date = new Date()
-    this.message = 'MongoDB encountered and error!'
+    this.message = message || 'MongoDB encountered and error!'
     this.status = 422
   }
 }

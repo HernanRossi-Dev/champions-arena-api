@@ -6,6 +6,7 @@ export default interface IUser {
   lastName?: string
   _id: ObjectID | string
   created?: Date
+  updated?: Date
   email: string
-  password: string
+  password?: string
 }

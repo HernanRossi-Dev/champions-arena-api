@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import lodash from 'lodash'
-import { SendTempPassword, processFindUserFilter, userFullName } from '../utils'
+import bcrypt from 'bcrypt'
+import { SendTempPassword, processFindUserFilter } from '../utils'
 import { NotFoundError, MongoDBError } from '../errors'
 import { UserDB, CharacterDB } from '../data-access'
 import { UserQueryType, UserFilterType, CharFilterType } from '../models/types'
@@ -9,47 +10,56 @@ import { IUser, ICharacter, DefaultCharacters, ActionResult } from '../models'
 const cloneDeep = lodash.cloneDeep
 
 const getUserById = async (id: string): Promise<ActionResult> => {
-  const result = await UserDB.getUserById(id)
-  if (!result?._id) {
+  const userDetails = await UserDB.getUserById(id)
+  if (!userDetails?._id) {
     return new ActionResult({}, `Get user failed: ${id}`, new NotFoundError())
   }
-  return new ActionResult(result, `Get user success: ${id}`)
+  delete userDetails.password
+  return new ActionResult(userDetails, `Get user success: ${id}`)
 }
 
 const getUserDetails = async (query: UserQueryType): Promise<ActionResult> => {
   const filter: UserFilterType = processFindUserFilter(query)
-  const result = await UserDB.getUserDetails(filter)
-  if (!result?._id) {
-    return new ActionResult({}, 'Failed to fetch users.', new NotFoundError())
+  const userDetails = await UserDB.getUserDetails(filter)
+  if (!userDetails?._id) {
+    return new ActionResult({}, 'Failed to fetch user details.', new NotFoundError())
   }
   if (query.sendEmail) {
-    await SendTempPassword(result)
+    await SendTempPassword(userDetails)
   }
-  return new ActionResult(result, 'Get users success.')
+  return new ActionResult(userDetails, 'Get users success.')
 }
 
 const createUser = async (user: IUser): Promise<ActionResult> => {
-  const defaultCharacters: ICharacter[] = cloneDeep(DefaultCharacters)
-  defaultCharacters.forEach((character) => {
-    character.user = userFullName(user)
-    character._id = mongoose.Types.ObjectId()
-  })
-
   user.created = new Date()
+  delete user._id
+  const saltRounds = 10
+  user.password = await bcrypt.hash(user.password, saltRounds)
   const result = await UserDB.createUser(user)
-  if (!result.insertedId) {
+  if (!result._id) {
     return new ActionResult(result, 'Create user failed.', new MongoDBError())
   }
   try {
+    const defaultCharacters: ICharacter[] = cloneDeep(DefaultCharacters)
+    defaultCharacters.forEach((character) => {
+      character.user = user.userName
+      character._id = mongoose.Types.ObjectId()
+    })
     await CharacterDB.createCharacters(defaultCharacters)
   } catch (err) {
-    console.error('Failed to insert default characters.')
+    const actionError = new MongoDBError(`Failed to insert default characters: ${err.message}`)
+    return new ActionResult(result, 'Create user success.', actionError)
   }
   return new ActionResult(result, 'Create user success.')
 }
 
 const updateUser = async (id: string, user: IUser): Promise<ActionResult> => {
   delete user._id
+  delete user.userName
+  if (user.password) {
+    user.password = await bcrypt.hash(user.password, 10)
+  }
+  user.updated = new Date()
   const result = await UserDB.updateUser(id, user)
   if (!result.modifiedCount) {
     return new ActionResult(result, `Failed to update user: ${id}`, new NotFoundError())
@@ -57,15 +67,19 @@ const updateUser = async (id: string, user: IUser): Promise<ActionResult> => {
   return new ActionResult(result)
 }
 
-const deleteUser = async (name: string): Promise<ActionResult> => {
-  const result = await UserDB.deleteUser(name)
+const deleteUser = async (userName: string): Promise<ActionResult> => {
+  const result = await UserDB.deleteUser(userName)
   if (!result.deletedCount) {
-    return new ActionResult(result, `Failed to delete user: ${name}`, new NotFoundError())
+    return new ActionResult(result, `Failed to delete user: ${userName}`, new NotFoundError())
   }
 
-  const filter: CharFilterType = { name }
-  const deleteChars = await CharacterDB.deleteCharacters(filter)
-  return new ActionResult(deleteChars, `Delete User Success: ${name}`)
+  try {
+    const filter: CharFilterType = { user: userName }
+    await CharacterDB.deleteCharacters(filter)
+  } catch (err) {
+    console.error('Failed to delete users characters.')
+  }
+  return new ActionResult(result, `Delete User Success: ${userName}`)
 }
 
 export default {

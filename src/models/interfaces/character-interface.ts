@@ -1,9 +1,9 @@
-import { ObjectID } from "mongodb"
+import { Types } from 'mongoose'
 
 export default interface ICharacter {
   created?: Date
   user: string
-  _id: ObjectID | string
+  _id: Types.ObjectId | string
   basics: {
     name: string,
     player: string,

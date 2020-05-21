@@ -3,7 +3,7 @@ import UserService from '../services/user-service'
 import AuthServices from '../services/auth-service'
 import mongodb from 'mongodb'
 import { Request, Response, Router } from 'express'
-import { ActionResult, UserQueryType } from '../models'
+import { ActionResult, UserQueryType, IUser } from '../models'
 
 const ObjectId = mongodb.ObjectID
 const router = Router()
@@ -34,9 +34,9 @@ router.get('/', async (req: Request, res: Response) => {
 })
 
 router.post('/', async (req: Request, res: Response) => {
-  const { body } = req
+  const user: IUser = req.body
   try {
-    const result = await UserService.createUser(body)
+    const result = await UserService.createUser(user)
     res.status(200).json({data: result.data, message: result.message, errors: result.errors})
   } catch (err) {
     res.status(500).json({ message: `Internal Server Error: ${err.message}` })
@@ -45,7 +45,7 @@ router.post('/', async (req: Request, res: Response) => {
 
 router.put('/:id', async (req: Request, res: Response) => {
   const { id } = req.params
-  const { user } = req.body
+  const user: IUser = req.body
   if (!ObjectId.isValid(id)) {
     return res.status(422).send(`Invalid user id format: ${id}`)
   }
@@ -58,10 +58,10 @@ router.put('/:id', async (req: Request, res: Response) => {
   }
 })
 
-router.delete('/:name', async (req: Request, res: Response) => {
-  const { name } = req.params
+router.delete('/:userName', async (req: Request, res: Response) => {
+  const { userName } = req.params
   try {
-    const result: ActionResult = await UserService.deleteUser(name)
+    const result: ActionResult = await UserService.deleteUser(userName)
     res.status(200).json({ message: result.message, errors: result.errors })
   } catch (err) {
     res.status(500).json({ message: `Internal Server Error: ${err.message}` })

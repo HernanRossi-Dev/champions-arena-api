@@ -18,7 +18,7 @@ const SendTempPassword = async (user: IUser ) => {
   await db.collection('user')
     .update(
       { name: user.userName },
-      { password: hashPass, user: user.userName, email: user.email },
+      { password: hashPass },
       { upsert: false }
     )
   const transporter = nodemailer.createTransport({
