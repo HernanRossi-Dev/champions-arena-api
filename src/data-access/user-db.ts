@@ -1,10 +1,11 @@
-import { IUser, UserFilterType, UserModel } from '../models'
+import { IUser, IUserFilterType, UserModel } from '../models'
+import { QueryFindOptions } from 'mongoose'
 
 const getUserById = async (_id: string) => {
   return await UserModel.findOne({ _id })
 }
 
-const getUserDetails = async (filter: UserFilterType) => {
+const getUserDetails = async (filter: QueryFindOptions) => {
   return await UserModel.findOne(filter)
 }
 

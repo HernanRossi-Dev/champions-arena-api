@@ -29,6 +29,7 @@ UserSchema.statics.fullName = function() {
 export interface IUserDocument extends IUser, Document {
   _id: ObjectID | string
   insertedId?: string | ObjectId
+  isGuest: boolean
 }
 
 export const UserModel: Model<IUserDocument> = model<IUserDocument>('users', UserSchema)

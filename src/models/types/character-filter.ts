@@ -1,6 +1,6 @@
-import { ObjectId } from "mongodb"
+import { QueryFindOptions } from "mongoose"
 
-type CharFilterType = {
+interface CharFilterType extends QueryFindOptions {
   user?: string
   class?: string
   ancestry?: string

@@ -1,4 +1,4 @@
-type UserQueryType = {
+interface IUserQueryType {
   userName?: string
   sendEmail?: boolean
   firstName?: string
@@ -8,4 +8,6 @@ type UserQueryType = {
   password?: string
 }
 
-export default UserQueryType
+export {
+  IUserQueryType,
+}

@@ -1,4 +1,6 @@
-type UserFilterType = {
+import { QueryFindOptions } from "mongoose"
+
+interface IUserFilterType extends QueryFindOptions {
   userName?: string
   firstName?: string
   lastName?: string
@@ -6,4 +8,10 @@ type UserFilterType = {
   _id?: string
 }
 
-export default UserFilterType
+interface IUserDupeFilter extends QueryFindOptions { 
+  $or: [ { userName: string }, { email: string} ]
+}
+export {
+  IUserFilterType,
+  IUserDupeFilter
+}

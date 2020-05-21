@@ -1,10 +1,11 @@
-import { CharacterModel, CharFilterType, ICharacter } from '../models'
+import { CharacterModel, ICharacter } from '../models'
+import { QueryFindOptions } from 'mongoose'
 
 const getCharacter = async (_id: string) => {
   return await CharacterModel.findOne({ _id })
 }
 
-const getCharacters = async (filter: CharFilterType) => {
+const getCharacters = async (filter: QueryFindOptions) => {
   return await CharacterModel.find(filter)
 }
 
@@ -26,7 +27,7 @@ const deleteCharacter = async (_id: string) => {
   return await CharacterModel.deleteOne({ _id })
 }
 
-const deleteCharacters = async (filter: CharFilterType) => {
+const deleteCharacters = async (filter: QueryFindOptions) => {
   return await CharacterModel.deleteMany(filter)
 }
 

@@ -9,4 +9,5 @@ export default interface IUser {
   updated?: Date
   email: string
   password?: string
+  isGuest?: boolean
 }

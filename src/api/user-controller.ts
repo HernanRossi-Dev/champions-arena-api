@@ -3,7 +3,7 @@ import UserService from '../services/user-service'
 import AuthServices from '../services/auth-service'
 import mongodb from 'mongodb'
 import { Request, Response, Router } from 'express'
-import { ActionResult, UserQueryType, IUser } from '../models'
+import { ActionResult, IUserQueryType, IUser } from '../models'
 
 const ObjectId = mongodb.ObjectID
 const router = Router()
@@ -24,7 +24,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 router.use(AuthServices.jwtCheck)
 
 router.get('/', async (req: Request, res: Response) => {
-  const query = <UserQueryType>req.query
+  const query = <IUserQueryType>req.query
   try {
     const result: ActionResult = await UserService.getUserDetails(query)
     res.status(200).json({data: result.data, message: result.message, errors: result.errors})

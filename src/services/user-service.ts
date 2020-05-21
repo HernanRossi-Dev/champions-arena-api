@@ -1,10 +1,11 @@
 import mongoose from 'mongoose'
 import lodash from 'lodash'
 import bcrypt from 'bcrypt'
-import { SendTempPassword, processFindUserFilter } from '../utils'
+import { Types } from 'mongoose'
+import { SendTempPassword, processFindUserFilter, userDupeCheck } from '../utils'
 import { NotFoundError, MongoDBError } from '../errors'
 import { UserDB, CharacterDB } from '../data-access'
-import { UserQueryType, UserFilterType, CharFilterType } from '../models/types'
+import { IUserQueryType, IUserFilterType, CharFilterType } from '../models/types'
 import { IUser, ICharacter, DefaultCharacters, ActionResult } from '../models'
 
 const cloneDeep = lodash.cloneDeep
@@ -14,12 +15,11 @@ const getUserById = async (id: string): Promise<ActionResult> => {
   if (!userDetails?._id) {
     return new ActionResult({}, `Get user failed: ${id}`, new NotFoundError())
   }
-  delete userDetails.password
   return new ActionResult(userDetails, `Get user success: ${id}`)
 }
 
-const getUserDetails = async (query: UserQueryType): Promise<ActionResult> => {
-  const filter: UserFilterType = processFindUserFilter(query)
+const getUserDetails = async (query: IUserQueryType): Promise<ActionResult> => {
+  const filter: IUserFilterType = processFindUserFilter(query)
   const userDetails = await UserDB.getUserDetails(filter)
   if (!userDetails?._id) {
     return new ActionResult({}, 'Failed to fetch user details.', new NotFoundError())
@@ -31,8 +31,11 @@ const getUserDetails = async (query: UserQueryType): Promise<ActionResult> => {
 }
 
 const createUser = async (user: IUser): Promise<ActionResult> => {
+  const { userName, email } = user
+  const isDupe = await userDupeCheck(userName, email)
+  if (isDupe) return <ActionResult>isDupe
   user.created = new Date()
-  delete user._id
+  user._id = new Types.ObjectId()
   const saltRounds = 10
   user.password = await bcrypt.hash(user.password, saltRounds)
   const result = await UserDB.createUser(user)
@@ -56,6 +59,7 @@ const createUser = async (user: IUser): Promise<ActionResult> => {
 const updateUser = async (id: string, user: IUser): Promise<ActionResult> => {
   delete user._id
   delete user.userName
+  delete user.isGuest
   if (user.password) {
     user.password = await bcrypt.hash(user.password, 10)
   }

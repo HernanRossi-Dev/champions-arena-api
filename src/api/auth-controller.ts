@@ -1,6 +1,6 @@
 import express, { Response, Request } from 'express'
 import AuthService from '../services/auth-service'
-import { UserQueryType } from '../models';
+import { IUserQueryType } from '../models';
 const router = express.Router()
 
 router.get('/', async (req: Request, res: Response) => {
