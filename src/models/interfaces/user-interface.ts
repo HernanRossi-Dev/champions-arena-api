@@ -7,5 +7,5 @@ export default interface IUser {
   _id: ObjectID | string
   created?: Date
   email: string
-  password?: string
+  password: string
 }

@@ -3,6 +3,7 @@ import SendTempPassword from './temp-password-helper'
 import CharacterFilters from './filter-helpers'
 import { processDeleteCharacterFilter, processFindCharacterFilter, processFindUserFilter } from './query-utils'
 import { userFullName } from './user-utils'
+import { validateUser } from './auth-utils'
 
 export {
   processDeleteCharacterFilter,
@@ -11,5 +12,6 @@ export {
   getMongoConnection,
   SendTempPassword,
   CharacterFilters,
-  userFullName
+  userFullName,
+  validateUser
 }

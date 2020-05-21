@@ -15,7 +15,7 @@ router.get('/:id', async (req: Request, res: Response) => {
     return res.status(422).send(`Invalid user id format: ${id}`)
   }
   try {
-    const result: ActionResult = await UserService.getUser(id, query)
+    const result: ActionResult = await UserService.getUserById(id, query)
     res.status(200).json({data: result.data, message: result.message, errors: result.errors})
   } catch (err) {
     res.status(500).json({ message: `Internal Server Error: ${err.message}` })
@@ -27,7 +27,7 @@ router.use(AuthServices.jwtCheck)
 router.get('/', async (req: Request, res: Response) => {
   const { query } = req
   try {
-    const result: ActionResult = await UserService.getUsers(query)
+    const result: ActionResult = await UserService.getUserDetails(query)
     res.status(200).json({data: result.data, message: result.message, errors: result.errors})
   } catch (err) {
     res.status(500).json({ message: `Internal Server Error: ${err.message}` })

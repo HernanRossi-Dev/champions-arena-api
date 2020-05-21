@@ -8,8 +8,8 @@ import { IUser, ICharacter, DefaultCharacters, ActionResult } from '../models'
 
 const cloneDeep = lodash.cloneDeep
 
-const getUser = async (id: string, query: UserQueryType): Promise<ActionResult> => {
-  const result = await UserDB.getUser(id)
+const getUserById = async (id: string, query: UserQueryType): Promise<ActionResult> => {
+  const result = await UserDB.getUserById(id)
   if (!result?._id) {
     return new ActionResult({}, `Get user failed: ${id}`, new NotFoundError())
   }
@@ -19,9 +19,9 @@ const getUser = async (id: string, query: UserQueryType): Promise<ActionResult> 
   return new ActionResult(result, `Get user success: ${id}`)
 }
 
-const getUsers = async (query: UserQueryType): Promise<ActionResult> => {
+const getUserDetails = async (query: UserQueryType): Promise<ActionResult> => {
   const filter: UserFilterType = processFindUserFilter(query)
-  const result = await UserDB.getUsers(filter)
+  const result = await UserDB.getUserDetails(filter)
   if (!result.length) {
     return new ActionResult(result, 'Failed to fetch users.', new NotFoundError())
   }
@@ -70,8 +70,8 @@ const deleteUser = async (name: string): Promise<ActionResult> => {
 
 export default {
   createUser,
-  getUser,
-  getUsers,
+  getUserById,
+  getUserDetails,
   deleteUser,
   updateUser
 }

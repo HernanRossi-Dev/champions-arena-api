@@ -2,8 +2,9 @@ import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
 import request from 'request'
 import { Request, Response } from 'express'
+import { validateUser } from '../utils'
 
-const authenticate = async () => {
+const authenticate = async (email: string, password: string) => {
   const options = {
     method: 'POST',
     url: 'https://dev-qf368xa5.auth0.com/oauth/token',
@@ -11,6 +12,10 @@ const authenticate = async () => {
     body: '{"client_id":"D9Q8oFzgxOvpCTCFxR0mNGZJ9x6sgzq5","client_secret":"faeq5zuIcrZ4EwJskdVQ_c4tx33vsbh-qDtYqLVuC8RbmrK3CakNr8bvBRpBVc3N","audience":"champions-arena","grant_type":"client_credentials"}'
   }
 
+  const isValid = await validateUser(email, password)
+  if (!isValid) {
+    return false
+  }
   return new Promise((resolve, reject) => {
     request(options, (error, response, body) => {
       if (!error && response.statusCode == 200) {

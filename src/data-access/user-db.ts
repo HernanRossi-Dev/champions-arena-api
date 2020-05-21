@@ -1,11 +1,11 @@
 import { IUser, UserFilterType, UserModel } from '../models'
 
-const getUser = async (_id: string) => {
+const getUserById = async (_id: string) => {
   return await UserModel.findOne({ _id })
 }
 
-const getUsers = async (filter: UserFilterType) => {
-  return await UserModel.find(filter)
+const getUserDetails = async (filter: UserFilterType) => {
+  return await UserModel.findOne(filter)
 }
 
 const createUser = async (user: IUser) => {
@@ -24,8 +24,8 @@ const deleteUser = async (name: string) => {
 
 export default {
   createUser,
-  getUser,
-  getUsers,
+  getUserById,
+  getUserDetails,
   deleteUser,
   updateUser
 }
