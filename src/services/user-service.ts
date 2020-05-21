@@ -1,14 +1,9 @@
-import mongoose from 'mongoose'
-import lodash from 'lodash'
 import bcrypt from 'bcrypt'
 import { Types } from 'mongoose'
-import { SendTempPassword, processFindUserFilter, userDupeCheck } from '../utils'
+import { SendTempPassword, processFindUserFilter, userDupeCheck, insertDefaultCharacters } from '../utils'
 import { NotFoundError, MongoDBError } from '../errors'
 import { UserDB, CharacterDB } from '../data-access'
-import { IUserQueryType, IUserFilterType, CharFilterType } from '../models/types'
-import { IUser, ICharacter, DefaultCharacters, ActionResult } from '../models'
-
-const cloneDeep = lodash.cloneDeep
+import { IUser, ActionResult, IUserQueryType, IUserFilterType, CharFilterType } from '../models'
 
 const getUserById = async (id: string): Promise<ActionResult> => {
   const userDetails = await UserDB.getUserById(id)
@@ -36,24 +31,16 @@ const createUser = async (user: IUser): Promise<ActionResult> => {
   if (isDupe) return <ActionResult>isDupe
   user.created = new Date()
   user._id = new Types.ObjectId()
-  const saltRounds = 10
-  user.password = await bcrypt.hash(user.password, saltRounds)
+  user.password = await bcrypt.hash(user.password, 10)
   const result = await UserDB.createUser(user)
   if (!result._id) {
     return new ActionResult(result, 'Create user failed.', new MongoDBError())
   }
-  try {
-    const defaultCharacters: ICharacter[] = cloneDeep(DefaultCharacters)
-    defaultCharacters.forEach((character) => {
-      character.user = user.userName
-      character._id = mongoose.Types.ObjectId()
-    })
-    await CharacterDB.createCharacters(defaultCharacters)
-  } catch (err) {
-    const actionError = new MongoDBError(`Failed to insert default characters: ${err.message}`)
-    return new ActionResult(result, 'Create user success.', actionError)
+  const insertResult = await insertDefaultCharacters(userName)
+  if (insertResult instanceof MongoDBError) {
+    return new ActionResult(result, 'Create user success.', insertResult)
   }
-  return new ActionResult(result, 'Create user success.')
+  return new ActionResult(result, 'Create user success.\n Default characters inserted: ' + insertResult)
 }
 
 const updateUser = async (id: string, user: IUser): Promise<ActionResult> => {

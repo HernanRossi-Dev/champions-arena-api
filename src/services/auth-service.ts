@@ -16,7 +16,7 @@ const authenticate = async (email: string, password: string) => {
   }
   const isValid = await validateUser(email, password)
   if (!isValid) {
-    throw new AuthError()
+    throw new AuthError('Failed to validate credentials.')
   }
   return new Promise((resolve, reject) => {
     request(options, (error, response, body) => {

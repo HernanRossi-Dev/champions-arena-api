@@ -4,7 +4,7 @@ import CharacterFilters from './filter-helpers'
 import { processDeleteCharacterFilter, processFindCharacterFilter, processFindUserFilter } from './query-utils'
 import { userFullName, isUser, userDupeCheck } from './user-utils'
 import { validateUser } from './auth-utils'
-
+import { insertDefaultCharacters } from './character-utils'
 export {
   processDeleteCharacterFilter,
   processFindCharacterFilter,
@@ -15,5 +15,6 @@ export {
   userFullName,
   isUser,
   userDupeCheck,
-  validateUser
+  validateUser,
+  insertDefaultCharacters
 }
