@@ -6,7 +6,7 @@ yarn.lock
 dist/
 coverage/
 .vscode/
-
+debug.log
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

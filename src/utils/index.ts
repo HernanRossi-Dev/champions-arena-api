@@ -5,6 +5,8 @@ import { processDeleteCharacterFilter, processFindCharacterFilter, processFindUs
 import { userFullName, isUser, userDupeCheck } from './user-utils'
 import { validateUser } from './auth-utils'
 import { insertDefaultCharacters } from './character-utils'
+import logger from './logger'
+
 export {
   processDeleteCharacterFilter,
   processFindCharacterFilter,
@@ -16,5 +18,6 @@ export {
   isUser,
   userDupeCheck,
   validateUser,
-  insertDefaultCharacters
+  insertDefaultCharacters,
+  logger
 }

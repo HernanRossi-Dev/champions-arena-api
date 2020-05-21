@@ -49,4 +49,13 @@ export default class ActionResult {
   set status(status: string) {
     this._status = status
   }
+
+  toJSON(): object {
+    return {
+      data: this._data,
+      message: this._message,
+      status: this._status,
+      errors: this.errors
+    }
+  }
 }
