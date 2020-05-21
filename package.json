@@ -62,7 +62,6 @@
     "nodemon": "^1.18.9",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
-    "password-hash": "^1.2.2",
     "request": "^2.88.2",
     "source-map-support": "^0.5.10",
     "supertest": "^4.0.2",

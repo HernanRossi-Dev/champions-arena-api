@@ -22,7 +22,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 })
 
 router.get('/', async (req: Request, res: Response) => {
-  const query = <CharQueryType>req
+  const query = <CharQueryType>req.query
   try {
     const result: ActionResult = await CharacterService.getCharacters(query)
     res.status(200).json({data: result.data, message: result.message, errors: result.errors})
@@ -73,7 +73,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
 })
 
 router.delete('/', async (req: Request, res: Response) => {
-  const query = <CharQueryType>req
+  const query = <CharQueryType>req.query
   try {
     const result: ActionResult = await CharacterService.deleteCharacters(query)
     res.status(200).json({data: result.data, message: result.message, errors: result.errors})

@@ -24,7 +24,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 router.use(AuthServices.jwtCheck)
 
 router.get('/', async (req: Request, res: Response) => {
-  const query = <UserQueryType>req
+  const query = <UserQueryType>req.query
   try {
     const result: ActionResult = await UserService.getUserDetails(query)
     res.status(200).json({data: result.data, message: result.message, errors: result.errors})

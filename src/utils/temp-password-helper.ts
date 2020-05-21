@@ -1,23 +1,24 @@
 import nodemailer from 'nodemailer'
 import generator from 'generate-password'
-import passwordHash from 'password-hash'
 import getMongoConnection from './mongo-connection.js'
 import { IUser } from '../models'
 import mongoose from 'mongoose'
+import bcrypt from 'bcrypt'
 
 const SendTempPassword = async (user: IUser ) => {
-  
+  const saltRounds = 10
   const password = generator.generate({
     length: 8,
     numbers: true
   })
-  const hashedTempPassword = passwordHash.generate('password')
-  const text = `Hello your Arena user name is: ${user.userName}\n\n your temporary password is: ${password}`
+  const hashPass = await bcrypt.hash(password, saltRounds)
+
+  const text = `Hello your Arena user name is: ${user.userName}\n\n your temporary password is: ${hashPass}`
   const db: mongoose.Connection = await getMongoConnection()
   await db.collection('user')
     .update(
       { name: user.userName },
-      { password: hashedTempPassword, user: user.userName, email: user.email },
+      { password: hashPass, user: user.userName, email: user.email },
       { upsert: false }
     )
   const transporter = nodemailer.createTransport({
