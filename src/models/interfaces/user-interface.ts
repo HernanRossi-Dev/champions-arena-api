@@ -4,7 +4,7 @@ export default interface IUser {
   userName: string
   firstName: string
   lastName?: string
-  _id: ObjectID | string
+  _id: ObjectID
   created?: Date
   updated?: Date
   email: string

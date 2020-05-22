@@ -22,12 +22,12 @@ const UserSchema = new Schema({
   },
 })
 
-UserSchema.statics.fullName = function() {
+UserSchema.statics.fullName = function () {
   return this.firstName + ' ' + this.lastName
 }
 
 export interface IUserDocument extends IUser, Document {
-  _id: ObjectID | string
+  _id: ObjectID
   insertedId?: string | ObjectId
   isGuest: boolean
 }

@@ -7,12 +7,13 @@ import { validateUser } from '../utils'
 import { AuthError } from '../errors'
 
 const authenticate = async (email: string, password: string) => {
-  const clientSecret = process.env.CLIENTSECRET
-  const clientId = process.env.CLIENTID
+  const clientSecret = process.env.CLIENT_SECRET
+  const clientId = process.env.CLIENT_ID
+  const authURL = process.env.AUTH_URL || ''
   const body = `{"client_id":"${clientId}","client_secret":"${clientSecret}","audience":"${config.get("auth0.audience")}","grant_type":"client_credentials"}`
   const options = {
     method: 'POST',
-    url: 'https://dev-qf368xa5.auth0.com/oauth/token',
+    url: authURL,
     headers: { 'content-type': 'application/json' },
     body
   }

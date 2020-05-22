@@ -1,4 +1,3 @@
-import config from 'config'
 import mongoose from 'mongoose'
 import { logger } from './index'
 
@@ -9,10 +8,11 @@ const getMongoConnection = async () => {
     return mongoConnection
   }
 
-  const dbUrl: string = <string>process.env.MONGODBURL
+  const dbUrl: string = process.env.MONGODB_URL || ''
   const mongoClient = await mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
   mongoConnection = mongoClient.connection
   mongoConnection.on('error', console.error.bind(console, 'MongoDB connection error!'))
+  logger.debug({message: 'New database connection made.'})
   return mongoConnection
 }
 

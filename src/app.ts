@@ -1,7 +1,6 @@
 import express from 'express'
 import SourceMapSupport from 'source-map-support'
 import cors from 'cors'
-import dotenv from 'dotenv'
 import helmet from 'helmet'
 import { CharacterRoutes, UserRoutes, AuthRoutes } from './api'
 import { logger, getMongoConnection } from './utils'
@@ -17,8 +16,14 @@ app.use('/api/characters', CharacterRoutes)
 app.use('/api/users', UserRoutes)
 
 const initServer = () => {
-  app.listen(process.env.PORT || 8080, () => {
+  const server = app.listen(process.env.PORT || 8080, () => {
     logger.debug('Application started on port 8080.')
+  })
+
+  process.on('SIGTERM', () => {
+    server.close(() => {
+      logger.debug('Process terminated')
+    })
   })
 }
 
@@ -31,6 +36,8 @@ const initDepenencies = async () => {
       error: err.message,
       stacktrace: err.stacktrace
     })
+    //Don't initialize app if no database connection
+    process.exit(1);
   }
 }
 

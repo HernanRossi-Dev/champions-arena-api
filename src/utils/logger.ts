@@ -1,15 +1,19 @@
-import winston from "winston";
+import { LoggerOptions, format, transports, createLogger } from "winston";
 
-const options: winston.LoggerOptions = {
+const options: LoggerOptions = {
+  format: format.combine(
+    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSSZZ' }),
+    format.json()
+  ),
   transports: [
-    new winston.transports.Console({
+    new transports.Console({
       level: process.env.NODE_ENV === "production" ? "error" : "info"
     }),
-    new winston.transports.File({ filename: "debug.log", level: "debug" })
+    new transports.File({ filename: "debug.log", level: "debug" })
   ]
 };
 
-const logger = winston.createLogger(options);
+const logger = createLogger(options);
 
 if (process.env.NODE_ENV !== "production") {
   logger.debug("Logging initialized at debug level");

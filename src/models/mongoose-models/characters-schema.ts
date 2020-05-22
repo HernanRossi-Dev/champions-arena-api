@@ -64,7 +64,7 @@ const CharacterSchema: Schema = new Schema({
     ancestry: String,
     size: String,
     speed: Number,
-    languages: String,
+    languages: Array,
     ancestryTraits: Array,
     attributes: Object
   },
@@ -98,7 +98,7 @@ const CharacterSchema: Schema = new Schema({
     ranged: Array,
   },
   feats: Object,
-})
+}, { typeKey: '$type' })
 
 export interface ICharacterDocument extends ICharacter, Document {
   _id: Types.ObjectId | string
