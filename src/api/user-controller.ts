@@ -2,7 +2,7 @@ import UserService from '../services/user-service'
 import AuthServices from '../services/auth-service'
 import mongodb from 'mongodb'
 import { Request, Response, Router } from 'express'
-import { ActionResult, IUserQueryType, IUser, User } from '../models'
+import { ActionResult, IUserQueryType, User } from '../models'
 import { logger } from '../utils'
 
 const ObjectId = mongodb.ObjectID

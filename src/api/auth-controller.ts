@@ -13,8 +13,8 @@ router.post('/', async (req: Request, res: Response) => {
   let response
   try {
     response = await AuthService.authenticate(email, password)
-  } catch (error) {
-    logger.error({ message: `Failed to authenticate user.`, error: error.message })
+  } catch (err) {
+    logger.error({ message: `Failed to authenticate user.`, error: err.message })
     res.status(401).json({ message: 'Authentication failed, please verify credentials.' })
   }
   logger.debug({message: `Authentication success. ${email}`})

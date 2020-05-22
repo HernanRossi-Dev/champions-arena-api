@@ -1,8 +1,7 @@
-import bcrypt from 'bcrypt'
 import { SendTempPassword, processFindUserFilter, userDupeCheck, insertDefaultCharacters, prepareUpdate } from '../utils'
 import { NotFoundError, MongoDBError } from '../errors'
 import { UserDB, CharacterDB } from '../data-access'
-import { IUser, ActionResult, IUserQueryType, IUserFilterType, CharFilterType, User } from '../models'
+import {  ActionResult, IUserQueryType, IUserFilterType, CharFilterType, User } from '../models'
 import { ObjectId } from 'mongodb'
 
 const getUserById = async (id: ObjectId): Promise<ActionResult> => {
