@@ -6,6 +6,7 @@ import { userFullName, isUser, userDupeCheck } from './user-utils'
 import { validateUser } from './auth-utils'
 import { insertDefaultCharacters } from './character-utils'
 import logger from './logger'
+import { SecretClient } from './secrets-client'
 
 export {
   processDeleteCharacterFilter,
@@ -19,5 +20,6 @@ export {
   userDupeCheck,
   validateUser,
   insertDefaultCharacters,
-  logger
+  logger,
+  SecretClient
 }

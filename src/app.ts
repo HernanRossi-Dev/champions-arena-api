@@ -1,9 +1,10 @@
 import express from 'express'
 import SourceMapSupport from 'source-map-support'
 import cors from 'cors'
+import dotenv from 'dotenv'
 import helmet from 'helmet'
 import { CharacterRoutes, UserRoutes, AuthRoutes } from './api'
-import { getMongoConnection } from './utils'
+import { logger, getMongoConnection } from './utils'
 
 SourceMapSupport.install()
 
@@ -17,18 +18,23 @@ app.use('/api/users', UserRoutes)
 
 const initServer = () => {
   app.listen(process.env.PORT || 8080, () => {
-    console.log('App started on port 8080.')
+    logger.debug('Application started on port 8080.')
   })
 }
 
-const initMongoDB = async () => {
+const initDepenencies = async () => {
   try {
     await getMongoConnection()
-  } catch(err) {
-    console.error('Failed to connect to mongodb.')
+  } catch (err) {
+    logger.error({
+      message: "Failed to connect to Mongodb server.",
+      error: err.message,
+      stacktrace: err.stacktrace
+    })
   }
 }
-initMongoDB()
+
+initDepenencies()
 initServer()
 
 export default app
