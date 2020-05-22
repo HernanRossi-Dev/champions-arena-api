@@ -16,7 +16,7 @@ const createUser = async (user: IUser) => {
 }
 
 const updateUser = async (_id: Types.ObjectId, user: IUser) => {
-  return await UserModel.update({ _id }, user, { upsert: true })
+  return await UserModel.updateOne({ _id }, user, { upsert: true })
 }
 
 const deleteUser = async (userName: string) => {

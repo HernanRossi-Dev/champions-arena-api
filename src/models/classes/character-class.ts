@@ -1,7 +1,7 @@
 import { ObjectID } from "mongodb";
-import { ICharacter } from "./interfaces";
+import { ICharacter } from "../interfaces";
 
-export class CharacterClass implements ICharacter {
+export class Character implements ICharacter {
   user: string
   _id: ObjectID | string
   basics: {

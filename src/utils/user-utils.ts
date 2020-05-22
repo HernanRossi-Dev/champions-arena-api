@@ -1,6 +1,6 @@
-import { IUser, ActionResult } from '../models'
-import { IUserDupeFilter } from '../models/types'
+import { IUserDupeFilter, IUser, User } from '../models'
 import { UserDB } from '../data-access'
+import { MongoDBError } from '../errors'
 
 const userFullName = (user: IUser): string => {
   return user.firstName + ' ' + user.lastName
@@ -13,22 +13,24 @@ const isUser = (data: object): boolean => {
   return false
 }
 
-const userDupeCheck = async (userName: string, email: string): Promise<ActionResult | boolean> => {
+const prepareUpdate = (user: User) : void => {
+  delete user.userName
+  delete user._id
+  delete user.created
+  user.updated = new Date()
+}
+
+const userDupeCheck = async (userName: string, email: string): Promise<boolean> => {
   const dupQuery: IUserDupeFilter = { $or: [{ userName }, { email }] }
   const checkDup = await UserDB.getUserDetails(dupQuery)
-  if (checkDup?.userName === userName) {
-    return new ActionResult({ userName }, 
-      `Create user failure, user with userName: ${userName} already exists`)
-  }
-  if (checkDup?.email === email) {
-    return new ActionResult({ email },
-      `Create user failure, user with email: ${email} already exists`)
-  }
+  if (checkDup?.userName === userName) throw new MongoDBError(`Create user failure, user with userName: ${userName} already exists`)
+  if (checkDup?.email === email) throw new MongoDBError(`Create user failure, user with email: ${email} already exists`)
   return false
 }
 
 export {
   userFullName,
   isUser,
-  userDupeCheck
+  userDupeCheck,
+  prepareUpdate
 }

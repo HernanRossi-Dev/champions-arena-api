@@ -1,11 +1,11 @@
 import bcrypt from 'bcrypt'
-import { Types } from 'mongoose'
-import { SendTempPassword, processFindUserFilter, userDupeCheck, insertDefaultCharacters } from '../utils'
+import { SendTempPassword, processFindUserFilter, userDupeCheck, insertDefaultCharacters, prepareUpdate } from '../utils'
 import { NotFoundError, MongoDBError } from '../errors'
 import { UserDB, CharacterDB } from '../data-access'
-import { IUser, ActionResult, IUserQueryType, IUserFilterType, CharFilterType } from '../models'
+import { IUser, ActionResult, IUserQueryType, IUserFilterType, CharFilterType, User } from '../models'
+import { ObjectId } from 'mongodb'
 
-const getUserById = async (id: string): Promise<ActionResult> => {
+const getUserById = async (id: ObjectId): Promise<ActionResult> => {
   const userDetails = await UserDB.getUserById(id)
   if (!userDetails?._id) {
     return new ActionResult({}, `Get user failed: ${id}`, new NotFoundError())
@@ -25,13 +25,10 @@ const getUserDetails = async (query: IUserQueryType): Promise<ActionResult> => {
   return new ActionResult(userDetails, 'Get users success.')
 }
 
-const createUser = async (user: IUser): Promise<ActionResult> => {
+const createUser = async (user: User ): Promise<ActionResult> => {
   const { userName, email } = user
-  const isDupe = await userDupeCheck(userName, email)
-  if (isDupe) return <ActionResult>isDupe
-  user.created = new Date()
-  user._id = new Types.ObjectId()
-  user.password = await bcrypt.hash(user.password, 10)
+  await userDupeCheck(userName, email)
+  await user.setInsertValues()
   const result = await UserDB.createUser(user)
   if (!result._id) {
     return new ActionResult(result, 'Create user failed.', new MongoDBError())
@@ -40,22 +37,18 @@ const createUser = async (user: IUser): Promise<ActionResult> => {
   if (insertResult instanceof MongoDBError) {
     return new ActionResult(result, 'Create user success.', insertResult)
   }
-  return new ActionResult(result, 'Create user success.\n Default characters inserted: ' + insertResult)
+  return new ActionResult(result, 'Create user success.\n Default characters insert success.')
 }
 
-const updateUser = async (id: string, user: IUser): Promise<ActionResult> => {
-  delete user._id
-  delete user.userName
-  delete user.isGuest
-  if (user.password) {
-    user.password = await bcrypt.hash(user.password, 10)
+const updateUser = async (user: User): Promise<ActionResult> => {
+  if (!ObjectId.isValid(user._id)) throw new MongoDBError('Invalid search id.')
+  const searchId = new ObjectId(user._id)
+  prepareUpdate(user)
+  const result = await UserDB.updateUser(searchId, user)
+  if (!result.nModified) {
+    return new ActionResult({}, `Failed to update user: ${searchId}`, new NotFoundError())
   }
-  user.updated = new Date()
-  const result = await UserDB.updateUser(id, user)
-  if (!result.modifiedCount) {
-    return new ActionResult(result, `Failed to update user: ${id}`, new NotFoundError())
-  }
-  return new ActionResult(result)
+  return new ActionResult({modified: 1})
 }
 
 const deleteUser = async (userName: string): Promise<ActionResult> => {

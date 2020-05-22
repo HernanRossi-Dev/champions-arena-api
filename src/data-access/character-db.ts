@@ -11,7 +11,7 @@ const getCharacters = async (filter: QueryFindOptions) => {
 
 const updateCharacter = async (_id: string, character: ICharacter) => {
   delete character._id
-  return await CharacterModel.update({ _id }, character, { upsert: true })
+  return await CharacterModel.updateOne({ _id }, character, { upsert: true })
 }
 
 const createCharacter = async (character: ICharacter) => {
