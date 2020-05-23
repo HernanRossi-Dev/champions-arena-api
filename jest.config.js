@@ -5,5 +5,6 @@ module.exports = {
   moduleFileExtensions: ['ts',  'js', 'json', 'node'],
   "transformIgnorePatterns": [
     "<rootDir>/node_modules/(?!lodash-es)"
-  ]
+  ],
+  setupFiles: ["dotenv/config"]
 };
