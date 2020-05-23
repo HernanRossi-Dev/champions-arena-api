@@ -1,6 +1,6 @@
-import NotFoundError from './NotFoundError'
-import MongoDBError from './MongoDBError'
-import AuthError from './AuthError'
+import NotFoundError from './not-found-error'
+import MongoDBError from './mongodb-error'
+import AuthError from './auth-error'
 
 export {
   NotFoundError,

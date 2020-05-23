@@ -1,7 +1,8 @@
 import { CharacterModel, ICharacter } from '../models'
 import { QueryFindOptions } from 'mongoose'
+import { ObjectId } from 'mongodb'
 
-const getCharacter = async (_id: string) => {
+const getCharacter = async (_id: ObjectId) => {
   return await CharacterModel.findOne({ _id })
 }
 
@@ -9,7 +10,7 @@ const getCharacters = async (filter: QueryFindOptions) => {
   return await CharacterModel.find(filter)
 }
 
-const updateCharacter = async (_id: string, character: ICharacter) => {
+const updateCharacter = async (_id: ObjectId, character: ICharacter) => {
   delete character._id
   return await CharacterModel.updateOne({ _id }, character, { upsert: true })
 }
@@ -23,7 +24,7 @@ const createCharacters = async (characters: ICharacter[]) => {
   return await CharacterModel.insertMany(characters)
 }
 
-const deleteCharacter = async (_id: string) => {
+const deleteCharacter = async (_id: ObjectId) => {
   return await CharacterModel.deleteOne({ _id })
 }
 

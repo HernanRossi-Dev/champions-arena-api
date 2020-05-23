@@ -1,4 +1,3 @@
-'use strict';
 process.env.NODE_ENV = 'test';
 
 import mongoose from 'mongoose';
@@ -8,8 +7,7 @@ import chaiHttp from 'chai-http';
 import app from '../../src/app.js';
 import faker from 'faker';
 
-const mongoDBUrl =
-  "mongodb+srv://HernanRossi:UMlYnuMQWVomlFYW@pathfinderarena-gmjjh.mongodb.net/test";
+const mongoDBUrl = process.env.MONGODB_URL
 const ObjectId = mongoose.Types.ObjectId;
 chai.should();
 chai.use(chaiHttp);

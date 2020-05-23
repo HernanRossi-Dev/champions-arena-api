@@ -16,11 +16,11 @@ router.get('/:id', async (req: Request, res: Response) => {
 
   try {
     const result: ActionResult = await UserService.getUserById(id)
-    logger.debug({ message: 'Retrieve character success', data: result })
+    logger.debug({ message: 'Retrieve user success', data: result })
     res.status(200).json(result.toJSON())
   } catch (err) {
-    logger.error({ message: 'Retrieve character failure', error: err.message, stacktrace: err.stacktrace })
-    res.status(500).json({ message: `Internal Server Error: ${err.message}` })
+    logger.error({ message: 'Retrieve user failure', error: err.message, name: err.name })
+    res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
 })
 
@@ -30,11 +30,11 @@ router.get('/', async (req: Request, res: Response) => {
   const query = <IUserQueryType>req.query
   try {
     const result: ActionResult = await UserService.getUserDetails(query)
-    logger.debug({ message: 'Retrieve character success', data: result })
+    logger.debug({ message: 'Retrieve user success', data: result })
     res.status(200).json(result.toJSON())
   } catch (err) {
-    logger.error({ message: 'Retrieve character failure', error: err.message, stacktrace: err.stacktrace })
-    res.status(err.status).json({ message: `Internal Server Error: ${err.message}` })
+    logger.error({ message: 'Retrieve user failure', error: err.message, name: err.name })
+    res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
 })
 
@@ -42,11 +42,11 @@ router.post('/', async (req: Request, res: Response) => {
   const user: User = new User(req.body)
   try {
     const result: ActionResult = await UserService.createUser(user)
-    logger.debug({ message: 'Post character success', data: result })
+    logger.debug({ message: 'Post user success', data: result })
     res.status(200).json(result.toJSON())
   } catch (err) {
-    logger.error({ message: 'Post character failure.', error: err.message, stacktrace: err.stacktrace })
-    res.status(err.status).json({ message: `Internal Server Error: ${err.message}` })
+    logger.error({ message: 'Post user failure.', error: err.message, name: err.name })
+    res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
 })
 
@@ -54,11 +54,11 @@ router.put('/', async (req: Request, res: Response) => {
   const user: User = new User(req.body)
   try {
     const result: ActionResult = await UserService.updateUser(user)
-    logger.debug({ message: 'Put character success', data: result })
+    logger.debug({ message: 'Put user success', data: result })
     res.status(200).json(result.toJSON())
   } catch (err) {
-    logger.error({ message: 'Put character failure.', error: err.message, stacktrace: err.stacktrace })
-    res.status(err.status).json({ message: `Internal Server Error: ${err.message}` })
+    logger.error({ message: 'Put user failure.', error: err.message, name: err.name })
+    res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
 })
 
@@ -68,8 +68,8 @@ router.delete('/:userName', async (req: Request, res: Response) => {
     const result: ActionResult = await UserService.deleteUser(userName)
     res.status(200).json(result.toJSON())
   } catch (err) {
-    logger.error({ message: 'Delete character failure.', error: err.message, stacktrace: err.stacktrace })
-    res.status(err.status).json({ message: `Internal Server Error: ${err.message}` })
+    logger.error({ message: 'Delete user failure.', error: err.message, name: err.name })
+    res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
 })
 

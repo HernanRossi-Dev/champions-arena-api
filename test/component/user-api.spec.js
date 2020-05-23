@@ -4,7 +4,7 @@ process.env.NODE_ENV = 'test'
 // import * as uuid from 'uuid'
 // import * as faker from 'faker'
 import request from "supertest";
-import app from '../../src/app'
+import app from '../../dist/app'
 
 // const { v4: uuidv4 } = uuid
 // const ObjectId = mongoose.Types.ObjectId

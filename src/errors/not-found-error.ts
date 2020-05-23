@@ -4,11 +4,11 @@ class NotFoundError extends Error {
   message: string
   status: number
 
-  constructor() {
+  constructor(message = 'Data not found in database.') {
     super()
     this.name = "NotFoundError"
     this.date = new Date()
-    this.message = 'Data not found in MongoDB'
+    this.message = message
     this.status = 404
   }
 }

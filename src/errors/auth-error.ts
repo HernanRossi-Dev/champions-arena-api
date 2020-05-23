@@ -4,11 +4,11 @@ class AuthError extends Error {
     message: string
     status: number
   
-    constructor(message?: string) {
+    constructor(message='Authentication error!') {
       super()
       this.name = "AuthError"
       this.date = new Date()
-      this.message = message || 'Authentication error!'
+      this.message = message
       this.status = 401
     }
   }
