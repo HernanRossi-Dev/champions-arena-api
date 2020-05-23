@@ -24,6 +24,8 @@ router.get('/:id', async (req: Request, res: Response) => {
   }
 })
 
+router.use(AuthServices.jwtCheck)
+
 router.get('/', async (req: Request, res: Response) => {
   const query = <CharQueryType>req.query
   try {
@@ -35,7 +37,16 @@ router.get('/', async (req: Request, res: Response) => {
   }
 })
 
-router.use(AuthServices.jwtCheck)
+router.post('/', async (req: Request, res: Response) => {
+  const { character } = req.body
+  try {
+    const result: ActionResult = await CharacterService.createCharacter(character)
+    res.status(200).json({ data: result.data, message: result.message, errors: result.errors })
+  } catch (err) {
+    logger.error({ message: 'Post character failure.', error: err.message, name: err.name })
+    res.status(err.status || 500).json({ name: err.name, message: err.message })
+  }
+})
 
 router.put('/:id', async (req: Request, res: Response) => {
   const { id } = req.params
@@ -49,17 +60,6 @@ router.put('/:id', async (req: Request, res: Response) => {
     res.status(200).json({ data: result.data, message: result.message, errors: result.errors })
   } catch (err) {
     logger.error({ message: 'Put character failure.', error: err.message, name: err.name })
-    res.status(err.status || 500).json({ name: err.name, message: err.message })
-  }
-})
-
-router.post('/', async (req: Request, res: Response) => {
-  const { character } = req.body
-  try {
-    const result: ActionResult = await CharacterService.createCharacter(character)
-    res.status(200).json({ data: result.data, message: result.message, errors: result.errors })
-  } catch (err) {
-    logger.error({ message: 'Post character failure.', error: err.message, name: err.name })
     res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
 })
