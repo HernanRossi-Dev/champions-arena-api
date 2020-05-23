@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express'
 import mongodb, { ObjectID } from 'mongodb'
 import CharacterService from '../services/character-service'
 import AuthServices from '../services/auth-service'
-import { ActionResult, CharQueryType } from '../models'
+import { ActionResult, CharQueryType, Character } from '../models'
 import { logger } from '../utils'
 
 const ObjectId = mongodb.ObjectID
@@ -38,7 +38,7 @@ router.get('/', async (req: Request, res: Response) => {
 })
 
 router.post('/', async (req: Request, res: Response) => {
-  const { character } = req.body
+  const character: Character = new Character(req.body.data)
   try {
     const result: ActionResult = await CharacterService.createCharacter(character)
     res.status(200).json({ data: result.data, message: result.message, errors: result.errors })
@@ -54,7 +54,7 @@ router.put('/:id', async (req: Request, res: Response) => {
     return res.status(422).send(`Invalid character id format: ${id}`)
   }
   const objId = new ObjectID(req.params.id)
-  const { character } = req.body
+  const character: Character = new Character(req.body.data)
   try {
     const result: ActionResult = await CharacterService.updateCharacter(objId, character)
     res.status(200).json({ data: result.data, message: result.message, errors: result.errors })

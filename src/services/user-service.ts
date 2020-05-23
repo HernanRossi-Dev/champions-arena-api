@@ -1,4 +1,4 @@
-import { SendTempPassword, processFindUserFilter, userDupeCheck, insertDefaultCharacters, prepareUpdate } from '../utils'
+import { SendTempPassword, processFindUserFilter, userDupeCheck, insertDefaultCharacters, prepareUpdate, logger } from '../utils'
 import { NotFoundError, MongoDBError } from '../errors'
 import { UserDB, CharacterDB } from '../data-access'
 import {  ActionResult, IUserQueryType, IUserFilterType, CharFilterType, User } from '../models'
@@ -60,7 +60,7 @@ const deleteUser = async (userName: string): Promise<ActionResult> => {
     const filter: CharFilterType = { user: userName }
     await CharacterDB.deleteCharacters(filter)
   } catch (err) {
-    console.error('Failed to delete users characters.')
+    logger.error({message: 'Failed to delete users characters: ' + err.message, name: err.name})
   }
   return new ActionResult(result, `Delete User Success: ${userName}`)
 }

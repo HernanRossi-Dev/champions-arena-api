@@ -4,6 +4,7 @@ import getMongoConnection from './mongo-connection'
 import { IUser } from '../models'
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
+import logger from './logger'
 
 const SendTempPassword = async (user: IUser) => {
   const saltRounds = 10
@@ -21,7 +22,7 @@ const SendTempPassword = async (user: IUser) => {
       { password: hashPass },
       { upsert: false }
     )
-  
+
   const adminEmail = process.env.APP_EMAIL
   const adminPass = process.env.APP_EMAIL_PASS
   const transporter = nodemailer.createTransport({
@@ -38,11 +39,11 @@ const SendTempPassword = async (user: IUser) => {
     text,
   }
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log('Sending password email error: ', error)
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      logger.error({ message: `Failed sending temp password: ${err.message}`, name: err.name })
     } else {
-      console.log(`Message sent: ${info.response}`)
+      logger.debug({ message: `Succeeded sending temp password: ${info.response}` })
     }
   })
 }

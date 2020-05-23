@@ -21,22 +21,23 @@ const getCharacters = async (query: CharQueryType): Promise<ActionResult> => {
   return new ActionResult(result, 'Get characters success.')
 }
 
-const updateCharacter = async (id: ObjectId, character: ICharacter): Promise<ActionResult> => {
-  delete character._id
-  const result = await CharacterDB.updateCharacter(id, character)
-  if (!result.modifiedCount) {
-    return new ActionResult(result, `Failed to update character: ${id}`, new NotFoundError())
-  }
-  return new ActionResult(result, 'Update character succes.')
-}
-
 const createCharacter = async (character: ICharacter): Promise<ActionResult> => {
   character.created = new Date()
+  character._id = new ObjectId()
   const result = await CharacterDB.createCharacter(character)
   if (!result) {
     return new ActionResult(result, 'Create character failed.', new MongoDBError())
   }
   return new ActionResult(result, 'Create character success.')
+}
+
+const updateCharacter = async (id: ObjectId, character: ICharacter): Promise<ActionResult> => {
+  delete character._id
+  const result = await CharacterDB.updateCharacter(id, character)
+  if (!result.nModified) {
+    return new ActionResult(result, `Failed to update character: ${id}`, new NotFoundError())
+  }
+  return new ActionResult(result, 'Update character succes.')
 }
 
 const deleteCharacter = async (id: ObjectId): Promise<ActionResult> => {

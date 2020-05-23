@@ -11,7 +11,7 @@ const getMongoConnection = async () => {
   const dbUrl: string = process.env.MONGODB_URL || ''
   const mongoClient = await mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
   mongoConnection = mongoClient.connection
-  mongoConnection.on('error', console.error.bind(console, 'MongoDB connection error!'))
+  mongoConnection.on('error', console.error.bind(logger.error, 'MongoDB connection error!'))
   logger.debug({message: 'New database connection made.'})
   return mongoConnection
 }
