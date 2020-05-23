@@ -1,4 +1,4 @@
-#This project is in process of being refactored to use TypeScript and not launchable yet
+#This project is undergoing refactor to use TypeScript, server codebase complete working on tests
 
 --Dependencies-- 
     Node version 14+
