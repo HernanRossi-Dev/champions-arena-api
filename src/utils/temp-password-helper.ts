@@ -1,11 +1,11 @@
 import nodemailer from 'nodemailer'
 import generator from 'generate-password'
-import getMongoConnection from './mongo-connection.js'
+import getMongoConnection from './mongo-connection'
 import { IUser } from '../models'
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 
-const SendTempPassword = async (user: IUser ) => {
+const SendTempPassword = async (user: IUser) => {
   const saltRounds = 10
   const password = generator.generate({
     length: 8,
@@ -21,15 +21,18 @@ const SendTempPassword = async (user: IUser ) => {
       { password: hashPass },
       { upsert: false }
     )
+  
+  const adminEmail = process.env.APP_EMAIL
+  const adminPass = process.env.APP_EMAIL_PASS
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-      user: 'thechampionsarena@gmail.com',
-      pass: 'Han4567!'
+      user: adminEmail,
+      pass: adminPass
     }
   })
   const mailOptions = {
-    from: 'TheChampionsArena@gmail.com',
+    from: adminEmail,
     to: user.email,
     subject: 'The Arena Temporary Password',
     text,

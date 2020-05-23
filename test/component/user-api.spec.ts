@@ -1,27 +1,23 @@
-process.env.NODE_ENV = 'test'
-
-// import * as mongoose from 'mongoose'
-// import * as uuid from 'uuid'
-// import * as faker from 'faker'
-import request from "supertest";
-import app from '../../dist/app'
-
-// const { v4: uuidv4 } = uuid
-// const ObjectId = mongoose.Types.ObjectId
+import mongoose from 'mongoose'
+import uuid from 'uuid'
+import faker from 'faker'
+import request from "supertest"
+import server from '../../src/server'
+const { v4: uuidv4 } = uuid
+const ObjectId = mongoose.Types.ObjectId
 
 // let userName, userEmail, _id
 describe('Users-API', () => {
 
     describe('Get Users: ', () => {
-       
-        it('should respond status 200: /api/users', async () => {
-            const res = await request(app).get('/api/users')
-             
-            // expect(res.status).toEqual(200);
-            console.log(res.body);
-            // expect(res.body).toHaveProperty('post')
-          })
 
+        it('should respond status 200: /api/users', async () => {
+            const res = await request(server).get('/api/users')
+
+            // expect(res.status).toEqual(200);
+            console.log(res);
+            // expect(res.body).toHaveProperty('post')
+        })
         // it('Get users should response status 200 and return array', async () => {
         //     const response = await testApp.get('/api/users');
         //     const jsonRes = JSON.parse(response.res.text);
@@ -29,7 +25,7 @@ describe('Users-API', () => {
         //     jsonRes.users.should.be.a('array');
         // })}
     });
-    
+
     // describe('Get User: ', () => {
     //     before (async () => {
     //         userName = faker.name.firstName();

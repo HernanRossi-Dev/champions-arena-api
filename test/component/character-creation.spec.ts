@@ -1,10 +1,10 @@
 process.env.NODE_ENV = 'test';
 
 import mongoose from 'mongoose';
-import CreateCharacterMock from '../mocks/create-character-mock.js';
+import CreateCharacterMock from '../mocks/create-character-mock';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../../src/app.js';
+import app from '../../src/app';
 import faker from 'faker';
 
 const mongoDBUrl = process.env.MONGODB_URL

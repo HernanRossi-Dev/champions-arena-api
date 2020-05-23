@@ -1,6 +1,6 @@
 import faker from 'faker';
 import lodash from 'lodash';
-import CharacterProperties from './character-properties.js';
+import CharacterProperties from './character-properties';
 
 const sample = lodash.sample;
 
