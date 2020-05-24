@@ -1,19 +1,16 @@
 import mongoose from 'mongoose'
 import { logger } from './index'
 
-let mongoConnection: mongoose.Connection
+let db: mongoose.Connection
 
-const getMongoConnection = async () => {
-  if (mongoConnection) {
-    return mongoConnection
-  }
+const getMongoConnection = async (): Promise<mongoose.Connection> => {
 
   const dbUrl: string = process.env.MONGODB_URL || ''
   const mongoClient = await mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-  mongoConnection = mongoClient.connection
-  mongoConnection.on('error', console.error.bind(logger.error, 'MongoDB connection error!'))
-  logger.debug({message: 'New database connection made.'})
-  return mongoConnection
+  db = mongoClient.connection
+  db.on('error', console.error.bind(logger.error, 'MongoDB connection error!'))
+  logger.debug({ message: 'New database connection made.' })
+  return db
 }
 
-export default getMongoConnection
+export { getMongoConnection }

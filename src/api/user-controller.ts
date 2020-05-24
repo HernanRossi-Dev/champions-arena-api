@@ -1,5 +1,4 @@
-import UserService from '../services/user-service'
-import AuthServices from '../services/auth-service'
+import { UserService, jwtCheck } from '../services'
 import mongodb from 'mongodb'
 import { Request, Response, Router } from 'express'
 import { ActionResult, IUserQueryType, User } from '../models'
@@ -24,7 +23,7 @@ router.get('/:id', async (req: Request, res: Response) => {
   }
 })
 
-router.use(AuthServices.jwtCheck)
+router.use(jwtCheck)
 
 router.get('/', async (req: Request, res: Response) => {
   const query = <IUserQueryType>req.query

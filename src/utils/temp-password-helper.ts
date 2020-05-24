@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 import generator from 'generate-password'
-import getMongoConnection from './mongo-connection'
+import { getMongoConnection } from './mongo-connection'
 import { IUser } from '../models'
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'

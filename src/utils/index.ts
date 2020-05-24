@@ -1,4 +1,4 @@
-import getMongoConnection from './mongo-connection'
+import { getMongoConnection } from './mongo-connection'
 import SendTempPassword from './temp-password-helper'
 import CharacterFilters from './filter-helpers'
 import { processDeleteCharacterFilter, processFindCharacterFilter, processFindUserFilter } from './query-utils'
@@ -7,6 +7,7 @@ import { validateUser } from './auth-utils'
 import { insertDefaultCharacters } from './character-utils'
 import logger from './logger'
 import { SecretClient } from './secrets-client'
+import { sleep } from './process-utils'
 
 export {
   processDeleteCharacterFilter,
@@ -22,5 +23,6 @@ export {
   validateUser,
   insertDefaultCharacters,
   logger,
+  sleep,
   SecretClient
 }

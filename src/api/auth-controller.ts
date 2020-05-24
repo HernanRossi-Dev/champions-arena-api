@@ -1,5 +1,5 @@
 import express, { Response, Request } from 'express'
-import AuthService from '../services/auth-service'
+import { authenticate } from '../services/auth-service'
 import { logger } from '../utils';
 const router = express.Router()
 
@@ -12,12 +12,12 @@ router.post('/', async (req: Request, res: Response) => {
   }
   let response
   try {
-    response = await AuthService.authenticate(email, password)
+    response = await authenticate(email, password)
   } catch (err) {
     logger.error({ message: `Failed to authenticate user.`, error: err.message, name: err.name })
     res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
-  logger.debug({message: `Authentication success. ${email}`})
+  logger.debug({ message: `Authentication success. ${email}` })
   res.status(200).json(response)
 });
 

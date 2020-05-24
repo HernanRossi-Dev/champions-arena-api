@@ -6,5 +6,6 @@ module.exports = {
   "transformIgnorePatterns": [
     "<rootDir>/node_modules/(?!lodash-es)"
   ],
-  setupFiles: ["dotenv/config"]
+  setupFiles: ["dotenv/config"],
+  preset: "@shelf/jest-mongodb"
 };

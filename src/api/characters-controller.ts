@@ -1,7 +1,6 @@
 import { Request, Response, Router } from 'express'
 import mongodb, { ObjectID } from 'mongodb'
-import CharacterService from '../services/character-service'
-import AuthServices from '../services/auth-service'
+import { CharacterService, jwtCheck } from '../services'
 import { ActionResult, CharQueryType, Character } from '../models'
 import { logger } from '../utils'
 
@@ -24,7 +23,7 @@ router.get('/:id', async (req: Request, res: Response) => {
   }
 })
 
-router.use(AuthServices.jwtCheck)
+router.use(jwtCheck)
 
 router.get('/', async (req: Request, res: Response) => {
   const query = <CharQueryType>req.query

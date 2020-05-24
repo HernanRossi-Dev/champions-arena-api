@@ -24,7 +24,8 @@ const authenticate = async (email: string, password: string) => {
   return new Promise((resolve, reject) => {
     request(options, (error, response, body) => {
       if (!error && response.statusCode == 200) {
-        resolve(body)
+        const parsedBody = JSON.parse(body)
+        resolve(parsedBody)
       } else {
         reject(error)
       }
@@ -50,7 +51,7 @@ const jwtCheck = jwt({
   algorithms: ['RS256']
 })
 
-export default {
+export {
   authenticate,
   authError,
   jwtCheck
