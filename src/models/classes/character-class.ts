@@ -2,26 +2,27 @@ import { ObjectID } from "mongodb";
 import { ICharacter } from "../interfaces";
 
 export class Character implements ICharacter {
+  created?: Date
   user: string
-  _id: ObjectID | string
+  _id?: ObjectID | string
   basics: {
     name: string,
     player: string,
     LVL: string | number,
-    XP: string,
-    homeland: string,
+    XP: string | number,
+    homeland?: string,
     type: string,
     alignment: string,
-    deity: string,
+    deity?: string,
     abilityBoost: string
   }
   appearance: {
-    age: string,
-    eyes: string,
-    hair: string,
-    weight: string,
-    height: string,
-    gender: string,
+    age?: string,
+    eyes?: string,
+    hair?: string,
+    weight?: string,
+    height?: string,
+    gender?: string,
 
   }
   mainStats: {
@@ -50,16 +51,16 @@ export class Character implements ICharacter {
     PER: string,
   }
   items: {
-    worn: string,
-    ready: string,
-    stowed: string,
-    coins: {
+    worn?: string,
+    ready?: string,
+    stowed?: string,
+    coins?: {
       platinum: number,
       gold: number,
       silver: number,
       copper: number,
     },
-    bulk: string,
+    bulk?: string,
   }
   ancestryProps: {
     ancestry: string,
@@ -79,6 +80,7 @@ export class Character implements ICharacter {
   classProps: {
     class: string,
     keyAbility: string[],
+    baseHP?: number | string,
     proficiencies: object,
     savingThrows: object,
     skills: object,
@@ -89,17 +91,17 @@ export class Character implements ICharacter {
     items?: string[],
     spells?: object
   }
-  characterTraits: object
-  characterNotes: string
-  skillsModifiers: object
-  skillFeats: string
-  spells: object
+  characterTraits?: object
+  characterNotes?: string
+  skillsModifiers?: object
+  skillFeats?: string
+  spells?: object
   actions: {
     stride: string,
     melee: string[],
     ranged: string[],
   }
-  feats: object
+  feats?: object
 
   constructor(character: ICharacter) {
     this.user = character.user

@@ -1,126 +1,136 @@
 import faker from 'faker';
 import lodash from 'lodash';
-import CharacterProperties from './character-properties';
-
-const sample = lodash.sample;
+import getCharacterProperties from './character-properties';
+import { Character } from '../../src/models';
+import { ObjectID } from 'mongodb';
 
 const CreateCharacterMock = () => {
   const newCharacter = {
+    created: new Date(),
     user: faker.name.firstName(),
-    player: sample(CharacterProperties.types),
-    name: faker.name.firstName(),
-    class: sample(CharacterProperties.classes),
-    ancestry: sample(CharacterProperties.ancestries),
-    type: "Iconic",
-    gender: sample(CharacterProperties.genders),
-    alignment: sample(CharacterProperties.alignments),
-    age: 'unknown',
-    hair: 'Brown',
-    eyes: 'Brown',
-    height: 'Unknown',
-    weight: 'Unknown',
-    level: faker.random.number(20),
-    XP: faker.random.number(20000),
-    attributes: { Init: 2, Senses: { Perception: 16 } },
-    STR: faker.random.number(30),
-    DEX: faker.random.number(30),
-    CON: faker.random.number(30),
-    INT: faker.random.number(30),
-    WIS: faker.random.number(30),
-    CHA: faker.random.number(30),
-    baseAttack: 12,
-    CMB: { base: 22, additional: { "bull rush": 24 } },
-    CMD: { base: 35, vs: { "bull rush": 37 } },
-    feats: [
-      "Cleave",
-      "Exotic Weapons Proficiency (bastard sword)",
-      "Power Attack",
-      "Great Cleave",
-      "Improved Bull Rush",
-      "Toughness",
-      "Weapon Proficiency (bastard sword)"
-    ],
-    skills: {
-      Climb: 23,
-      HandleAnimal: 9,
-      Intimidate: 15,
-      Perception: 16,
-      Survival: 13,
-      Swim: 20
+    _id: new ObjectID(),
+    basics: {
+      name: faker.name.firstName(),
+      player: faker.name.firstName(),
+      LVL: Math.random() * 10,
+      XP: Math.random() * 100,
+      homeland: 'Unknown',
+      type: getCharacterProperties.getType(),
+      alignment: getCharacterProperties.getAlignment(),
+      deity: 'None',
+      abilityBoost: '+3'
     },
+    appearance: {
+      age: undefined,
+      eyes: undefined,
+      hair: 'Brown',
+      weight: 'Unknown',
+      height: 'Unknown',
+      gender: getCharacterProperties.getGender(),
+    },
+    mainStats: {
+      STR: '+15',
+      DEX: '+15',
+      CON: '+15',
+      INT: '+15',
+      WIS: '+15',
+      CHA: '+15',
+      AC: '+15',
+      TOUCHAC: '+15',
+      HP: '120',
+    },
+    modifiers: {
+      CHA: '+10',
+      CON: '+10',
+      DEX: '+10',
+      INT: '+10',
+      WIS: '+10',
+      STR: '+10',
+      FORT: '+10',
+      WILL: '+10',
+      REFLEX: '+10',
+      TOUCHAC: '+10',
+      AC: '+10',
+      PER: '+10',
+    },
+    items: {
+      worn: 'backpack studded leather armor',
+      ready: 'rapier, daggers (6), thieves tools',
+      stowed: 'hooded lantern, oil (5), rations (3), silk rope (50ft)',
+      coins: {
+        gold: 4,
+        silver: 3,
+        copper: 0,
+        platinum: 0,
 
-    size: "Medium",
-    defense: {
-      AC: faker.random.number(30),
-      touch: faker.random.number(30),
-      "flat-footed": {
-        base: 22,
-        armor: 9,
-        deflection: 3,
-        Dex: 2,
-        natural: 2,
-        rage: -2
-      }
-    },
-    hp: { base: faker.random.number(300), aug: "12d12+108" },
-    Fort: faker.random.number(30),
-    Ref: faker.random.number(30),
-    Will: faker.random.number(30),
-    offense: {
-      Speed: 40,
-      Melee: { modifiers: { baseAttack: 3, }, name: "Large bastard sword" },
-      Ranged: { modifiers: { baseAttack: 1, }, name: "Longbow" },
-      SpecialAttacks: {
-        "Greater rage": "30 rounds/day",
-        "Rage powers": "guarded stance [+3 dodge vs melee",
-        "Increased damage reduction": "+1",
-        "Powerful Blow": "+4",
-        "Renewed vigor": "3d8+7 hp",
-        "Strength surge": "+12",
-        "Surprise accuracy": "+4"
-      }
-    },
-
-    languages: ["Common"],
-    gear: {
-      weapons: {
-        "Javelin of Lightning": { amount: 1, modifiers: {} },
-        "Large Bastard Sword": { amount: 1, modifiers: { attackBonus: 3 } },
-        LongBow: { amount: 1, modifiers: { arrows: 20 } }
       },
-      potions: {
-        "Potions of Cure Serious Wounds": { amount: 5 },
-        "Potion of Delay Poison": { amount: 1 },
-        "Potion of Fly": { amount: 1 },
-        "Potion of Hase": { amount: 1 },
-        "Potion of Lesser Restoration": { amount: 1 }
-      },
-      armor: {
-        "Hide Armor": { amount: 1, modifiers: { AC: 5 } },
-        "Belt of Physical Might": { amount: 1, modifiers: { STR: 4, DEX: 4 } },
-        "Cloak of Resistence": { amount: 1, modifiers: { AC: 4 } }
-      },
-      other: {
-        backpack: { amount: 1 },
-        bedroll: { amount: 1 },
-        caltrops: { amount: 1 },
-        shovel: { amount: 1 },
-        torches: { amount: 5 },
-        waterskin: { amount: 1 },
-        gp: faker.random.number(3000),
-        'trail rations': { amount: 4 },
-        'flint and steel': { amount: 1 },
-        'hemp rope (50 ft)': { amount: 1 },
-      }
+      bulk: '3 Bulk, 2 light (encumbered beyond 5 Bulk, max 10 Bulk)',
     },
-    homeland: 'Realm of the Mammoth Lords',
-    deity: 'Gorum',
-    bio: faker.lorem.paragraph(),
-    ancestryProps: {},
-    backgroundProps: {},
-    classProps: {},
+    actions: {
+      stride: '30 feet',
+      melee: ['rapier +5 (deadly 1d8, disarm, finesse), Damage 1d6+4 piercing'],
+      ranged: ['dagger +5 (agile, finesse, thrown 10, versatile slashing) Damage 1d4 piercing']
+    },
+    ancestryProps: {
+      ancestry: getCharacterProperties.getAncestry(),
+      size: 'Medium',
+      speed: 120,
+      languages: ['Common'],
+      ancestryTraits:['Unknown'],
+      attributes: {}
+    },
+    backgroundProps: {
+      background: getCharacterProperties.getBackground(),
+      selectBoost: ['DEX'],
+      freeAbilityBoost: 1,
+      skillFeat: 'None',
+      loreSkill: 'None',
+    },
+    classProps: {
+      class: getCharacterProperties.getClass(),
+      keyAbility: ['DEX'],
+      baseHP: 8,
+      proficiencies: {sword: '+2'},
+      savingThrows: {ranged: '+2'},
+      skills: {sneak: 'master'},
+      weapons: {bow: 'trained'},
+      armor: {heavy: 'trained'},
+      signatureSkills: ['Elbow drop'],
+      classFeatures: ['Unknown'],
+      items: ['Magic bag'],
+      spells: {'magic missile': 'Big damage'}
+    },
+    characterTraits: {},
+    characterNotes: 'This is a test character',
+     skillsModifiers: {
+      Acrobatics: 4,
+      Athletics: 1,
+      Crafting: 2,
+      Deception: 2,
+      Diplomacy: 2,
+      Intimidation: 2,
+      Lore: 2,
+      Performance: 2,
+      Religion: 2,
+      Society: 2,
+      Stealth: 4,
+      Thievery: 4,
+    },
+    skillFeats: 'Cat Fall, Experienced Smuggler',
+    spells: {
+      roll: '+5',
+      DC: '15',
+      cantrips: ['detect magic', 'forbidding ward', 'light', 'stabilize'],
+      One: ['bless', 'sanctuary'],
+      DomainPower: 'fire ray (fire domain)',
+      SpellPoints: '4',
+    },
+    feats: {
+      ancestry: 'Natural Ambition',
+      class: 'Reactive Shield, Sudden Charge',
+    },
   }
-  return newCharacter;
+  return new Character(newCharacter)
 }
 
 export default CreateCharacterMock

@@ -30,12 +30,11 @@ describe('Characters-API', () => {
       .send({ email: faker.internet.email(), password: faker.lorem.sentence() })
     token = res.body.access_token
 
-    const characterPayload = CreateCharacterMock()
-    console.log('New HCAR: ', characterPayload)
+    newCharacter = CreateCharacterMock()
     const result = await request(server).post(`/api/characters`)
       .set('authorization', 'Bearer ' + token)
-      .send({ data: characterPayload })
-    console.log('Create char result', result.body)
+      .send({ data: newCharacter })
+    newCharacter._id = result?.body?.data?._id
   })
 
   afterAll(async () => {
@@ -58,25 +57,37 @@ describe('Characters-API', () => {
     })
 
     it('should respond status 200: /api/characters/:id', async () => {
-      const id = new ObjectID()
+      const id = newCharacter._id
       const res = await request(server).get(`/api/characters/${id}`)
       expect(res.status).toEqual(200)
       expect(res.body.status).toEqual('Processed')
-      expect(res.body.data).toEqual({})
-      expect(res.body.message).toEqual(`Get character failed: ${id}`)
-      expect(res.body.errors.length).toBeGreaterThan(0)
+      const character = res.body.data
+      expect(character).toHaveProperty('_id')
+      expect(character).toHaveProperty('basics')
+      expect(character.basics).toHaveProperty('name')
+      expect(character).toHaveProperty('user')
+      expect(res.body.message).toEqual(`Get character success: ${id}`)
+      expect(res.body.errors.length).toBe(0)
     })
   })
 
   describe('Get Character by query: ', () => {
     it('by email should response status 200 and return object', async () => {
+      const id = newCharacter._id
       const res = await request(server).get(`/api/characters`)
         .set('authorization', 'Bearer ' + token)
         .query({ user: newCharacter.user })
       console.log("GEt char result:", res.body)
       expect(res.status).toEqual(200)
       expect(res.body.status).toEqual('Processed')
-      const userResult = res.body.data
+      const character = res.body.data
+
+      expect(character).toHaveProperty('_id')
+      expect(character).toHaveProperty('_id')
+      expect(character).toHaveProperty('basics')
+      expect(character.basics).toHaveProperty('name')
+      expect(character).toHaveProperty('user')
+      expect(res.body.message).toEqual(`Get character success: ${id}`)
       expect(res.body.errors.length).toBe(0)
     })
   })

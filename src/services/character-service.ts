@@ -4,17 +4,18 @@ import { processFindCharacterFilter, processDeleteCharacterFilter } from '../uti
 import { ActionResult, CharQueryType, CharFilterType, ICharacter } from '../models'
 import { ObjectId } from 'mongodb'
 
-const getCharacter = async (id: ObjectId): Promise<ActionResult> => {
-  const result = await CharacterDB.getCharacter(id)
+const getCharacterById = async (id: ObjectId): Promise<ActionResult> => {
+  const result = await CharacterDB.getCharacterById(id)
   if (!result?._id) {
     return new ActionResult({}, `Get character failed: ${id}`, new NotFoundError())
   }
   return new ActionResult(result, `Get character success: ${id}`)
 }
 
-const getCharacters = async (query: CharQueryType): Promise<ActionResult> => {
+const getCharacterByFilter = async (query: CharQueryType): Promise<ActionResult> => {
   const filter: CharFilterType = processFindCharacterFilter(query)
-  const result = await CharacterDB.getCharacters(filter)
+  console.log('filter: ', filter)
+  const result = await CharacterDB.getCharacterByFilter(filter)
   if (!result.length) {
     return new ActionResult([], 'Failed to fetch characters.', new NotFoundError())
   }
@@ -58,8 +59,8 @@ const deleteCharacters = async (query: CharQueryType): Promise<ActionResult> => 
 }
 
 export default {
-  getCharacter,
-  getCharacters,
+  getCharacterById,
+  getCharacterByFilter,
   updateCharacter,
   createCharacter,
   deleteCharacter,

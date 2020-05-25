@@ -2,11 +2,11 @@ import { CharacterModel, ICharacter } from '../models'
 import { QueryFindOptions } from 'mongoose'
 import { ObjectId } from 'mongodb'
 
-const getCharacter = async (_id: ObjectId) => {
+const getCharacterById = async (_id: ObjectId) => {
   return await CharacterModel.findOne({ _id })
 }
 
-const getCharacters = async (filter: QueryFindOptions) => {
+const getCharacterByFilter = async (filter: QueryFindOptions) => {
   return await CharacterModel.find(filter)
 }
 
@@ -33,8 +33,8 @@ const deleteCharacters = async (filter: QueryFindOptions) => {
 }
 
 export default {
-  getCharacter,
-  getCharacters,
+  getCharacterById,
+  getCharacterByFilter,
   updateCharacter,
   createCharacter,
   createCharacters,
