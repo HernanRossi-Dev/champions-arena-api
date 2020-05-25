@@ -73,20 +73,32 @@ describe('Characters-API', () => {
 
   describe('Get Character by query: ', () => {
     it('by email should response status 200 and return object', async () => {
+      const fakename = faker.name.firstName()
+      const res = await request(server).get(`/api/characters`)
+        .set('authorization', 'Bearer ' + token)
+        .query({ user: fakename })
+      expect(res.status).toEqual(200)
+      expect(res.body.status).toEqual('Processed')
+      expect(res.body.data.length).toEqual(0)
+      expect(res.body.message).toEqual('Failed to fetch characters.')
+      expect(res.body.errors.length).toBeGreaterThan(0)
+    })
+
+    it('by email should response status 200 and return object', async () => {
       const id = newCharacter._id
       const res = await request(server).get(`/api/characters`)
         .set('authorization', 'Bearer ' + token)
         .query({ user: newCharacter.user })
       expect(res.status).toEqual(200)
       expect(res.body.status).toEqual('Processed')
-      const character = res.body.data
-
+      expect(res.body.data.length).toEqual(1)
+      const character = res.body.data[0]
       expect(character).toHaveProperty('_id')
       expect(character).toHaveProperty('_id')
-      expect(character).toHaveProperty('basics')
+      expect(character._id).toEqual(id)
       expect(character.basics).toHaveProperty('name')
       expect(character).toHaveProperty('user')
-      expect(res.body.message).toEqual(`Get character success: ${id}`)
+      expect(res.body.message).toEqual('Get characters success.')
       expect(res.body.errors.length).toBe(0)
     })
   })
