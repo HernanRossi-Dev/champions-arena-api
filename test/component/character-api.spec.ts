@@ -77,7 +77,6 @@ describe('Characters-API', () => {
       const res = await request(server).get(`/api/characters`)
         .set('authorization', 'Bearer ' + token)
         .query({ user: newCharacter.user })
-      console.log("GEt char result:", res.body)
       expect(res.status).toEqual(200)
       expect(res.body.status).toEqual('Processed')
       const character = res.body.data

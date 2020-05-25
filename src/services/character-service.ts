@@ -14,7 +14,6 @@ const getCharacterById = async (id: ObjectId): Promise<ActionResult> => {
 
 const getCharacterByFilter = async (query: CharQueryType): Promise<ActionResult> => {
   const filter: CharFilterType = processFindCharacterFilter(query)
-  console.log('filter: ', filter)
   const result = await CharacterDB.getCharacterByFilter(filter)
   if (!result.length) {
     return new ActionResult([], 'Failed to fetch characters.', new NotFoundError())

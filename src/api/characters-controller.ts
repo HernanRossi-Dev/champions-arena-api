@@ -27,8 +27,6 @@ router.use(jwtCheck)
 
 router.get('/', async (req: Request, res: Response) => {
   const query = <CharQueryType>req.query
-  console.log("get QUery formated: ", query)
-
   try {
     const result: ActionResult = await CharacterService.getCharacterByFilter(query)
     res.status(200).json(result.toJSON())
