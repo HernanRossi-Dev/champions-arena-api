@@ -16,6 +16,7 @@ const inMemoryDB = async () => {
 
   client = await mongoose.connect(url, options)
   console.log("returning in memory database")
+  
   return client.connection
 }
 

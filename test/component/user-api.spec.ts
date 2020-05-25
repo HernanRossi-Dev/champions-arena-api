@@ -1,66 +1,92 @@
-import mongoose from 'mongoose'
-import uuid from 'uuid'
+import { inMemoryDB, clearDB, closeDB } from '../database-helper'
+jest.mock('../../src/utils/mongo-connection', () => ({
+  getMongoConnection: jest.fn().mockImplementation(() => inMemoryDB())
+}))
+jest.mock('../../src/utils/logger', () => ({
+  error: jest.fn().mockImplementation(() => { }),
+  debug: jest.fn().mockImplementation(() => { })
+}))
+jest.mock('../../src/utils/auth-utils', () => ({
+  validateUser: jest.fn().mockImplementation(() => { return true }),
+}))
+jest.mock('../../src/utils/user-utils', () => ({
+  userDupeCheck: jest.fn().mockImplementation(() => { return false }),
+  isUser: jest.fn().mockImplementation(() => { return true }),
+}))
+
 import faker from 'faker'
 import request from "supertest"
-import server from '../../src/server'
 import { ObjectID } from 'mongodb'
+import server from '../../src/server'
+let userName: string, testEmail: string, firstName: string,
+  lastName: string, testId: ObjectID, testPassword: string, token: string
 
-
-const ObjectId = mongoose.Types.ObjectId
-
-// let userName, userEmail, _id
 describe('Users-API', () => {
 
-  afterEach(() => {
-    server.close()
+  beforeAll(async () => {
+    jest.setTimeout(6000)
+    const res = await request(server).post(`/api/authenticate/`)
+      .send({ email: faker.internet.email(), password: faker.lorem.sentence() })
+    token = res.body.access_token
+    userName = faker.name.firstName()
+    firstName = userName
+    testEmail = faker.internet.email()
+    lastName = faker.name.lastName()
+    testPassword = faker.lorem.sentence()
+    const userPayload = {
+      userName,
+      email: testEmail,
+      firstName: userName,
+      lastName,
+      password: testPassword,
+      isGuest: false,
+    }
+    const result = await request(server).post(`/api/users`)
+      .set('authorization', 'Bearer ' + token)
+      .send(userPayload)
   })
-  describe('Get Users: ', () => {
 
-    it('should respond status 200: /api/users', async () => {
+  afterAll(async () => {
+    await clearDB()
+    await closeDB()
+    server.close()
+    jest.clearAllMocks()
+    jest.resetModules()
+  })
+
+  describe('Get User by id param, ', () => {
+    it('should respond status 200: /api/users/:id', async () => {
       const id = new ObjectID()
       const res = await request(server).get(`/api/users/${id}`)
-      expect(res.status).toEqual(200);
-      const jsonRes = JSON.parse(res.text);
-      expect(jsonRes.body).toEqual({});
-      expect(jsonRes.errors.length).toBeGreaterThan(0)
+      expect(res.status).toEqual(200)
+      expect(res.body.status).toEqual('Processed')
+      expect(res.body.data).toEqual({})
+      expect(res.body.message).toEqual(`Get user failed: ${id}`)
+      expect(res.body.errors.length).toBeGreaterThan(0)
     })
-  });
 
-  // describe('Get User: ', () => {
-  //     before (async () => {
-  //         userName = faker.name.firstName();
-  //         userEmail = faker.internet.email();
-  //         const userPayload =  { 
-  //             name: userName,
-  //             email: userEmail,
-  //             password: uuidv4(),
-  //             isGuest: false,
-  //         }
-  //         testApp = chai.request(app);
-  //         await mongoose.createConnection(mongoDBUrl, { useNewUrlParser: true });
-  //         const postResult = await testApp.post(`/api/user/basic`).send(userPayload);           
-  //         _id = JSON.parse(postResult.res.text);
-  //         testApp.close();
-  //     })
-  //     it('by email should response status 200 and return object', async () => {
-  //         const response = await testApp.get(`/api/user?email=${userEmail}`);
-  //         const jsonRes = JSON.parse(response.res.text);
-  //         response.status.should.equal(200);
-  //         jsonRes.user.should.be.a('object');
-  //     })
+    it('should respond status 200: /api/users/:id', async () => {
+      const id = new ObjectID()
+      const res = await request(server).get(`/api/users/${id}`)
+      expect(res.status).toEqual(200)
+      expect(res.body.status).toEqual('Processed')
+      expect(res.body.data).toEqual({})
+      expect(res.body.message).toEqual(`Get user failed: ${id}`)
+      expect(res.body.errors.length).toBeGreaterThan(0)
+    })
+  })
 
-  //     it('by name should response status 200 and return object', async () => {
-  //         const response = await testApp.get(`/api/user?name=${userName}`);
-  //         const jsonRes = JSON.parse(response.res.text);
-  //         response.status.should.equal(200);
-  //         jsonRes.user.should.be.a('object');
-  //     })
-
-  //     it('by _id should response status 200 and return object', async () => {
-  //         const response = await testApp.get(`/api/user?_id=${_id}`);
-  //         const jsonRes = JSON.parse(response.res.text);
-  //         response.status.should.equal(200);
-  //         jsonRes.user.should.be.a('object');
-  //     })
-  // })
+  describe('Get User: ', () => {
+    it('by email should response status 200 and return object', async () => {
+      const res = await request(server).get(`/api/users`)
+        .set('authorization', 'Bearer ' + token)
+        .query({ userName })
+      expect(res.status).toEqual(200)
+      expect(res.body.status).toEqual('Processed')
+      const userResult = res.body.data
+      expect(userResult.userName).toEqual(userName)
+      expect(userResult.email).toEqual(testEmail)
+      expect(res.body.errors.length).toBe(0)
+    })
+  })
 })
