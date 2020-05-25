@@ -1,5 +1,6 @@
 import { ObjectID } from "mongodb";
 import { ICharacter } from "../interfaces";
+import { ProcessError } from "../../errors";
 
 export class Character implements ICharacter {
   created?: Date
@@ -104,6 +105,8 @@ export class Character implements ICharacter {
   feats?: object
 
   constructor(character: ICharacter) {
+    if (!character) throw new ProcessError('Character data must be provided.')
+    if (!character.user) throw new ProcessError('Character must have a user.')
     this.user = character.user
     this._id = character._id
     this.basics = character.basics
@@ -122,7 +125,7 @@ export class Character implements ICharacter {
     this.actions = character.actions ? character.actions : { stride: '', melee: [], ranged: [] }
     this.feats = character.feats ? character.feats : {}
   }
-  
+
   public getProperties(): ICharacter {
     return {
       user: this.user,

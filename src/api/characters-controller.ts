@@ -8,13 +8,10 @@ const ObjectId = mongodb.ObjectID
 const router = Router()
 
 router.get('/:id', async (req: Request, res: Response) => {
-  const { id } = req.params
-  if (!ObjectId.isValid(id)) {
-    return res.status(422).send(`Invalid character id format: ${id}`)
-  }
-  const objId = new ObjectID(req.params.id)
-
+  const { id } = req?.params
+  if (!ObjectId.isValid(id)) return res.status(422).json({message: `Invalid character id format: ${id}`})
   try {
+    const objId = new ObjectID(req.params.id)
     const result: ActionResult = await CharacterService.getCharacterById(objId)
     res.status(200).json(result.toJSON())
   } catch (err) {
@@ -26,8 +23,8 @@ router.get('/:id', async (req: Request, res: Response) => {
 router.use(jwtCheck)
 
 router.get('/', async (req: Request, res: Response) => {
-  const query = <CharQueryType>req.query
   try {
+    const query = <CharQueryType>req.query
     const result: ActionResult = await CharacterService.getCharacterByFilter(query)
     res.status(200).json(result.toJSON())
   } catch (err) {
@@ -37,8 +34,8 @@ router.get('/', async (req: Request, res: Response) => {
 })
 
 router.post('/', async (req: Request, res: Response) => {
-  const character: Character = new Character(req.body.data)
   try {
+    const character: Character = new Character(req.body.data)
     const result: ActionResult = await CharacterService.createCharacter(character)
     res.status(200).json(result.toJSON())
   } catch (err) {
@@ -48,13 +45,11 @@ router.post('/', async (req: Request, res: Response) => {
 })
 
 router.put('/:id', async (req: Request, res: Response) => {
-  const { id } = req.params
-  if (!ObjectId.isValid(id)) {
-    return res.status(422).send(`Invalid character id format: ${id}`)
-  }
-  const objId = new ObjectID(req.params.id)
-  const character: Character = new Character(req.body.data)
+  const { id } = req?.params
+  if (!ObjectId.isValid(id)) return res.status(422).json({message: `Invalid character id format: ${id}`})
   try {
+    const objId = new ObjectID(req.params.id)
+    const character: Character = new Character(req.body.data)
     const result: ActionResult = await CharacterService.updateCharacter(objId, character)
     res.status(200).json(result.toJSON())
   } catch (err) {
@@ -64,12 +59,10 @@ router.put('/:id', async (req: Request, res: Response) => {
 })
 
 router.delete('/:id', async (req: Request, res: Response) => {
-  const { id } = req.params
-  if (!ObjectId.isValid(id)) {
-    return res.status(422).send(`Invalid character id format: ${id}`)
-  }
-  const objId = new ObjectID(req.params.id)
+  const { id } = req?.params
+  if (!ObjectId.isValid(id)) return res.status(422).json({message: `Invalid character id format: ${id}`})
   try {
+    const objId = new ObjectID(req.params.id)
     const result: ActionResult = await CharacterService.deleteCharacter(objId)
     res.status(200).json(result.toJSON())
   } catch (err) {
@@ -79,7 +72,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
 })
 
 router.delete('/', async (req: Request, res: Response) => {
-  const query = <CharQueryType>req.query
+  const query = <CharQueryType>req?.query
   try {
     const result: ActionResult = await CharacterService.deleteCharacters(query)
     res.status(200).json(result.toJSON())

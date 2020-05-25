@@ -13,6 +13,7 @@ const getCharacterById = async (id: ObjectId): Promise<ActionResult> => {
 }
 
 const getCharacterByFilter = async (query: CharQueryType): Promise<ActionResult> => {
+  if (!query.user) return new ActionResult([], 'Must provide a username to retrieve characters.', new NotFoundError())
   const filter: CharFilterType = processFindCharacterFilter(query)
   const result = await CharacterDB.getCharacterByFilter(filter)
   if (!result.length) {
@@ -37,7 +38,7 @@ const updateCharacter = async (id: ObjectId, character: ICharacter): Promise<Act
   if (!result.nModified) {
     return new ActionResult(result, `Failed to update character: ${id}`, new NotFoundError())
   }
-  return new ActionResult(result, 'Update character succes.')
+  return new ActionResult(result, 'Update character success.')
 }
 
 const deleteCharacter = async (id: ObjectId): Promise<ActionResult> => {
