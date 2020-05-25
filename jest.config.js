@@ -7,5 +7,13 @@ module.exports = {
     "<rootDir>/node_modules/(?!lodash-es)"
   ],
   setupFiles: ["dotenv/config"],
-  preset: "@shelf/jest-mongodb"
+  preset: "@shelf/jest-mongodb",
+  coverageThreshold: {
+    global: {
+      branches: 50,
+      functions: 50,
+      lines: 50,
+      statements: 50
+    }
+  }
 };

@@ -22,7 +22,7 @@ const prepareUpdate = (user: User) : void => {
 
 const userDupeCheck = async (userName: string, email: string): Promise<boolean> => {
   const dupQuery: IUserDupeFilter = { $or: [{ userName }, { email }] }
-  const checkDup = await UserDB.getUserDetails(dupQuery)
+  const checkDup = await UserDB.getUserByQuery(dupQuery)
   if (checkDup?.userName === userName) throw new MongoDBError(`Create user failure, user with userName: ${userName} already exists`)
   if (checkDup?.email === email) throw new MongoDBError(`Create user failure, user with email: ${email} already exists`)
   return false

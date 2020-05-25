@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 
 const validateUser = async (email: string, password: string): Promise<boolean> => {
   const filter: IUserFilterType = { email }
-  const result = await UserDB.getUserDetails(filter)
+  const result = await UserDB.getUserByQuery(filter)
   const savedPass = result?.password
   if ( savedPass ) {
     return bcrypt.compare(password, savedPass)

@@ -12,9 +12,9 @@ const getUserById = async (id: ObjectId): Promise<ActionResult> => {
   return new ActionResult(userDetails, `Get user success: ${id}`)
 }
 
-const getUserDetails = async (query: IUserQueryType): Promise<ActionResult> => {
+const getUserByQuery = async (query: IUserQueryType): Promise<ActionResult> => {
   const filter: IUserFilterType = processFindUserFilter(query)
-  const userDetails = await UserDB.getUserDetails(filter)
+  const userDetails = await UserDB.getUserByQuery(filter)
   if (!userDetails?._id) {
     return new ActionResult({}, 'Failed to fetch user details.', new NotFoundError())
   }
@@ -50,12 +50,11 @@ const updateUser = async (user: User): Promise<ActionResult> => {
   return new ActionResult({modified: 1})
 }
 
-const deleteUser = async (userName: string): Promise<ActionResult> => {
-  const result = await UserDB.deleteUser(userName)
+const deleteUser = async (id: ObjectId, userName: string): Promise<ActionResult> => {
+  const result = await UserDB.deleteUser(id, userName)
   if (!result.deletedCount) {
     return new ActionResult(result, `Failed to delete user: ${userName}`, new NotFoundError())
   }
-
   try {
     const filter: CharFilterType = { user: userName }
     await CharacterDB.deleteCharacters(filter)
@@ -68,7 +67,7 @@ const deleteUser = async (userName: string): Promise<ActionResult> => {
 export default {
   createUser,
   getUserById,
-  getUserDetails,
+  getUserByQuery,
   deleteUser,
   updateUser
 }

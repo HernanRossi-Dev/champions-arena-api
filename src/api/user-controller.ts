@@ -1,19 +1,16 @@
 import { UserService, jwtCheck } from '../services'
-import mongodb from 'mongodb'
+import { ObjectId } from 'mongodb'
 import { Request, Response, Router } from 'express'
 import { ActionResult, IUserQueryType, User } from '../models'
 import { logger } from '../utils'
 
-const ObjectId = mongodb.ObjectID
 const router = Router()
 
 router.get('/:id', async (req: Request, res: Response) => {
-  if (!ObjectId.isValid(req.params.id)) {
-    return res.status(422).send(`Invalid user id format: ${req.params.id}`)
-  }
-  const id = new ObjectId(req.params.id)
+  if (!ObjectId.isValid(req.params.id)) return res.status(422).send(`Invalid user id format: ${req.params.id}`)
 
   try {
+    const id = new ObjectId(req.params.id)
     const result: ActionResult = await UserService.getUserById(id)
     logger.debug({ message: 'Retrieve user success', data: result })
     res.status(200).json(result.toJSON())
@@ -26,9 +23,9 @@ router.get('/:id', async (req: Request, res: Response) => {
 router.use(jwtCheck)
 
 router.get('/', async (req: Request, res: Response) => {
-  const query = <IUserQueryType>req.query
   try {
-    const result: ActionResult = await UserService.getUserDetails(query)
+    const query = <IUserQueryType>req.query
+    const result: ActionResult = await UserService.getUserByQuery(query)
     logger.debug({ message: 'Retrieve user success', data: result })
     res.status(200).json(result.toJSON())
   } catch (err) {
@@ -38,8 +35,8 @@ router.get('/', async (req: Request, res: Response) => {
 })
 
 router.post('/', async (req: Request, res: Response) => {
-  const user: User = new User(req.body)
   try {
+    const user: User = new User(req.body)
     const result: ActionResult = await UserService.createUser(user)
     logger.debug({ message: 'Post user success', data: result })
     res.status(200).json(result.toJSON())
@@ -50,8 +47,8 @@ router.post('/', async (req: Request, res: Response) => {
 })
 
 router.put('/', async (req: Request, res: Response) => {
-  const user: User = new User(req.body)
   try {
+    const user: User = new User(req.body)
     const result: ActionResult = await UserService.updateUser(user)
     logger.debug({ message: 'Put user success', data: result })
     res.status(200).json(result.toJSON())
@@ -61,10 +58,13 @@ router.put('/', async (req: Request, res: Response) => {
   }
 })
 
-router.delete('/:userName', async (req: Request, res: Response) => {
-  const { userName } = req.params
+router.delete('/', async (req: Request, res: Response) => {
   try {
-    const result: ActionResult = await UserService.deleteUser(userName)
+    const userName: string = req.body?.userName
+    if (!ObjectId.isValid(req.body?.id) || !userName) return res.status(422).send(`Must provide valid userName and id.`)
+    const id: ObjectId = new ObjectId
+    (req.body.id)
+    const result: ActionResult = await UserService.deleteUser(id, userName)
     res.status(200).json(result.toJSON())
   } catch (err) {
     logger.error({ message: 'Delete user failure.', error: err.message, name: err.name })
