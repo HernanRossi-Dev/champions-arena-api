@@ -1,12 +1,9 @@
-import { ObjectID } from "mongodb"
+import IBase from './base-interface'
 
-export default interface IUser {
+export default interface IUser extends IBase {
   userName: string
   firstName: string
   lastName?: string
-  _id: ObjectID
-  created?: Date
-  updated?: Date
   email: string
   password?: string
   isGuest?: boolean

@@ -7,15 +7,15 @@ import { logger } from '../utils'
 const ObjectId = mongodb.ObjectID
 const router = Router()
 
-router.get('/:id', async (req: Request, res: Response) => {
-  const { id } = req?.params
-  if (!ObjectId.isValid(id)) return res.status(422).json({message: `Invalid character id format: ${id}`})
+router.get('/:_id', async (req: Request, res: Response) => {
+  const { _id } = req?.params
+  if (!ObjectId.isValid(_id)) return res.status(422).json({message: `Invalid character _id format: ${_id}`})
   try {
     const objId = new ObjectID(req.params.id)
     const result: ActionResult = await CharacterService.getCharacterById(objId)
     res.status(200).json(result.toJSON())
   } catch (err) {
-    logger.error({ message: 'Get character by id failure.', error: err.message, name: err.name })
+    logger.error({ message: 'Get character by _id failure.', error: err.message, name: err.name })
     res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
 })
@@ -44,13 +44,10 @@ router.post('/', async (req: Request, res: Response) => {
   }
 })
 
-router.put('/:id', async (req: Request, res: Response) => {
-  const { id } = req?.params
-  if (!ObjectId.isValid(id)) return res.status(422).json({message: `Invalid character id format: ${id}`})
+router.put('/', async (req: Request, res: Response) => {
   try {
-    const objId = new ObjectID(req.params.id)
     const character: Character = new Character(req.body.data)
-    const result: ActionResult = await CharacterService.updateCharacter(objId, character)
+    const result: ActionResult = await CharacterService.updateCharacter(character)
     res.status(200).json(result.toJSON())
   } catch (err) {
     logger.error({ message: 'Put character failure.', error: err.message, name: err.name })
@@ -58,15 +55,15 @@ router.put('/:id', async (req: Request, res: Response) => {
   }
 })
 
-router.delete('/:id', async (req: Request, res: Response) => {
-  const { id } = req?.params
-  if (!ObjectId.isValid(id)) return res.status(422).json({message: `Invalid character id format: ${id}`})
+router.delete('/:_id', async (req: Request, res: Response) => {
+  const { _id } = req?.params
+  if (!ObjectId.isValid(_id)) return res.status(422).json({message: `Invalid character _id format: ${_id}`})
   try {
-    const objId = new ObjectID(req.params.id)
+    const objId = new ObjectID(req.params._id)
     const result: ActionResult = await CharacterService.deleteCharacter(objId)
     res.status(200).json(result.toJSON())
   } catch (err) {
-    logger.error({ message: 'Delete character by id failure.', error: err.message, name: err.name })
+    logger.error({ message: 'Delete character by _id failure.', error: err.message, name: err.name })
     res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
 })

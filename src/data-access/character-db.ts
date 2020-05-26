@@ -1,8 +1,8 @@
 import { CharacterModel, ICharacter } from '../models'
 import { QueryFindOptions } from 'mongoose'
-import { ObjectId } from 'mongodb'
+import { ObjectID } from 'mongodb'
 
-const getCharacterById = async (_id: ObjectId) => {
+const getCharacterById = async (_id: ObjectID) => {
   return await CharacterModel.findOne({ _id })
 }
 
@@ -19,12 +19,11 @@ const createCharacters = async (characters: ICharacter[]) => {
   return await CharacterModel.insertMany(characters)
 }
 
-const updateCharacter = async (_id: ObjectId, character: ICharacter) => {
-  delete character._id
-  return await CharacterModel.updateOne({ _id }, character, { upsert: true })
+const updateCharacter = async (character: ICharacter) => {
+  return await CharacterModel.updateOne({ _id: character._id }, character, { upsert: true })
 }
 
-const deleteCharacter = async (_id: ObjectId) => {
+const deleteCharacter = async (_id: ObjectID) => {
   return await CharacterModel.deleteOne({ _id })
 }
 

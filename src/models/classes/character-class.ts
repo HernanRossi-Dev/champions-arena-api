@@ -3,9 +3,10 @@ import { ICharacter } from "../interfaces";
 import { ProcessError } from "../../errors";
 
 export class Character implements ICharacter {
-  created?: Date
-  user: string
-  _id?: ObjectID | string
+  userName: string
+  _id: ObjectID
+  created: Date
+  updated?: Date
   basics: {
     name: string,
     player: string,
@@ -105,10 +106,13 @@ export class Character implements ICharacter {
   feats?: object
 
   constructor(character: ICharacter) {
+    console.log("Char: ", character)
     if (!character) throw new ProcessError('Character data must be provided.')
-    if (!character.user) throw new ProcessError('Character must have a user.')
-    this.user = character.user
-    this._id = character._id
+    if (!character.userName) throw new ProcessError('Character must have a userName.')
+    this.userName = character.userName
+    this._id = character._id || new ObjectID()
+    this.created = character.created || new Date()
+    this.updated = character.updated
     this.basics = character.basics
     this.appearance = character.appearance
     this.mainStats = character.mainStats
@@ -128,8 +132,10 @@ export class Character implements ICharacter {
 
   public getProperties(): ICharacter {
     return {
-      user: this.user,
+      userName: this.userName,
       _id: this._id,
+      created: this.created,
+      updated: this.updated,
       basics: this.basics,
       appearance: this.appearance,
       mainStats: this.mainStats,

@@ -1,16 +1,16 @@
 import lodash from 'lodash'
-import { Types } from 'mongoose'
 import { logger } from '.'
 import { ICharacter, DefaultCharacters } from '../models'
 import { CharacterDB } from '../data-access'
 import { MongoDBError } from '../errors'
+import { ObjectID } from 'mongodb'
 
 const insertDefaultCharacters = async (userName: string): Promise<object> => {
   try {
     const defaultCharacters: ICharacter[] = lodash.cloneDeep(DefaultCharacters)
     defaultCharacters.forEach((character) => {
-      character.user = userName
-      character._id = Types.ObjectId()
+      character.userName = userName
+      character._id = new ObjectID()
     })
     return await CharacterDB.createCharacters(defaultCharacters)
   } catch (err) {
@@ -19,6 +19,13 @@ const insertDefaultCharacters = async (userName: string): Promise<object> => {
   }
 }
 
+const isCharacter = (data: object): boolean => {
+  if ((data as ICharacter).userName && (data as ICharacter).basics.name) {
+    return true
+  }
+  return false
+}
 export {
-  insertDefaultCharacters
+  insertDefaultCharacters,
+  isCharacter
 }

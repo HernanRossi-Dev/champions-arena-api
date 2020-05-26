@@ -4,7 +4,7 @@ import { Types } from 'mongoose'
 const ObjectId = Types.ObjectId
 export const DefaultCharacters: ICharacter[] = [
   {
-    user: 'DM',
+    userName: 'DM',
     _id: new ObjectId(),
     basics: {
       name: 'Merisiel',
@@ -150,7 +150,7 @@ export const DefaultCharacters: ICharacter[] = [
     skillFeats: 'Cat Fall, Experienced Smuggler',
   },
   {
-    user: 'DM',
+    userName: 'DM',
     _id: new ObjectId(),
     basics: {
       name: 'Ezren',
@@ -290,7 +290,7 @@ export const DefaultCharacters: ICharacter[] = [
     skillFeats: 'Courtly Graces',
   },
   {
-    user: 'DM',
+    userName: 'DM',
     _id: new ObjectId(),
     basics: {
       name: 'Fumbus',
@@ -417,7 +417,7 @@ export const DefaultCharacters: ICharacter[] = [
     characterTraits: {},
   },
   {
-    user: 'DM',
+    userName: 'DM',
     _id: new ObjectId(),
     basics: {
       name: 'Kyra',
@@ -556,7 +556,7 @@ export const DefaultCharacters: ICharacter[] = [
     characterNotes: '',
   },
   {
-    user: 'DM',
+    userName: 'DM',
     _id: new ObjectId(),
     basics: {
       name: 'Valeros',

@@ -1,9 +1,9 @@
 import { Document, model, Model, Schema, Types } from 'mongoose'
 import { ICharacter } from "../interfaces"
+import { ObjectID } from 'mongodb'
 
 const CharacterSchema: Schema = new Schema({
-  _id: Types.ObjectId || String,
-  user: String,
+  userName: String,
   basics: {
     name: String,
     player: String,
@@ -101,7 +101,7 @@ const CharacterSchema: Schema = new Schema({
 }, { typeKey: '$type' })
 
 export interface ICharacterDocument extends ICharacter, Document {
-  _id: Types.ObjectId | string
+  _id: ObjectID
 }
 
 export const CharacterModel: Model<ICharacterDocument> = model<ICharacterDocument>('characters', CharacterSchema)

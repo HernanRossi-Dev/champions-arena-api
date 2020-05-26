@@ -1,9 +1,7 @@
-import { Types } from 'mongoose'
+import IBase from './base-interface'
 
-export default interface ICharacter {
-  created?: Date
-  user: string
-  _id?: Types.ObjectId | string
+export default interface ICharacter extends IBase{
+  userName: string
   basics: {
     name: string,
     player: string,

@@ -1,13 +1,13 @@
 import { IUser } from '../interfaces'
-import { ObjectId } from "mongodb";
+import { ObjectID } from "mongodb";
 import bcrypt from 'bcrypt'
 
 export class User implements IUser {
   userName: string
   firstName: string
   lastName?: string
-  _id: ObjectId
-  created?: Date
+  _id: ObjectID
+  created: Date
   updated?: Date
   email: string
   password?: string
@@ -17,12 +17,12 @@ export class User implements IUser {
     this.userName = user.userName
     this.firstName = user.firstName
     this.lastName = user.lastName || ''
-    this._id = user._id || new ObjectId()
-    this.created = user.created
+    this._id = user._id || new ObjectID()
+    this.created = user.created || new Date()
     this.updated = user.updated
     this.email = user.email
     this.password = user.password
-    this.isGuest = user.isGuest
+    this.isGuest = user.isGuest || false
   }
 
   public getProperties(): IUser {
@@ -40,8 +40,6 @@ export class User implements IUser {
   }
 
   public async setInsertValues(): Promise<void> {
-    this.created = new Date()
-    this._id = new ObjectId()
     this.password = await bcrypt.hash(this.password, 10)
   }
 }

@@ -1,12 +1,12 @@
 import { get } from 'lodash'
-import { CharQueryType, CharFilterType, IUserQueryType, IUserFilterType } from '../models'
+import { CharQueryType, ICharFilter, IUserQueryType, IUserFilter } from '../models'
 
-const processDeleteCharacterFilter = (query: CharQueryType): CharFilterType => {
-  const filter: CharFilterType = {}
+const processDeleteCharacterFilter = (query: CharQueryType): ICharFilter => {
+  const filter: ICharFilter = {}
   const filterParams = ['user', 'class', 'ancestry']
   filterParams.forEach((key: string) => {
     if (query[key as keyof CharQueryType]) {
-      filter[key as keyof CharFilterType] = query[key as keyof CharQueryType]
+      filter[key as keyof ICharFilter] = query[key as keyof CharQueryType]
     }
   })
   if (query.level_lte || query.level_gte) {
@@ -21,8 +21,8 @@ const processDeleteCharacterFilter = (query: CharQueryType): CharFilterType => {
   return filter
 }
 
-const processFindCharacterFilter = (query: CharQueryType): CharFilterType => {
-  const filter: CharFilterType = {}
+const processFindCharacterFilter = (query: CharQueryType): ICharFilter => {
+  const filter: ICharFilter = {}
   const filterParams = ['user', 'class', 'ancestry', 'level', 'name']
   filterParams.map((param) => {
     if (query[param as keyof CharQueryType]) {
@@ -34,13 +34,13 @@ const processFindCharacterFilter = (query: CharQueryType): CharFilterType => {
   return filter
 }
 
-const processFindUserFilter = (query: IUserQueryType): IUserFilterType => {
-  const filter: IUserFilterType = {}
+const processFindUserFilter = (query: IUserQueryType): IUserFilter => {
+  const filter: IUserFilter = {}
   const filterParams = ['firstName', 'lastName', 'email', '_id', 'userName']
   filterParams.map((param) => {
     if (query[param as keyof IUserQueryType]) {
       const newFilterParam: string = <string>query[param as keyof IUserQueryType]
-      filter[param as keyof IUserFilterType] = newFilterParam
+      filter[param as keyof IUserFilter] = newFilterParam
     }
   })
   return filter

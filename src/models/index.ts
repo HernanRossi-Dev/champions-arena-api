@@ -2,7 +2,7 @@ import { UserModel, CharacterModel } from './mongoose-models'
 import ActionResult from './action-result'
 import { Character, User } from './classes'
 import { IUser, ICharacter } from './interfaces'
-import { CharFilterType, CharQueryType, IUserQueryType, IUserFilterType, IUserDupeFilter } from './types'
+import { ICharFilter, CharQueryType, IUserQueryType, IUserFilter, IUserDupeFilter } from './types'
 import { DefaultCharacters } from  './mock-data'
 
 export {
@@ -13,9 +13,9 @@ export {
   User,
   IUser,
   ICharacter,
-  CharFilterType,
+  ICharFilter,
   CharQueryType,
-  IUserFilterType,
+  IUserFilter,
   IUserDupeFilter,
   IUserQueryType,
   DefaultCharacters

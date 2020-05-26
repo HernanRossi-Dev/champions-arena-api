@@ -6,12 +6,12 @@ import { logger } from '../utils'
 
 const router = Router()
 
-router.get('/:id', async (req: Request, res: Response) => {
-  if (!ObjectId.isValid(req.params.id)) return res.status(422).send(`Invalid user id format: ${req.params.id}`)
+router.get('/:_id', async (req: Request, res: Response) => {
+  if (!ObjectId.isValid(req.params._id)) return res.status(422).send(`Invalid user _id format: ${req.params._id}`)
 
   try {
-    const id = new ObjectId(req.params.id)
-    const result: ActionResult = await UserService.getUserById(id)
+    const _id = new ObjectId(req.params._id)
+    const result: ActionResult = await UserService.getUserById(_id)
     logger.debug({ message: 'Retrieve user success', data: result })
     res.status(200).json(result.toJSON())
   } catch (err) {
@@ -61,10 +61,11 @@ router.put('/', async (req: Request, res: Response) => {
 router.delete('/', async (req: Request, res: Response) => {
   try {
     const userName: string = req.body?.userName
-    if (!ObjectId.isValid(req.body?.id) || !userName) return res.status(422).send(`Must provide valid userName and id.`)
-    const id: ObjectId = new ObjectId
-    (req.body.id)
-    const result: ActionResult = await UserService.deleteUser(id, userName)
+    if (!ObjectId.isValid(req.body?._id) || !userName){
+      return res.status(422).send(`Must provide valid userName and id. ${req.body?.userName}, ${req.body?._id}`)
+    }
+    const _id: ObjectId = new ObjectId(req.body._id)
+    const result: ActionResult = await UserService.deleteUser(_id, userName)
     res.status(200).json(result.toJSON())
   } catch (err) {
     logger.error({ message: 'Delete user failure.', error: err.message, name: err.name })

@@ -1,7 +1,8 @@
 import { QueryFindOptions } from "mongoose"
+import { ObjectID } from "mongodb"
 
-interface CharFilterType extends QueryFindOptions {
-  user?: string
+interface ICharFilter extends QueryFindOptions {
+  userName?: string
   class?: string
   ancestry?: string
   level?: {
@@ -9,6 +10,7 @@ interface CharFilterType extends QueryFindOptions {
     $gte?: number
   }
   name?: string
+  _id?: ObjectID
 }
 
-export default CharFilterType
+export default ICharFilter

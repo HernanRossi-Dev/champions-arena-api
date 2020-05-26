@@ -1,19 +1,19 @@
 import { SendTempPassword, processFindUserFilter, userDupeCheck, insertDefaultCharacters, prepareUpdate, logger } from '../utils'
 import { NotFoundError, MongoDBError } from '../errors'
 import { UserDB, CharacterDB } from '../data-access'
-import {  ActionResult, IUserQueryType, IUserFilterType, CharFilterType, User } from '../models'
-import { ObjectId } from 'mongodb'
+import { ActionResult, IUserQueryType, IUserFilter, ICharFilter, User } from '../models'
+import { ObjectID } from 'mongodb'
 
-const getUserById = async (id: ObjectId): Promise<ActionResult> => {
-  const userDetails = await UserDB.getUserById(id)
+const getUserById = async (_id: ObjectID): Promise<ActionResult> => {
+  const userDetails = await UserDB.getUserById(_id)
   if (!userDetails?._id) {
-    return new ActionResult({}, `Get user failed: ${id}`, new NotFoundError())
+    return new ActionResult({}, `Get user failed: ${_id}`, new NotFoundError())
   }
-  return new ActionResult(userDetails, `Get user success: ${id}`)
+  return new ActionResult(userDetails, `Get user success: ${_id}`)
 }
 
 const getUserByQuery = async (query: IUserQueryType): Promise<ActionResult> => {
-  const filter: IUserFilterType = processFindUserFilter(query)
+  const filter: IUserFilter = processFindUserFilter(query)
   const userDetails = await UserDB.getUserByQuery(filter)
   if (!userDetails?._id) {
     return new ActionResult({}, 'Failed to fetch user details.', new NotFoundError())
@@ -24,13 +24,13 @@ const getUserByQuery = async (query: IUserQueryType): Promise<ActionResult> => {
   return new ActionResult(userDetails, 'Get users success.')
 }
 
-const createUser = async (user: User ): Promise<ActionResult> => {
+const createUser = async (user: User): Promise<ActionResult> => {
   const { userName, email } = user
   await userDupeCheck(userName, email)
   await user.setInsertValues()
   const result = await UserDB.createUser(user)
   if (!result._id) {
-    return new ActionResult(result, 'Create user failed.', new MongoDBError())
+    return new ActionResult({}, 'Create user failed.', new MongoDBError())
   }
   const insertResult = await insertDefaultCharacters(userName)
   if (insertResult instanceof MongoDBError) {
@@ -40,28 +40,30 @@ const createUser = async (user: User ): Promise<ActionResult> => {
 }
 
 const updateUser = async (user: User): Promise<ActionResult> => {
-  if (!ObjectId.isValid(user._id)) throw new MongoDBError('Invalid search id.')
-  const searchId = new ObjectId(user._id)
+  if (!ObjectID.isValid(user._id)) throw new MongoDBError('Invalid search id.')
+  const searchId = new ObjectID(user._id)
   prepareUpdate(user)
   const result = await UserDB.updateUser(searchId, user)
   if (!result.nModified) {
     return new ActionResult({}, `Failed to update user: ${searchId}`, new NotFoundError())
   }
-  return new ActionResult({modified: 1})
+  return new ActionResult({ modified: result.nModified }, 'Update user success.')
 }
 
-const deleteUser = async (id: ObjectId, userName: string): Promise<ActionResult> => {
-  const result = await UserDB.deleteUser(id, userName)
+const deleteUser = async (_id: ObjectID, userName: string, deleteCharacters = false): Promise<ActionResult> => {
+  const result = await UserDB.deleteUser(_id, userName)
   if (!result.deletedCount) {
-    return new ActionResult(result, `Failed to delete user: ${userName}`, new NotFoundError())
+    return new ActionResult({}, `Failed to delete user: ${userName}`, new NotFoundError())
   }
-  try {
-    const filter: CharFilterType = { user: userName }
-    await CharacterDB.deleteCharacters(filter)
-  } catch (err) {
-    logger.error({message: 'Failed to delete users characters: ' + err.message, name: err.name})
+  if (deleteCharacters) {
+    try {
+      const filter: ICharFilter = { userName }
+      await CharacterDB.deleteCharacters(filter)
+    } catch (err) {
+      logger.error({ message: 'Failed to delete users characters: ' + err.message, name: err.name })
+    }
   }
-  return new ActionResult(result, `Delete User Success: ${userName}`)
+  return new ActionResult({ deleted: result.deletedCount }, `Delete User Success: ${userName}`)
 }
 
 export default {

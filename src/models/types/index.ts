@@ -1,11 +1,11 @@
-import CharFilterType from './character-filter'
-import { IUserFilterType, IUserDupeFilter } from './user-filter'
+import ICharFilter from '../interfaces/character-filter'
+import { IUserFilter, IUserDupeFilter } from '../interfaces/user-filter'
 import CharQueryType from './character-query'
 import { IUserQueryType } from './user-query'
 
 export {
-  CharFilterType,
-  IUserFilterType,
+  ICharFilter,
+  IUserFilter,
   CharQueryType,
   IUserQueryType,
   IUserDupeFilter

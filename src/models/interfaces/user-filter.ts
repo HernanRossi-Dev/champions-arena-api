@@ -1,6 +1,6 @@
 import { QueryFindOptions } from "mongoose"
 
-interface IUserFilterType extends QueryFindOptions {
+interface IUserFilter extends QueryFindOptions {
   userName?: string
   firstName?: string
   lastName?: string
@@ -12,6 +12,6 @@ interface IUserDupeFilter extends QueryFindOptions {
   $or: [ { userName: string }, { email: string} ]
 }
 export {
-  IUserFilterType,
+  IUserFilter,
   IUserDupeFilter
 }
