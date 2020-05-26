@@ -44,7 +44,7 @@ describe('Characters-API', () => {
       const result = await request(server).post(`/api/characters`)
         .set('authorization', 'Bearer ' + token)
         .send({ data: newCharacter })
-      newCharacter._id = result?.body?.data?._id
+      newCharacter._id = result.body?.data?._id
     })
 
     describe('Get Character by _id /api/characters/:_id, ', () => {
@@ -55,7 +55,7 @@ describe('Characters-API', () => {
         expect(res.status).toEqual(422)
         expect(res.body).toHaveProperty('message')
         expect(res.body).not.toHaveProperty('data')
-        expect(res.body.message).toBe(`Invalid character _id format: notvalide!!@@!@!@!@!@!@!@!@`)
+        expect(res.body.message).toBe(`Invalid character _id format: notvalide!!@@!@!@!@!@!@!@!@.`)
       })
       it('should respond status 200 when character not found', async () => {
         const _id = new ObjectID()
@@ -63,7 +63,7 @@ describe('Characters-API', () => {
         expect(res.status).toEqual(200)
         expect(res.body.status).toEqual('Processed')
         expect(res.body.data).toEqual({})
-        expect(res.body.message).toEqual(`Get character failed: ${_id}`)
+        expect(res.body.message).toEqual(`Get character failed: ${_id}.`)
         expect(res.body.errors.length).toBeGreaterThan(0)
       })
 
@@ -76,18 +76,18 @@ describe('Characters-API', () => {
         expect(character).toHaveProperty('_id')
         expect(character).toHaveProperty('basics')
         expect(character.basics).toHaveProperty('name')
-        expect(character).toHaveProperty('user')
-        expect(res.body.message).toEqual(`Get character success: ${_id}`)
+        expect(character).toHaveProperty('userName')
+        expect(res.body.message).toEqual(`Get character success: ${_id}.`)
         expect(res.body.errors.length).toBe(0)
       })
     })
 
     describe('Get Character by query /api/characters/ ', () => {
       it('should respond status 200 if no character found', async () => {
-        const fakename = faker.name.firstName()
+        const fakename = 'This is a fake name'
         const res = await request(server).get(`/api/characters`)
           .set('authorization', 'Bearer ' + token)
-          .query({ user: fakename })
+          .query({ userName: fakename })
         expect(res.status).toEqual(200)
         expect(res.body.status).toEqual('Processed')
         expect(res.body.data.length).toEqual(0)
@@ -99,7 +99,7 @@ describe('Characters-API', () => {
         const _id = newCharacter._id
         const res = await request(server).get(`/api/characters`)
           .set('authorization', 'Bearer ' + token)
-          .query({ user: newCharacter.userName })
+          .query({ userName: newCharacter.userName })
         expect(res.status).toEqual(200)
         expect(res.body.status).toEqual('Processed')
         expect(res.body.data.length).toEqual(1)
@@ -161,61 +161,50 @@ describe('Characters-API', () => {
       updateCharacter._id = result?.body?.data?._id
     })
 
-    describe('Update Character put /api/characters/:_id, ', () => {
-      it('should respond status 422 when bad _id provided', async () => {
-        const _id = 'notvalide!!@@!@!@!@!@!@!@!@'
-        const res = await request(server).put(`/api/characters/${_id}`)
-          .set('authorization', 'Bearer ' + token)
-          .send({})
-        expect(res.status).toEqual(422)
-        expect(res.body).toHaveProperty('message')
-        expect(res.body).not.toHaveProperty('data')
-        expect(res.body.message).toBe(`Invalid character _id format: notvalide!!@@!@!@!@!@!@!@!@`)
-      })
-
+    describe('Update Character put /api/characters/, ', () => {
       it('should respond status 200 when character not found', async () => {
-        const _id = new ObjectID()
-        const res = await request(server).put(`/api/characters/${_id}`)
+        const res = await request(server).put(`/api/characters/`)
           .set('authorization', 'Bearer ' + token)
-          .send({})
+          .send({ data: {} })
         expect(res.status).toEqual(200)
         expect(res.body).toHaveProperty('name')
         expect(res.body).toHaveProperty('message')
         expect(res.body).not.toHaveProperty('data')
         expect(res.body).not.toHaveProperty('status')
         expect(res.body.name).toBe('ProcessError')
-        expect(res.body.message).toBe(`Character data must be provided.`)
+        expect(res.body.message).toBe(`Character must have a userName.`)
       })
 
       it('should respond status 200 if character not found.', async () => {
         const newUser = 'ChangeDaUser'
-        const _id = new ObjectID()
-        updateCharacter.userName = newUser
-        const res = await request(server).put(`/api/characters/${_id}`)
+        const changedChar = { ...updateCharacter }
+        changedChar.userName = newUser
+        changedChar._id = new ObjectID()
+        const res = await request(server).put(`/api/characters/`)
           .set('authorization', 'Bearer ' + token)
-          .send({ data: { ...updateCharacter } })
+          .send({ data: { ...changedChar } })
         expect(res.status).toEqual(200)
         expect(res.body).toHaveProperty('data')
-        expect(res.body.data).toHaveProperty('nModified')
-        expect(res.body.message).toBe(`Failed to update character: ${_id}`)
+        expect(res.body.data).toHaveProperty('modifiedCount')
+        expect(res.body.message).toBe(`Failed to update character.`)
         expect(res.body.status).toBe('Processed')
-        expect(res.body.data.nModified).toBe(0)
+        expect(res.body.data.modifiedCount).toBe(0)
         expect(res.body.errors.length).toBeGreaterThan(0)
       })
 
       it('should respond status 200 and return character if found.', async () => {
         const newUser = 'ChangeDaUser'
-        const _id = updateCharacter._id
-        updateCharacter.userName = newUser
-        const res = await request(server).put(`/api/characters/${_id}`)
+        const changedChar = { ...updateCharacter }
+        changedChar.userName = newUser
+        const res = await request(server).put(`/api/characters/`)
           .set('authorization', 'Bearer ' + token)
-          .send({ data: { ...updateCharacter } })
+          .send({ data: { ...changedChar } })
         expect(res.status).toEqual(200)
         expect(res.body).toHaveProperty('data')
-        expect(res.body.data).toHaveProperty('nModified')
+        expect(res.body.data).toHaveProperty('modifiedCount')
         expect(res.body.message).toBe('Update character success.')
         expect(res.body.status).toBe('Processed')
-        expect(res.body.data.nModified).toBe(1)
+        expect(res.body.data.modifiedCount).toBe(1)
       })
     })
   })
@@ -229,7 +218,7 @@ describe('Characters-API', () => {
       updateCharacter._id = result?.body?.data?._id
     })
 
-    describe('Update Character put /api/characters/:_id, ', () => {
+    describe('Delete Character /api/characters/:_id, ', () => {
       it('should respond status 200 when character not found', async () => {
         const _id = 'notvalide!!@@!@!@!@!@!@!@!@'
         const res = await request(server).delete(`/api/characters/${_id}`)

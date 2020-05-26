@@ -23,11 +23,11 @@ const processDeleteCharacterFilter = (query: CharQueryType): ICharFilter => {
 
 const processFindCharacterFilter = (query: CharQueryType): ICharFilter => {
   const filter: ICharFilter = {}
-  const filterParams = ['user', 'class', 'ancestry', 'level', 'name']
+  const filterParams = ['userName', 'class', 'ancestry', 'level', 'name']
   filterParams.map((param) => {
     if (query[param as keyof CharQueryType]) {
-      const newFilterParam: string = <string>query[param as keyof CharQueryType]
-      const addFilter = CharacterFilters[param](newFilterParam, filter)
+      const filterValue: string = <string>query[param as keyof CharQueryType]
+      const addFilter = CharacterFilters[param](filterValue, filter)
       Object.assign(filter, addFilter)
     }
   })
@@ -47,8 +47,8 @@ const processFindUserFilter = (query: IUserQueryType): IUserFilter => {
 }
 
 const CharacterFilters: any = {
-  user: (value: string) => {
-    return { user: value }
+  userName: (value: string) => {
+    return { userName: value }
   },
   type: (value: string) => {
     return { 'basics.type': value }

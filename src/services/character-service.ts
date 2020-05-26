@@ -4,17 +4,17 @@ import { processFindCharacterFilter, processDeleteCharacterFilter } from '../uti
 import { ActionResult, CharQueryType, ICharFilter, ICharacter } from '../models'
 import { ObjectID } from 'mongodb'
 
-const getCharacterById = async (id: ObjectID): Promise<ActionResult> => {
-  const result = await CharacterDB.getCharacterById(id)
+const getCharacterById = async (_id: ObjectID): Promise<ActionResult> => {
+  const result = await CharacterDB.getCharacterById(_id)
   if (!result?._id) {
-    return new ActionResult({}, `Get character failed: ${id}`, new NotFoundError())
+    return new ActionResult({}, `Get character failed: ${_id}.`, new NotFoundError())
   }
-  return new ActionResult(result, `Get character success: ${id}`)
+  return new ActionResult(result, `Get character success: ${_id}.`)
 }
 
 const getCharacterByFilter = async (query: CharQueryType): Promise<ActionResult> => {
-  if (!query.userName) return new ActionResult([], 'Must provide a username to retrieve characters.', new NotFoundError())
   const filter: ICharFilter = processFindCharacterFilter(query)
+  if (!filter.userName) return new ActionResult([], 'Must provide a username to retrieve characters.', new NotFoundError())
   const result = await CharacterDB.getCharacterByFilter(filter)
   if (!result.length) {
     return new ActionResult([], 'Failed to fetch characters.', new NotFoundError())
@@ -33,29 +33,31 @@ const createCharacter = async (character: ICharacter): Promise<ActionResult> => 
 }
 
 const updateCharacter = async (character: ICharacter): Promise<ActionResult> => {
-  delete character._id
   const result = await CharacterDB.updateCharacter(character)
-  if (!result.nModified) {
-    return new ActionResult({}, `Failed to update character.`, new NotFoundError())
+  const modifiedCount = result.nModified
+  if (!modifiedCount) {
+    return new ActionResult({ modifiedCount }, `Failed to update character.`, new NotFoundError())
   }
-  return new ActionResult(result, 'Update character success.')
+  return new ActionResult({ modifiedCount }, 'Update character success.')
 }
 
 const deleteCharacter = async (_id: ObjectID): Promise<ActionResult> => {
   const result = await CharacterDB.deleteCharacter(_id)
-  if (!result.deletedCount) {
-    return new ActionResult({}, `Failed to delete character: ${_id}`, new NotFoundError())
+  const { deletedCount } = result
+  if (!deletedCount) {
+    return new ActionResult({ deletedCount }, `Failed to delete character: ${_id}`, new NotFoundError())
   }
-  return new ActionResult({deleted: result.deletedCount}, `Delete character success: ${_id}`)
+  return new ActionResult({ deletedCount }, `Delete character success: ${_id}`)
 }
 
 const deleteCharacters = async (query: CharQueryType): Promise<ActionResult> => {
   const filter: ICharFilter = processDeleteCharacterFilter(query)
   const result = await CharacterDB.deleteCharacters(filter)
-  if (!result.deletedCount) {
-    return new ActionResult({}, 'Failed to delete characters.', new NotFoundError())
+  const { deletedCount } = result
+  if (!deletedCount) {
+    return new ActionResult({ deletedCount }, 'Failed to delete characters.', new NotFoundError())
   }
-  return new ActionResult({deleted: result.deletedCount}, 'Delete characters success.')
+  return new ActionResult({ deletedCount }, 'Delete characters success.')
 }
 
 export default {

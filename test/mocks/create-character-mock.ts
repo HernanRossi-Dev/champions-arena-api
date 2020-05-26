@@ -1,5 +1,4 @@
 import faker from 'faker';
-import lodash from 'lodash';
 import getCharacterProperties from './character-properties';
 import { Character } from '../../src/models';
 import { ObjectID } from 'mongodb';
@@ -7,7 +6,7 @@ import { ObjectID } from 'mongodb';
 const CreateCharacterMock = () => {
   const newCharacter = {
     created: new Date(),
-    user: faker.name.firstName(),
+    userName: faker.name.firstName(),
     _id: new ObjectID(),
     basics: {
       name: faker.name.firstName(),

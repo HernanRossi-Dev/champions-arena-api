@@ -6,7 +6,7 @@ const userFullName = (user: IUser): string => {
   return user.firstName + ' ' + user.lastName
 }
 
-const isUser = (data: object): boolean => {
+const isUser = (data: object) => {
   if ((data as IUser).userName && (data as IUser).email) {
     return true
   }

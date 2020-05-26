@@ -5,6 +5,6 @@ export default interface IBase {
   _id?: ObjectID
   created?: Date
   updated?: Date
-  modified?: number
-  deleted?: number
+  modifiedCount?: number
+  deletedCount?: number
 }

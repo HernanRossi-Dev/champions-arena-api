@@ -1,7 +1,5 @@
-import { isUser } from '../utils/user-utils'
 import { IBase, IUser, ICharacter } from './interfaces'
 import { User, Character } from '.'
-import { isCharacter } from '../utils'
 
 export interface IActionResult {
   message: string
@@ -23,16 +21,29 @@ export default class ActionResult implements IActionResult {
     this.errors = error ? [error] : []
   }
 
-  private processData(data: object ): IBase {
-    
-    if (isUser(data)) {
+  private processData(data: object): IBase {
+    if (this.isUser(data) ) {
       const user = new User(<IUser>data)
       delete user.password
       return user
-    }else if (isCharacter(data)) {
+    } else if (this.isCharacter(data)) {
       return new Character(<ICharacter>data)
     }
     return data
+  }
+
+  isUser = (data: object) => {
+    if ((data as IUser).userName && (data as IUser).email) {
+      return true
+    }
+    return false
+  }
+
+  isCharacter = (data: object) => {
+    if ((data as ICharacter).userName && (data as ICharacter).basics.name) {
+      return true
+    }
+    return false
   }
 
   setErrors(error: Error) {

@@ -8,10 +8,10 @@ const ObjectId = mongodb.ObjectID
 const router = Router()
 
 router.get('/:_id', async (req: Request, res: Response) => {
-  const { _id } = req?.params
-  if (!ObjectId.isValid(_id)) return res.status(422).json({message: `Invalid character _id format: ${_id}`})
+  const _id = req.params?._id
+  if (!ObjectId.isValid(_id)) return res.status(422).json({message: `Invalid character _id format: ${_id}.`})
   try {
-    const objId = new ObjectID(req.params.id)
+    const objId = new ObjectID(_id)
     const result: ActionResult = await CharacterService.getCharacterById(objId)
     res.status(200).json(result.toJSON())
   } catch (err) {
@@ -56,7 +56,7 @@ router.put('/', async (req: Request, res: Response) => {
 })
 
 router.delete('/:_id', async (req: Request, res: Response) => {
-  const { _id } = req?.params
+  const _id  = req.params?._id
   if (!ObjectId.isValid(_id)) return res.status(422).json({message: `Invalid character _id format: ${_id}`})
   try {
     const objId = new ObjectID(req.params._id)

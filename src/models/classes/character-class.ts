@@ -106,7 +106,6 @@ export class Character implements ICharacter {
   feats?: object
 
   constructor(character: ICharacter) {
-    console.log("Char: ", character)
     if (!character) throw new ProcessError('Character data must be provided.')
     if (!character.userName) throw new ProcessError('Character must have a userName.')
     this.userName = character.userName

@@ -44,16 +44,18 @@ const updateUser = async (user: User): Promise<ActionResult> => {
   const searchId = new ObjectID(user._id)
   prepareUpdate(user)
   const result = await UserDB.updateUser(searchId, user)
-  if (!result.nModified) {
-    return new ActionResult({}, `Failed to update user: ${searchId}`, new NotFoundError())
+  const modifiedCount = result.nModified
+  if (!modifiedCount) {
+    return new ActionResult({ modifiedCount }, `Failed to update user: ${searchId}`, new NotFoundError())
   }
-  return new ActionResult({ modified: result.nModified }, 'Update user success.')
+  return new ActionResult({ modifiedCount }, 'Update user success.')
 }
 
 const deleteUser = async (_id: ObjectID, userName: string, deleteCharacters = false): Promise<ActionResult> => {
   const result = await UserDB.deleteUser(_id, userName)
-  if (!result.deletedCount) {
-    return new ActionResult({}, `Failed to delete user: ${userName}`, new NotFoundError())
+  const { deletedCount } = result
+  if (!deletedCount) {
+    return new ActionResult({ deletedCount }, `Failed to delete user: ${userName}`, new NotFoundError())
   }
   if (deleteCharacters) {
     try {
@@ -63,7 +65,7 @@ const deleteUser = async (_id: ObjectID, userName: string, deleteCharacters = fa
       logger.error({ message: 'Failed to delete users characters: ' + err.message, name: err.name })
     }
   }
-  return new ActionResult({ deleted: result.deletedCount }, `Delete User Success: ${userName}`)
+  return new ActionResult({ deletedCount }, `Delete User Success: ${userName}`)
 }
 
 export default {
