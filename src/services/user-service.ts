@@ -6,7 +6,7 @@ import { ObjectID } from 'mongodb'
 
 const getUserById = async (_id: ObjectID): Promise<ActionResult> => {
   const userDetails = await UserDB.getUserById(_id)
-  if (!userDetails?._id) {
+  if (!userDetails?.userName) {
     return new ActionResult({}, `Get user failed: ${_id}`, new NotFoundError())
   }
   return new ActionResult(userDetails, `Get user success: ${_id}`)
@@ -16,12 +16,12 @@ const getUserByQuery = async (query: IUserQueryType): Promise<ActionResult> => {
   const filter: IUserFilter = processFindUserFilter(query)
   const userDetails = await UserDB.getUserByQuery(filter)
   if (!userDetails?._id) {
-    return new ActionResult({}, 'Failed to fetch user details.', new NotFoundError())
+    return new ActionResult({}, 'Failed to fetch user.', new NotFoundError())
   }
   if (query.sendEmail) {
     await SendTempPassword(userDetails)
   }
-  return new ActionResult(userDetails, 'Get users success.')
+  return new ActionResult(userDetails, 'Get user success.')
 }
 
 const createUser = async (user: User): Promise<ActionResult> => {

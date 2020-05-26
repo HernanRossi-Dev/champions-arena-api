@@ -1,5 +1,5 @@
 import { UserService, jwtCheck } from '../services'
-import { ObjectId } from 'mongodb'
+import { ObjectID } from 'mongodb'
 import { Request, Response, Router } from 'express'
 import { ActionResult, IUserQueryType, User } from '../models'
 import { logger } from '../utils'
@@ -7,10 +7,11 @@ import { logger } from '../utils'
 const router = Router()
 
 router.get('/:_id', async (req: Request, res: Response) => {
-  if (!ObjectId.isValid(req.params._id)) return res.status(422).send(`Invalid user _id format: ${req.params._id}`)
-
+  if (!ObjectID.isValid(req.params?._id)) {
+    return res.status(422).json({ message: `Invalid user _id format.` })
+  }
   try {
-    const _id = new ObjectId(req.params._id)
+    const _id = new ObjectID(req.params._id)
     const result: ActionResult = await UserService.getUserById(_id)
     logger.debug({ message: 'Retrieve user success', data: result })
     res.status(200).json(result.toJSON())
@@ -61,10 +62,10 @@ router.put('/', async (req: Request, res: Response) => {
 router.delete('/', async (req: Request, res: Response) => {
   try {
     const userName: string = req.body?.userName
-    if (!ObjectId.isValid(req.body?._id) || !userName){
-      return res.status(422).send(`Must provide valid userName and id. ${req.body?.userName}, ${req.body?._id}`)
+    if (!ObjectID.isValid(req.body?._id) || !userName) {
+      return res.status(422).json({ message: `Must provide valid userName and id. ${req.body?.userName}, ${req.body?._id}` })
     }
-    const _id: ObjectId = new ObjectId(req.body._id)
+    const _id: ObjectID = new ObjectID(req.body._id)
     const result: ActionResult = await UserService.deleteUser(_id, userName)
     res.status(200).json(result.toJSON())
   } catch (err) {

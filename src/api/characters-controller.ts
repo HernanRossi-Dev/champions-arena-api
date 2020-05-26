@@ -9,7 +9,7 @@ const router = Router()
 
 router.get('/:_id', async (req: Request, res: Response) => {
   const _id = req.params?._id
-  if (!ObjectId.isValid(_id)) return res.status(422).json({message: `Invalid character _id format: ${_id}.`})
+  if (!ObjectId.isValid(_id)) return res.status(422).json({message: `Invalid character _id format.`})
   try {
     const objId = new ObjectID(_id)
     const result: ActionResult = await CharacterService.getCharacterById(objId)
