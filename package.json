@@ -10,7 +10,8 @@
     "start-dev-win": "set NODE_ENV=development & node -r dotenv/config ./dist/server.js",
     "build": "tsc",
     "test": "jest --forceExit --coverage --verbose --detectOpenHandles --runInBand",
-    "test-file": "jest --forceExit --coverage --verbose --detectOpenHandles --runInBand test/component/user-api.spec.ts",
+    "test-user": "jest --forceExit --coverage --verbose --detectOpenHandles --runInBand test/component/user-api.spec.ts",
+    "test-char": "jest --forceExit --coverage --verbose --detectOpenHandles --runInBand test/component/character-api.spec.ts",
     "view:coverage": "serve coverage/lcov-report"
   },
   "engines": {
@@ -20,12 +21,14 @@
   "license": "ISC",
   "dependencies": {
     "@babel/core": "^7.9.6",
+    "@hapi/joi": "^17.1.1",
     "@types/bcrypt": "^3.0.0",
     "@types/body-parser": "^1.19.0",
     "@types/config": "^0.0.36",
     "@types/cors": "^2.8.6",
     "@types/eslint": "^6.8.1",
     "@types/express": "^4.17.6",
+    "@types/hapi__joi": "^17.1.0",
     "@types/helmet": "^0.0.47",
     "@types/lodash": "^4.14.151",
     "@types/mongoose": "^5.7.20",
@@ -51,7 +54,6 @@
     "helmet": "^3.22.0",
     "hover": "^3.0.0-alpha.6",
     "immutable": "^4.0.0-rc.12",
-    "joi": "^14.3.1",
     "jsonwebtoken": "^8.2.1",
     "jwks-rsa": "^1.8.0",
     "lodash": "^4.17.11",

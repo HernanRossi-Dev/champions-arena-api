@@ -1,15 +1,13 @@
-import { UserService, jwtCheck } from '../services'
 import { ObjectID } from 'mongodb'
 import { Request, Response, Router } from 'express'
+import { UserService, jwtCheck } from '../services'
 import { ActionResult, IUserQueryType, User } from '../models'
 import { logger } from '../utils'
+import { fetchUserById, fetchUserByQuery, postUser, deleteUserQuery, updateUser ,joiValidation } from '../models/request-validation'
 
 const router = Router()
 
-router.get('/:_id', async (req: Request, res: Response) => {
-  if (!ObjectID.isValid(req.params?._id)) {
-    return res.status(422).json({ message: `Invalid user _id format.` })
-  }
+router.get('/:_id', joiValidation(fetchUserById, 'params'), async (req: Request, res: Response) => {
   try {
     const _id = new ObjectID(req.params._id)
     const result: ActionResult = await UserService.getUserById(_id)
@@ -23,7 +21,7 @@ router.get('/:_id', async (req: Request, res: Response) => {
 
 router.use(jwtCheck)
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', joiValidation(fetchUserByQuery, 'query'), async (req: Request, res: Response) => {
   try {
     const query = <IUserQueryType>req.query
     const result: ActionResult = await UserService.getUserByQuery(query)
@@ -35,7 +33,7 @@ router.get('/', async (req: Request, res: Response) => {
   }
 })
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', joiValidation(postUser, 'body'), async (req: Request, res: Response) => {
   try {
     const user: User = new User(req.body)
     const result: ActionResult = await UserService.createUser(user)
@@ -47,7 +45,7 @@ router.post('/', async (req: Request, res: Response) => {
   }
 })
 
-router.put('/', async (req: Request, res: Response) => {
+router.put('/', joiValidation(updateUser, 'body'), async (req: Request, res: Response) => {
   try {
     const user: User = new User(req.body)
     const result: ActionResult = await UserService.updateUser(user)
@@ -59,14 +57,10 @@ router.put('/', async (req: Request, res: Response) => {
   }
 })
 
-router.delete('/', async (req: Request, res: Response) => {
+router.delete('/', joiValidation(deleteUserQuery, 'query'), async (req: Request, res: Response) => {
   try {
-    const userName: string = req.body?.userName
-    if (!ObjectID.isValid(req.body?._id) || !userName) {
-      return res.status(422).json({ message: `Must provide valid userName and id. ${req.body?.userName}, ${req.body?._id}` })
-    }
-    const _id: ObjectID = new ObjectID(req.body._id)
-    const result: ActionResult = await UserService.deleteUser(_id, userName)
+    const { query } = req
+    const result: ActionResult = await UserService.deleteUser(query)
     res.status(200).json(result.toJSON())
   } catch (err) {
     logger.error({ message: 'Delete user failure.', error: err.message, name: err.name })

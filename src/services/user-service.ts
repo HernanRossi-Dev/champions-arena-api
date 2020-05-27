@@ -3,6 +3,7 @@ import { NotFoundError, MongoDBError } from '../errors'
 import { UserDB, CharacterDB } from '../data-access'
 import { ActionResult, IUserQueryType, IUserFilter, ICharFilter, User } from '../models'
 import { ObjectID } from 'mongodb'
+import { deleteQuery } from '../models/types'
 
 const getUserById = async (_id: ObjectID): Promise<ActionResult> => {
   const userDetails = await UserDB.getUserById(_id)
@@ -32,11 +33,12 @@ const createUser = async (user: User): Promise<ActionResult> => {
   if (!result._id) {
     return new ActionResult({}, 'Create user failed.', new MongoDBError())
   }
+
   const insertResult = await insertDefaultCharacters(userName)
   if (insertResult instanceof MongoDBError) {
-    return new ActionResult(result, 'Create user success.', insertResult)
+    return new ActionResult(result, 'Create user success. \n Default characters not created', insertResult)
   }
-  return new ActionResult(result, 'Create user success.\n Default characters insert success.')
+  return new ActionResult(result, 'Create user success.\n Default characters created.')
 }
 
 const updateUser = async (user: User): Promise<ActionResult> => {
@@ -51,8 +53,10 @@ const updateUser = async (user: User): Promise<ActionResult> => {
   return new ActionResult({ modifiedCount }, 'Update user success.')
 }
 
-const deleteUser = async (_id: ObjectID, userName: string, deleteCharacters = false): Promise<ActionResult> => {
-  const result = await UserDB.deleteUser(_id, userName)
+const deleteUser = async (query: unknown): Promise<ActionResult> => {
+  const { _id, userName, deleteCharacters } = <deleteQuery>query
+  const searchId = new ObjectID(_id)
+  const result = await UserDB.deleteUser(searchId, userName)
   const { deletedCount } = result
   if (!deletedCount) {
     return new ActionResult({ deletedCount }, `Failed to delete user: ${userName}`, new NotFoundError())

@@ -132,7 +132,7 @@ describe('Characters-API', () => {
     it('should respond status 200 and return object', async () => {
       const res = await request(server).post(`/api/characters`)
         .set('authorization', 'Bearer ' + token)
-        .send({ data: { userName: 'Test name' } })
+        .send({ userName: 'Test name' })
       expect(res.status).toEqual(200)
       expect(res.body).toHaveProperty('data')
       expect(res.body.message).toBe('Create character success.')
@@ -143,7 +143,7 @@ describe('Characters-API', () => {
       const createCharacter = CreateCharacterMock()
       const res = await request(server).post(`/api/characters`)
         .set('authorization', 'Bearer ' + token)
-        .send({ data: { ...createCharacter } })
+        .send({ ...createCharacter })
       expect(res.status).toEqual(200)
       expect(res.body).toHaveProperty('data')
       expect(res.body.message).toBe('Create character success.')
@@ -157,7 +157,7 @@ describe('Characters-API', () => {
       updateCharacter = CreateCharacterMock()
       const result = await request(server).post(`/api/characters`)
         .set('authorization', 'Bearer ' + token)
-        .send({ data: newCharacter })
+        .send({  ...newCharacter })
       updateCharacter._id = result?.body?.data?._id
     })
 
@@ -165,7 +165,7 @@ describe('Characters-API', () => {
       it('should respond status 200 when character not found', async () => {
         const res = await request(server).put(`/api/characters/`)
           .set('authorization', 'Bearer ' + token)
-          .send({ data: {} })
+          .send({})
         expect(res.status).toEqual(200)
         expect(res.body).toHaveProperty('name')
         expect(res.body).toHaveProperty('message')
@@ -182,7 +182,7 @@ describe('Characters-API', () => {
         changedChar._id = new ObjectID()
         const res = await request(server).put(`/api/characters/`)
           .set('authorization', 'Bearer ' + token)
-          .send({ data: { ...changedChar } })
+          .send({ ...changedChar })
         expect(res.status).toEqual(200)
         expect(res.body).toHaveProperty('data')
         expect(res.body.data).toHaveProperty('modifiedCount')
@@ -198,7 +198,7 @@ describe('Characters-API', () => {
         changedChar.userName = newUser
         const res = await request(server).put(`/api/characters/`)
           .set('authorization', 'Bearer ' + token)
-          .send({ data: { ...changedChar } })
+          .send({ ...changedChar })
         expect(res.status).toEqual(200)
         expect(res.body).toHaveProperty('data')
         expect(res.body.data).toHaveProperty('modifiedCount')

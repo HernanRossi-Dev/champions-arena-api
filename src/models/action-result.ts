@@ -15,7 +15,7 @@ export default class ActionResult implements IActionResult {
   message: string
 
   constructor(databaseResult: object, newMessage = '', error?: Error) {
-    this.status = 'Processed'
+    this.status = 'Processed Successfully'
     this.data = this.processData(databaseResult)
     this.message = newMessage
     this.errors = error ? [error] : []
@@ -51,6 +51,9 @@ export default class ActionResult implements IActionResult {
   }
 
   toJSON(): IActionResult {
+    if (this.errors.length) {
+      this.status = 'Processed with Errors'
+    }
     return {
       data: this.data,
       message: this.message,

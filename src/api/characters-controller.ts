@@ -35,7 +35,7 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.post('/', async (req: Request, res: Response) => {
   try {
-    const character: Character = new Character(req.body.data)
+    const character: Character = new Character(req.body)
     const result: ActionResult = await CharacterService.createCharacter(character)
     res.status(200).json(result.toJSON())
   } catch (err) {
@@ -46,7 +46,7 @@ router.post('/', async (req: Request, res: Response) => {
 
 router.put('/', async (req: Request, res: Response) => {
   try {
-    const character: Character = new Character(req.body.data)
+    const character: Character = new Character(req.body)
     const result: ActionResult = await CharacterService.updateCharacter(character)
     res.status(200).json(result.toJSON())
   } catch (err) {
