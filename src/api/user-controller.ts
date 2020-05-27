@@ -3,11 +3,12 @@ import { Request, Response, Router } from 'express'
 import { UserService, jwtCheck } from '../services'
 import { ActionResult, IUserQueryType, User } from '../models'
 import { logger } from '../utils'
-import { fetchUserById, fetchUserByQuery, postUser, deleteUserQuery, updateUser ,joiValidation } from '../models/request-validation'
+import { JoiSchemas,joiValidation } from '../models/request-validation'
+import { DeleteQueryT } from '../models/types'
 
 const router = Router()
 
-router.get('/:_id', joiValidation(fetchUserById, 'params'), async (req: Request, res: Response) => {
+router.get('/:_id', joiValidation(JoiSchemas.findById, 'params'), async (req: Request, res: Response) => {
   try {
     const _id = new ObjectID(req.params._id)
     const result: ActionResult = await UserService.getUserById(_id)
@@ -21,7 +22,7 @@ router.get('/:_id', joiValidation(fetchUserById, 'params'), async (req: Request,
 
 router.use(jwtCheck)
 
-router.get('/', joiValidation(fetchUserByQuery, 'query'), async (req: Request, res: Response) => {
+router.get('/', joiValidation(JoiSchemas.fetchUserByQuery, 'query'), async (req: Request, res: Response) => {
   try {
     const query = <IUserQueryType>req.query
     const result: ActionResult = await UserService.getUserByQuery(query)
@@ -33,7 +34,7 @@ router.get('/', joiValidation(fetchUserByQuery, 'query'), async (req: Request, r
   }
 })
 
-router.post('/', joiValidation(postUser, 'body'), async (req: Request, res: Response) => {
+router.post('/', joiValidation(JoiSchemas.postUser, 'body'), async (req: Request, res: Response) => {
   try {
     const user: User = new User(req.body)
     const result: ActionResult = await UserService.createUser(user)
@@ -45,7 +46,7 @@ router.post('/', joiValidation(postUser, 'body'), async (req: Request, res: Resp
   }
 })
 
-router.put('/', joiValidation(updateUser, 'body'), async (req: Request, res: Response) => {
+router.put('/', joiValidation(JoiSchemas.updateUser, 'body'), async (req: Request, res: Response) => {
   try {
     const user: User = new User(req.body)
     const result: ActionResult = await UserService.updateUser(user)
@@ -57,9 +58,9 @@ router.put('/', joiValidation(updateUser, 'body'), async (req: Request, res: Res
   }
 })
 
-router.delete('/', joiValidation(deleteUserQuery, 'query'), async (req: Request, res: Response) => {
+router.delete('/', joiValidation(JoiSchemas.deleteUserQuery, 'query'), async (req: Request, res: Response) => {
   try {
-    const { query } = req
+    const query = <DeleteQueryT>req.query
     const result: ActionResult = await UserService.deleteUser(query)
     res.status(200).json(result.toJSON())
   } catch (err) {

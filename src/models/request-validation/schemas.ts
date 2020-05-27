@@ -23,7 +23,7 @@ export const updateUser = Joi.object({
   password: Joi.string().regex(passwordRegex).optional()
 }).or('userName', 'email')
 
-export const fetchUserById = Joi.object({
+export const findById = Joi.object({
   _id: Joi.string().regex(objectIdRegex).required(),
 })
 
@@ -39,4 +39,38 @@ export const deleteUserQuery = Joi.object({
   userName: Joi.string().required(),
   _id: Joi.string().regex(objectIdRegex).required(),
   deleteCharacters: Joi.boolean().optional()
+})
+
+export const postCharacter = Joi.object({
+  userName: Joi.string().required(),
+  name: Joi.string().email().required(),
+  basics: Joi.object().required(),
+  class: Joi.object().required(),
+  ancestry: Joi.object().required(),
+  background: Joi.object().required(),
+  _id: Joi.string().regex(objectIdRegex).optional(),
+})
+
+export const updateCharacter = Joi.object({
+  _id: Joi.string().regex(objectIdRegex).required(),
+  userName: Joi.string().optional(),
+  name: Joi.string().optional(),
+  basics: Joi.string().optional(),
+  ancestry: Joi.object().optional(),
+  class: Joi.object().optional(),
+  background: Joi.object().optional(),
+})
+
+export const fetchCharacterByQuery = Joi.object({
+  userName: Joi.string().required(),
+  name: Joi.string().optional(),
+  ancestry: Joi.string().optional(),
+  class: Joi.boolean().optional(),
+  level_lte: Joi.number().optional(),
+  level_gte: Joi.number().optional(),
+})
+
+export const deleteCharacterQuery = Joi.object({
+  userName: Joi.string().required(),
+  _id: Joi.string().regex(objectIdRegex).required(),
 })

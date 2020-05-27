@@ -1,8 +1,8 @@
 import { IUser, UserModel } from '../models'
 import { QueryFindOptions } from 'mongoose'
-import { Types } from 'mongoose'
+import { ObjectID } from 'mongodb'
 
-const getUserById = async (_id: Types.ObjectId) => {
+const getUserById = async (_id: ObjectID) => {
   return await UserModel.findOne({ _id })
 }
 
@@ -15,11 +15,11 @@ const createUser = async (user: IUser) => {
   return await newUser.save()
 }
 
-const updateUser = async (_id: Types.ObjectId, user: IUser) => {
+const updateUser = async (_id: ObjectID, user: IUser) => {
   return await UserModel.updateOne({ _id }, user, { upsert: true })
 }
 
-const deleteUser = async (id: Types.ObjectId, userName: string) => {
+const deleteUser = async (id: ObjectID, userName: string) => {
   return await UserModel.deleteOne({ id, userName })
 }
 

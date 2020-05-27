@@ -1,7 +1,7 @@
 import { CharacterDB } from '../data-access'
 import { MongoDBError, NotFoundError } from '../errors'
-import { processFindCharacterFilter, processDeleteCharacterFilter } from '../utils'
-import { ActionResult, CharQueryType, ICharFilter, ICharacter } from '../models'
+import { processFindCharacterFilter } from '../utils'
+import { ActionResult, CharQueryT, ICharFilter, ICharacter } from '../models'
 import { ObjectID } from 'mongodb'
 
 const getCharacterById = async (_id: ObjectID): Promise<ActionResult> => {
@@ -12,7 +12,7 @@ const getCharacterById = async (_id: ObjectID): Promise<ActionResult> => {
   return new ActionResult(result, `Get character success: ${_id}.`)
 }
 
-const getCharacterByFilter = async (query: CharQueryType): Promise<ActionResult> => {
+const getCharacterByFilter = async (query: CharQueryT): Promise<ActionResult> => {
   const filter: ICharFilter = processFindCharacterFilter(query)
   if (!filter.userName) return new ActionResult([], 'Must provide a username to retrieve characters.', new NotFoundError())
   const result = await CharacterDB.getCharacterByFilter(filter)
@@ -50,8 +50,8 @@ const deleteCharacter = async (_id: ObjectID): Promise<ActionResult> => {
   return new ActionResult({ deletedCount }, `Delete character success: ${_id}`)
 }
 
-const deleteCharacters = async (query: CharQueryType): Promise<ActionResult> => {
-  const filter: ICharFilter = processDeleteCharacterFilter(query)
+const deleteCharacters = async (query: CharQueryT): Promise<ActionResult> => {
+  const filter: ICharFilter = processFindCharacterFilter(query)
   const result = await CharacterDB.deleteCharacters(filter)
   const { deletedCount } = result
   if (!deletedCount) {

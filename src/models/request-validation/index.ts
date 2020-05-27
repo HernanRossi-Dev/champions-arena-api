@@ -1,11 +1,7 @@
 import joiValidation from './joi-validation'
-import { postUser, fetchUserByQuery, fetchUserById , deleteUserQuery, updateUser} from './schemas'
+import * as JoiSchemas from './schemas'
 
 export {
-  postUser,
-  fetchUserById,
-  fetchUserByQuery,
-  deleteUserQuery,
-  updateUser,
+  JoiSchemas,
   joiValidation
 }

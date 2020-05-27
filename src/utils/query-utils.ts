@@ -1,32 +1,12 @@
 import { get } from 'lodash'
-import { CharQueryType, ICharFilter, IUserQueryType, IUserFilter } from '../models'
+import { CharQueryT, ICharFilter, IUserQueryType, IUserFilter } from '../models'
 
-const processDeleteCharacterFilter = (query: CharQueryType): ICharFilter => {
-  const filter: ICharFilter = {}
-  const filterParams = ['user', 'class', 'ancestry']
-  filterParams.forEach((key: string) => {
-    if (query[key as keyof CharQueryType]) {
-      filter[key as keyof ICharFilter] = query[key as keyof CharQueryType]
-    }
-  })
-  if (query.level_lte || query.level_gte) {
-    filter.level = {}
-    if (query.level_lte) {
-      filter.level.$lte = parseInt(query.level_lte, 10)
-    }
-    if (query.level_gte) {
-      filter.level.$gte = parseInt(query.level_gte, 10)
-    }
-  }
-  return filter
-}
-
-const processFindCharacterFilter = (query: CharQueryType): ICharFilter => {
+const processFindCharacterFilter = (query: CharQueryT): ICharFilter => {
   const filter: ICharFilter = {}
   const filterParams = ['userName', 'class', 'ancestry', 'level', 'name']
   filterParams.map((param) => {
-    if (query[param as keyof CharQueryType]) {
-      const filterValue: string = <string>query[param as keyof CharQueryType]
+    if (query[param as keyof CharQueryT]) {
+      const filterValue: string = <string>query[param as keyof CharQueryT]
       const addFilter = CharacterFilters[param](filterValue, filter)
       Object.assign(filter, addFilter)
     }
@@ -74,6 +54,5 @@ const CharacterFilters: any = {
 
 export {
   processFindCharacterFilter,
-  processDeleteCharacterFilter,
   processFindUserFilter
 }

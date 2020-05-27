@@ -1,13 +1,13 @@
 import ICharFilter from '../interfaces/character-filter'
 import { IUserFilter, IUserDupeFilter } from '../interfaces/user-filter'
-import CharQueryType from './character-query'
-import { IUserQueryType, deleteQuery } from './user-query'
+import CharQueryT from './character-query'
+import { IUserQueryType, DeleteQueryT } from './user-query'
 
 export {
   ICharFilter,
   IUserFilter,
-  CharQueryType,
+  CharQueryT,
   IUserQueryType,
   IUserDupeFilter,
-  deleteQuery
+  DeleteQueryT
 }

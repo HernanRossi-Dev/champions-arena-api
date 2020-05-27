@@ -9,9 +9,9 @@ export interface IUserQueryType {
   _id?: string
 }
 
-export type deleteQuery = {
+export type DeleteQueryT = {
   _id: ObjectID | string,
   userName: string,
-  email: string,
-  deleteCharacters: boolean
+  email?: string,
+  deleteCharacters?: boolean
 }

@@ -1,18 +1,17 @@
 import { Request, Response, Router } from 'express'
 import mongodb, { ObjectID } from 'mongodb'
 import { CharacterService, jwtCheck } from '../services'
-import { ActionResult, CharQueryType, Character } from '../models'
+import { ActionResult, CharQueryT, Character } from '../models'
 import { logger } from '../utils'
+import { JoiSchemas, joiValidation } from '../models/request-validation'
 
 const ObjectId = mongodb.ObjectID
 const router = Router()
 
-router.get('/:_id', async (req: Request, res: Response) => {
-  const _id = req.params?._id
-  if (!ObjectId.isValid(_id)) return res.status(422).json({message: `Invalid character _id format.`})
+router.get('/:_id', joiValidation(JoiSchemas.findById, 'params'), async (req: Request, res: Response) => {
   try {
-    const objId = new ObjectID(_id)
-    const result: ActionResult = await CharacterService.getCharacterById(objId)
+    const searchId = new ObjectID(req.params._id)
+    const result: ActionResult = await CharacterService.getCharacterById(searchId)
     res.status(200).json(result.toJSON())
   } catch (err) {
     logger.error({ message: 'Get character by _id failure.', error: err.message, name: err.name })
@@ -22,9 +21,9 @@ router.get('/:_id', async (req: Request, res: Response) => {
 
 router.use(jwtCheck)
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', joiValidation(JoiSchemas.fetchCharacterByQuery, 'query'), async (req: Request, res: Response) => {
   try {
-    const query = <CharQueryType>req.query
+    const query = <CharQueryT>req.query
     const result: ActionResult = await CharacterService.getCharacterByFilter(query)
     res.status(200).json(result.toJSON())
   } catch (err) {
@@ -33,7 +32,7 @@ router.get('/', async (req: Request, res: Response) => {
   }
 })
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', joiValidation(JoiSchemas.postCharacter, 'body'), async (req: Request, res: Response) => {
   try {
     const character: Character = new Character(req.body)
     const result: ActionResult = await CharacterService.createCharacter(character)
@@ -44,7 +43,7 @@ router.post('/', async (req: Request, res: Response) => {
   }
 })
 
-router.put('/', async (req: Request, res: Response) => {
+router.put('/', joiValidation(JoiSchemas.updateCharacter, 'body'), async (req: Request, res: Response) => {
   try {
     const character: Character = new Character(req.body)
     const result: ActionResult = await CharacterService.updateCharacter(character)
@@ -55,12 +54,10 @@ router.put('/', async (req: Request, res: Response) => {
   }
 })
 
-router.delete('/:_id', async (req: Request, res: Response) => {
-  const _id  = req.params?._id
-  if (!ObjectId.isValid(_id)) return res.status(422).json({message: `Invalid character _id format: ${_id}`})
+router.delete('/:_id', joiValidation(JoiSchemas.findById, 'params'), async (req: Request, res: Response) => {
   try {
-    const objId = new ObjectID(req.params._id)
-    const result: ActionResult = await CharacterService.deleteCharacter(objId)
+    const searchId = new ObjectID(req.params._id)
+    const result: ActionResult = await CharacterService.deleteCharacter(searchId)
     res.status(200).json(result.toJSON())
   } catch (err) {
     logger.error({ message: 'Delete character by _id failure.', error: err.message, name: err.name })
@@ -68,9 +65,9 @@ router.delete('/:_id', async (req: Request, res: Response) => {
   }
 })
 
-router.delete('/', async (req: Request, res: Response) => {
-  const query = <CharQueryType>req?.query
+router.delete('/', joiValidation(JoiSchemas.deleteCharacterQuery, 'params'), async (req: Request, res: Response) => {
   try {
+    const query: CharQueryT = <CharQueryT>req.query
     const result: ActionResult = await CharacterService.deleteCharacters(query)
     res.status(200).json(result.toJSON())
   } catch (err) {

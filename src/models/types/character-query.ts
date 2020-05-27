@@ -1,13 +1,13 @@
 import { ObjectID } from "mongodb"
 
-type CharQueryType = {
+type CharQueryT = {
   userName: string
   name?: string
   class?: string
   ancestry?: string
-  level_lte?: string
-  level_gte?: string
+  level_lte?: number
+  level_gte?: number
   _id?: ObjectID
 }
 
-export default CharQueryType
+export default CharQueryT
