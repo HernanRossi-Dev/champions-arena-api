@@ -61,15 +61,17 @@ const deleteUser = async (query: DeleteQueryT): Promise<ActionResult> => {
   if (!deletedCount) {
     return new ActionResult({ deletedCount }, `Failed to delete user: ${userName}`, new NotFoundError())
   }
+  let deleteCharMessage = ''
   if (deleteCharacters) {
     try {
       const filter: ICharFilter = { userName }
       await CharacterDB.deleteCharacters(filter)
+      deleteCharMessage += ' User characters deleted.'
     } catch (err) {
       logger.error({ message: 'Failed to delete users characters: ' + err.message, name: err.name })
     }
   }
-  return new ActionResult({ deletedCount }, `Delete User Success: ${userName}`)
+  return new ActionResult({ deletedCount }, `Delete User Success: ${userName}.` + deleteCharMessage)
 }
 
 export default {
