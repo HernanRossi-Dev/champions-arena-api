@@ -88,7 +88,9 @@ export default interface ICharacter extends IBase{
     spells?: object
   }
   characterTraits?: object
-  characterNotes?: string
+  characterNotes?: {
+    backstory?: string,
+  }
   skillsModifiers?: object
   skillFeats?: string
   spells?: object

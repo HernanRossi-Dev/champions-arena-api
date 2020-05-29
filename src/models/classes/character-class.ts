@@ -94,7 +94,7 @@ export class Character implements ICharacter {
     spells?: object
   }
   characterTraits?: object
-  characterNotes?: string
+  characterNotes?: object
   skillsModifiers?: object
   skillFeats?: string
   spells?: object

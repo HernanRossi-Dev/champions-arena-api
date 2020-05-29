@@ -145,7 +145,7 @@ export const DefaultCharacters: ICharacter[] = [
       Thievery: 4,
     },
     characterTraits: {},
-    characterNotes: '',
+    characterNotes: {},
     spells: {},
     skillFeats: 'Cat Fall, Experienced Smuggler',
   },
@@ -286,7 +286,7 @@ export const DefaultCharacters: ICharacter[] = [
       ranged: ['crossbow +3 (range 120 feet), Damage 1d8 piercing', 'acid splash +3 touch, Damage 1d4 acid plus splash 1 acid']
     },
     characterTraits: {},
-    characterNotes: '',
+    characterNotes: {},
     skillFeats: 'Courtly Graces',
   },
   {
@@ -413,7 +413,7 @@ export const DefaultCharacters: ICharacter[] = [
         'alchemists fire +4 (range 20 feet), Damage 1d8 fire + 1 persistent fire + splash 1 fire']
     },
     skillFeats: 'Additional Lore, Alchemical Crafter',
-    characterNotes: '',
+    characterNotes: {},
     characterTraits: {},
   },
   {
@@ -553,7 +553,7 @@ export const DefaultCharacters: ICharacter[] = [
       ranged: ['sling +2 (range 50 feet, propulsive, reload 1 action), Damage 1d6+1 bludgeoning',
         'fire ray +2 touch (evocation, fire), Damage 1d6+4 fire']
     },
-    characterNotes: '',
+    characterNotes: {},
   },
   {
     userName: 'DM',
@@ -682,6 +682,6 @@ export const DefaultCharacters: ICharacter[] = [
       ranged: ['shortbow +4 (range 60, deadly 1d10), Damage 1d6 piercing']
     },
     characterTraits: {},
-    characterNotes: '',
+    characterNotes: {},
   },
 ];

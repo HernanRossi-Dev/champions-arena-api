@@ -88,7 +88,7 @@ const CharacterSchema: Schema = new Schema({
     items: Array,
   },
   characterTraits: Object,
-  characterNotes: String,
+  characterNotes: Object,
   skillsModifiers: Object,
   skillFeats: String,
   spells: Object,

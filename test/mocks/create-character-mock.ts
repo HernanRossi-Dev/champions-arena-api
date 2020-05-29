@@ -100,7 +100,9 @@ const CreateCharacterMock = () => {
       spells: {'magic missile': 'Big damage'}
     },
     characterTraits: {},
-    characterNotes: 'This is a test character',
+    characterNotes: {
+      backstory: 'From the mean streets.'
+    },
      skillsModifiers: {
       Acrobatics: 4,
       Athletics: 1,
