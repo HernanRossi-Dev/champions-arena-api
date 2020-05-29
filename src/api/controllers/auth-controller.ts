@@ -9,7 +9,7 @@ export const requestAuth0Token = async (req: Request, res: Response) => {
     logger.debug({ message: `Authentication success. ${email}` })
     res.status(200).json(response)
   } catch (err) {
-    logger.error({ message: `Failed to authenticate user.`, error: err.message, name: err.name })
+    logger.error({ message: `Failed to authenticate user.`, error: err.message, name: err.name, stack: err.stack })
     res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
 }
