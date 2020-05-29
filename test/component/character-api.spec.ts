@@ -6,10 +6,10 @@ jest.mock('../../src/utils/logger', () => ({
   error: jest.fn().mockImplementation(() => { }),
   debug: jest.fn().mockImplementation(() => { })
 }))
-jest.mock('../../src/utils/auth-utils', () => ({
+jest.mock('../../src/utils/data-processing-utils/auth-utils', () => ({
   validateUser: jest.fn().mockImplementation(() => { return true }),
 }))
-jest.mock('../../src/utils/user-utils', () => ({
+jest.mock('../../src/utils/data-processing-utils/user-utils', () => ({
   userDupeCheck: jest.fn().mockImplementation(() => { return false }),
   isUser: jest.fn().mockImplementation(() => { return true }),
 }))
@@ -26,7 +26,7 @@ describe('Characters-API', () => {
   beforeAll(async () => {
     jest.setTimeout(6000)
     const res = await request(server).post(`/api/authenticate/`)
-      .send({ email: faker.internet.email(), password: faker.lorem.sentence() })
+      .send({ email: faker.internet.email(), password: 'FakePassword3' })
     token = res.body.access_token
   })
 
@@ -61,7 +61,7 @@ describe('Characters-API', () => {
         const _id = new ObjectID()
         const res = await request(server).get(`/api/characters/${_id}`)
         expect(res.status).toEqual(200)
-        expect(res.body.status).toEqual('Processed')
+        expect(res.body.status).toEqual('Processed with Errors')
         expect(res.body.data).toEqual({})
         expect(res.body.message).toEqual(`Get character failed: ${_id}.`)
         expect(res.body.errors.length).toBeGreaterThan(0)
@@ -71,7 +71,7 @@ describe('Characters-API', () => {
         const _id = newCharacter._id
         const res = await request(server).get(`/api/characters/${_id}`)
         expect(res.status).toEqual(200)
-        expect(res.body.status).toEqual('Processed')
+        expect(res.body.status).toEqual('Processed Successfully')
         const character = res.body.data
         expect(character).toHaveProperty('_id')
         expect(character).toHaveProperty('basics')
@@ -89,7 +89,7 @@ describe('Characters-API', () => {
           .set('authorization', 'Bearer ' + token)
           .query({ userName: fakename })
         expect(res.status).toEqual(200)
-        expect(res.body.status).toEqual('Processed')
+        expect(res.body.status).toEqual('Processed with Errors')
         expect(res.body.data.length).toEqual(0)
         expect(res.body.message).toEqual('Failed to fetch characters.')
         expect(res.body.errors.length).toBeGreaterThan(0)
@@ -101,10 +101,9 @@ describe('Characters-API', () => {
           .set('authorization', 'Bearer ' + token)
           .query({ userName: newCharacter.userName })
         expect(res.status).toEqual(200)
-        expect(res.body.status).toEqual('Processed')
+        expect(res.body.status).toEqual('Processed Successfully')
         expect(res.body.data.length).toEqual(1)
         const character = res.body.data[0]
-        expect(character).toHaveProperty('_id')
         expect(character).toHaveProperty('_id')
         expect(character._id).toEqual(_id)
         expect(character.basics).toHaveProperty('name')
@@ -136,7 +135,7 @@ describe('Characters-API', () => {
       expect(res.status).toEqual(200)
       expect(res.body).toHaveProperty('data')
       expect(res.body.message).toBe('Create character success.')
-      expect(res.body.status).toBe('Processed')
+      expect(res.body.status).toBe('Processed Successfully')
       expect(res.body.data.userName).toBe('Test name')
     })
     it('should respond status 200 and return object', async () => {
@@ -147,7 +146,7 @@ describe('Characters-API', () => {
       expect(res.status).toEqual(200)
       expect(res.body).toHaveProperty('data')
       expect(res.body.message).toBe('Create character success.')
-      expect(res.body.status).toBe('Processed')
+      expect(res.body.status).toBe('Processed Successfully')
       expect(res.body.data.userName).toBe(createCharacter.userName)
     })
   })
@@ -187,7 +186,7 @@ describe('Characters-API', () => {
         expect(res.body).toHaveProperty('data')
         expect(res.body.data).toHaveProperty('modifiedCount')
         expect(res.body.message).toBe(`Failed to update character.`)
-        expect(res.body.status).toBe('Processed')
+        expect(res.body.status).toBe('Processed with Errors')
         expect(res.body.data.modifiedCount).toBe(0)
         expect(res.body.errors.length).toBeGreaterThan(0)
       })
@@ -203,7 +202,7 @@ describe('Characters-API', () => {
         expect(res.body).toHaveProperty('data')
         expect(res.body.data).toHaveProperty('modifiedCount')
         expect(res.body.message).toBe('Update character success.')
-        expect(res.body.status).toBe('Processed')
+        expect(res.body.status).toBe('Processed Successfully')
         expect(res.body.data.modifiedCount).toBe(1)
       })
     })
@@ -237,7 +236,7 @@ describe('Characters-API', () => {
         expect(res.body).toHaveProperty('data')
         expect(res.body.data).toHaveProperty('deletedCount')
         expect(res.body.message).toBe(`Failed to delete character: ${_id}`)
-        expect(res.body.status).toBe('Processed')
+        expect(res.body.status).toBe('Processed with Errors')
         expect(res.body.data.deletedCount).toBe(0)
       })
 
@@ -249,7 +248,7 @@ describe('Characters-API', () => {
         expect(res.body).toHaveProperty('data')
         expect(res.body.data).toHaveProperty('deletedCount')
         expect(res.body.message).toBe(`Delete character success: ${_id}`)
-        expect(res.body.status).toBe('Processed')
+        expect(res.body.status).toBe('Processed Successfully')
         expect(res.body.data.deletedCount).toBe(1)
       })
     })

@@ -1,9 +1,9 @@
-import { SendTempPassword, processFindUserFilter, userDupeCheck, insertDefaultCharacters, prepareUpdate, logger } from '../../utils'
+import { ObjectID } from 'mongodb'
+import { SendTempPassword, processFindUserFilter, userDupeCheck, insertDefaultCharacters, logger } from '../../utils'
 import { NotFoundError, MongoDBError } from '../../errors'
 import { UserDB, CharacterDB } from '../data-access'
-import { ActionResult, IUserQueryType, IUserFilter, ICharFilter, User } from '../../models'
-import { ObjectID } from 'mongodb'
-import { DeleteUserQueryT } from '../../models/types'
+import { ActionResult, IUserQueryType, IUserFilter, ICharFilter, User, DeleteUserQueryT } from '../../models'
+import { UserUtils } from '../../utils/data-processing-utils/'
 
 const getUserById = async (_id: ObjectID): Promise<ActionResult> => {
   const userDetails = await UserDB.getUserById(_id)
@@ -36,16 +36,16 @@ const createUser = async (user: User): Promise<ActionResult> => {
 
   const insertResult = await insertDefaultCharacters(userName)
   if (insertResult instanceof MongoDBError) {
-    return new ActionResult(result, 'Create user success. \n Default characters not created', insertResult)
+    return new ActionResult(result, 'Create user success. Default characters not created', insertResult)
   }
-  return new ActionResult(result, 'Create user success.\n Default characters created.')
+  return new ActionResult(result, 'Create user success. Default characters created.')
 }
 
 const updateUser = async (user: User): Promise<ActionResult> => {
   if (!ObjectID.isValid(user._id)) throw new MongoDBError('Invalid search id.')
   const searchId = new ObjectID(user._id)
-  prepareUpdate(user)
-  const result = await UserDB.updateUser(searchId, user)
+  const updateUser: User = UserUtils.prepareUserUpdate(user)
+  const result = await UserDB.updateUser(searchId, updateUser)
   const modifiedCount = result.nModified
   if (!modifiedCount) {
     return new ActionResult({ modifiedCount }, `Failed to update user: ${searchId}`, new NotFoundError())

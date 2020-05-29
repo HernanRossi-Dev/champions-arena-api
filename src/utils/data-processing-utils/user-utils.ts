@@ -13,11 +13,13 @@ const isUser = (data: object) => {
   return false
 }
 
-const prepareUpdate = (user: User) : void => {
-  delete user.userName
-  delete user._id
-  delete user.created
-  user.updated = new Date()
+const prepareUserUpdate = (user: User): User => {
+  const updateUser = new User(user.getProperties())
+  delete updateUser.userName
+  delete updateUser._id
+  delete updateUser.created
+  updateUser.updated = new Date()
+  return updateUser
 }
 
 const userDupeCheck = async (userName: string, email: string): Promise<boolean> => {
@@ -31,6 +33,6 @@ const userDupeCheck = async (userName: string, email: string): Promise<boolean> 
 export {
   userFullName,
   isUser,
-  userDupeCheck,
-  prepareUpdate
+  prepareUserUpdate,
+  userDupeCheck
 }
