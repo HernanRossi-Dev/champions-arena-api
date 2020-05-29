@@ -1,4 +1,4 @@
-import { CharacterModel, ICharacter } from '../models'
+import { CharacterModel, ICharacter } from '../../models'
 import { QueryFindOptions } from 'mongoose'
 import { ObjectID } from 'mongodb'
 

@@ -74,3 +74,8 @@ export const deleteCharacterQuery = Joi.object({
   userName: Joi.string().required(),
   _id: Joi.string().regex(objectIdRegex).required(),
 })
+
+export const requestAuth0Token = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().regex(passwordRegex).required()
+})

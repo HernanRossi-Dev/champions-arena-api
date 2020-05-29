@@ -1,9 +1,9 @@
-import { SendTempPassword, processFindUserFilter, userDupeCheck, insertDefaultCharacters, prepareUpdate, logger } from '../utils'
-import { NotFoundError, MongoDBError } from '../errors'
+import { SendTempPassword, processFindUserFilter, userDupeCheck, insertDefaultCharacters, prepareUpdate, logger } from '../../utils'
+import { NotFoundError, MongoDBError } from '../../errors'
 import { UserDB, CharacterDB } from '../data-access'
-import { ActionResult, IUserQueryType, IUserFilter, ICharFilter, User } from '../models'
+import { ActionResult, IUserQueryType, IUserFilter, ICharFilter, User } from '../../models'
 import { ObjectID } from 'mongodb'
-import { DeleteQueryT } from '../models/types'
+import { DeleteUserQueryT } from '../../models/types'
 
 const getUserById = async (_id: ObjectID): Promise<ActionResult> => {
   const userDetails = await UserDB.getUserById(_id)
@@ -53,7 +53,7 @@ const updateUser = async (user: User): Promise<ActionResult> => {
   return new ActionResult({ modifiedCount }, 'Update user success.')
 }
 
-const deleteUser = async (query: DeleteQueryT): Promise<ActionResult> => {
+const deleteUser = async (query: DeleteUserQueryT): Promise<ActionResult> => {
   const { _id, userName, deleteCharacters } = query
   const searchId = new ObjectID(_id)
   const result = await UserDB.deleteUser(searchId, userName)

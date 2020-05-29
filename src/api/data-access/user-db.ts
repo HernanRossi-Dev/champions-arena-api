@@ -1,4 +1,4 @@
-import { IUser, UserModel } from '../models'
+import { IUser, UserModel } from '../../models'
 import { QueryFindOptions } from 'mongoose'
 import { ObjectID } from 'mongodb'
 

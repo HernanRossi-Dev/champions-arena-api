@@ -2,7 +2,7 @@ import express from 'express'
 import SourceMapSupport from 'source-map-support'
 import cors from 'cors'
 import helmet from 'helmet'
-import { CharacterRoutes, UserRoutes, AuthRoutes } from './api'
+import { CharacterRoutes, UserRoutes, AuthRoutes } from './api/routes'
 import { logger, getMongoConnection } from './utils'
 
 SourceMapSupport.install()

@@ -3,8 +3,8 @@ import jwt from 'express-jwt'
 import request from 'request'
 import config from 'config'
 import { Request, Response } from 'express'
-import { validateUser } from '../utils'
-import { AuthError } from '../errors'
+import { validateUser } from '../../utils'
+import { AuthError } from '../../errors'
 
 const authenticate = async (email: string, password: string) => {
   const clientSecret = process.env.CLIENT_SECRET

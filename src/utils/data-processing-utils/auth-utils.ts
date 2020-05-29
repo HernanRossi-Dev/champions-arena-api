@@ -1,5 +1,5 @@
-import { IUserFilter } from '../models'
-import { UserDB } from '../data-access'
+import { IUserFilter } from '../../models'
+import { UserDB } from '../../api/data-access'
 import bcrypt from 'bcrypt'
 
 const validateUser = async (email: string, password: string): Promise<boolean> => {

@@ -9,7 +9,7 @@ export interface IUserQueryType {
   _id?: string
 }
 
-export type DeleteQueryT = {
+export type DeleteUserQueryT = {
   _id: ObjectID | string,
   userName: string,
   email?: string,

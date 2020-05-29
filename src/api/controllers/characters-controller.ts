@@ -1,14 +1,10 @@
-import { Request, Response, Router } from 'express'
-import mongodb, { ObjectID } from 'mongodb'
-import { CharacterService, jwtCheck } from '../services'
-import { ActionResult, CharQueryT, Character } from '../models'
-import { logger } from '../utils'
-import { JoiSchemas, joiValidation } from '../models/request-validation'
+import { Request, Response } from 'express'
+import { ObjectID } from 'mongodb'
+import { CharacterService } from '../services'
+import { ActionResult, CharQueryT, Character } from '../../models'
+import { logger } from '../../utils'
 
-const ObjectId = mongodb.ObjectID
-const router = Router()
-
-router.get('/:_id', joiValidation(JoiSchemas.findById, 'params'), async (req: Request, res: Response) => {
+export const getCharacterParam = async (req: Request, res: Response) => {
   try {
     const searchId = new ObjectID(req.params._id)
     const result: ActionResult = await CharacterService.getCharacterById(searchId)
@@ -17,11 +13,9 @@ router.get('/:_id', joiValidation(JoiSchemas.findById, 'params'), async (req: Re
     logger.error({ message: 'Get character by _id failure.', error: err.message, name: err.name })
     res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
-})
+}
 
-router.use(jwtCheck)
-
-router.get('/', joiValidation(JoiSchemas.fetchCharacterByQuery, 'query'), async (req: Request, res: Response) => {
+export const getCharacterQuery = async (req: Request, res: Response) => {
   try {
     const query = <CharQueryT>req.query
     const result: ActionResult = await CharacterService.getCharacterByFilter(query)
@@ -30,9 +24,9 @@ router.get('/', joiValidation(JoiSchemas.fetchCharacterByQuery, 'query'), async 
     logger.error({ message: 'Get character by query failure.', error: err.message, name: err.name })
     res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
-})
+}
 
-router.post('/', joiValidation(JoiSchemas.postCharacter, 'body'), async (req: Request, res: Response) => {
+export const postCharacter = async (req: Request, res: Response) => {
   try {
     const character: Character = new Character(req.body)
     const result: ActionResult = await CharacterService.createCharacter(character)
@@ -41,9 +35,9 @@ router.post('/', joiValidation(JoiSchemas.postCharacter, 'body'), async (req: Re
     logger.error({ message: 'Post character failure.', error: err.message, name: err.name })
     res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
-})
+}
 
-router.put('/', joiValidation(JoiSchemas.updateCharacter, 'body'), async (req: Request, res: Response) => {
+export const putCharacter = async (req: Request, res: Response) => {
   try {
     const character: Character = new Character(req.body)
     const result: ActionResult = await CharacterService.updateCharacter(character)
@@ -52,9 +46,9 @@ router.put('/', joiValidation(JoiSchemas.updateCharacter, 'body'), async (req: R
     logger.error({ message: 'Put character failure.', error: err.message, name: err.name })
     res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
-})
+}
 
-router.delete('/:_id', joiValidation(JoiSchemas.findById, 'params'), async (req: Request, res: Response) => {
+export const deleteCharacterByParam = async (req: Request, res: Response) => {
   try {
     const searchId = new ObjectID(req.params._id)
     const result: ActionResult = await CharacterService.deleteCharacter(searchId)
@@ -63,9 +57,9 @@ router.delete('/:_id', joiValidation(JoiSchemas.findById, 'params'), async (req:
     logger.error({ message: 'Delete character by _id failure.', error: err.message, name: err.name })
     res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
-})
+}
 
-router.delete('/', joiValidation(JoiSchemas.deleteCharacterQuery, 'params'), async (req: Request, res: Response) => {
+export const deleteCharacterByQuery = async (req: Request, res: Response) => {
   try {
     const query: CharQueryT = <CharQueryT>req.query
     const result: ActionResult = await CharacterService.deleteCharacters(query)
@@ -74,6 +68,4 @@ router.delete('/', joiValidation(JoiSchemas.deleteCharacterQuery, 'params'), asy
     logger.error({ message: 'Delete characters failure.', error: err.message, name: err.name })
     res.status(err.status || 500).json({ name: err.name, message: err.message })
   }
-})
-
-export default router
+}

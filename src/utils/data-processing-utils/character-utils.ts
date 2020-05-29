@@ -1,8 +1,8 @@
 import lodash from 'lodash'
-import { logger } from '.'
-import { ICharacter, DefaultCharacters } from '../models'
-import { CharacterDB } from '../data-access'
-import { MongoDBError } from '../errors'
+import { logger } from '../'
+import { ICharacter, DefaultCharacters } from '../../models'
+import { CharacterDB } from '../../api/data-access'
+import { MongoDBError } from '../../errors'
 import { ObjectID } from 'mongodb'
 
 const insertDefaultCharacters = async (userName: string): Promise<object> => {

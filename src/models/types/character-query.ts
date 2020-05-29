@@ -1,7 +1,7 @@
 import { ObjectID } from "mongodb"
 
 type CharQueryT = {
-  userName: string
+  userName?: string
   name?: string
   class?: string
   ancestry?: string

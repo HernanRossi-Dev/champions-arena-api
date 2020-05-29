@@ -1,7 +1,7 @@
 import { CharacterDB } from '../data-access'
-import { MongoDBError, NotFoundError } from '../errors'
-import { processFindCharacterFilter } from '../utils'
-import { ActionResult, CharQueryT, ICharFilter, ICharacter } from '../models'
+import { MongoDBError, NotFoundError } from '../../errors'
+import { processFindCharacterFilter } from '../../utils'
+import { ActionResult, CharQueryT, ICharFilter, ICharacter } from '../../models'
 import { ObjectID } from 'mongodb'
 
 const getCharacterById = async (_id: ObjectID): Promise<ActionResult> => {

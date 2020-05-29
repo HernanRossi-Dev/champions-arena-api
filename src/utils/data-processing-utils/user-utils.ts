@@ -1,6 +1,6 @@
-import { IUserDupeFilter, IUser, User } from '../models'
-import { UserDB } from '../data-access'
-import { MongoDBError } from '../errors'
+import { IUserDupeFilter, IUser, User } from '../../models'
+import { UserDB } from '../../api/data-access'
+import { MongoDBError } from '../../errors'
 
 const userFullName = (user: IUser): string => {
   return user.firstName + ' ' + user.lastName

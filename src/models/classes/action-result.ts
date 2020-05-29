@@ -1,4 +1,4 @@
-import { IBase, IUser, ICharacter } from './interfaces'
+import { IBase, IUser, ICharacter } from '../interfaces'
 import { User, Character } from '.'
 
 export interface IActionResult {

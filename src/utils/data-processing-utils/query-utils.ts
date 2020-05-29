@@ -1,5 +1,5 @@
 import { get } from 'lodash'
-import { CharQueryT, ICharFilter, IUserQueryType, IUserFilter } from '../models'
+import { CharQueryT, ICharFilter, IUserQueryType, IUserFilter } from '../../models'
 
 const processFindCharacterFilter = (query: CharQueryT): ICharFilter => {
   const filter: ICharFilter = {}

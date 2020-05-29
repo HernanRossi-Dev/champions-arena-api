@@ -1,7 +1,7 @@
-import ICharFilter from '../interfaces/character-filter'
-import { IUserFilter, IUserDupeFilter } from '../interfaces/user-filter'
+import ICharFilter from '../interfaces/helper-interfaces/character-filter'
+import { IUserFilter, IUserDupeFilter } from '../interfaces/helper-interfaces/user-filter'
 import CharQueryT from './character-query'
-import { IUserQueryType, DeleteQueryT } from './user-query'
+import { IUserQueryType, DeleteUserQueryT } from './user-query'
 
 export {
   ICharFilter,
@@ -9,5 +9,5 @@ export {
   CharQueryT,
   IUserQueryType,
   IUserDupeFilter,
-  DeleteQueryT
+  DeleteUserQueryT
 }
