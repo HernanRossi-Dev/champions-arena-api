@@ -43,7 +43,7 @@ describe('Characters-API', () => {
       newCharacter = CreateCharacterMock()
       const result = await request(server).post(`/api/characters`)
         .set('authorization', 'Bearer ' + token)
-        .send({ data: newCharacter })
+        .send(newCharacter)
       newCharacter._id = result.body?.data?._id
     })
 
@@ -55,7 +55,7 @@ describe('Characters-API', () => {
         expect(res.status).toEqual(422)
         expect(res.body).toHaveProperty('message')
         expect(res.body).not.toHaveProperty('data')
-        expect(res.body.message).toBe(`Invalid character _id format: notvalide!!@@!@!@!@!@!@!@!@.`)
+        expect(res.body.message).toBe(`Joi validation error: ValidationError: "_id" with value "notvalide!!@@!@!@!@!@!@!@!@" fails to match the required pattern: /^[a-f\\d]{24}$/i`)
       })
       it('should respond status 200 when character not found', async () => {
         const _id = new ObjectID()
@@ -115,29 +115,17 @@ describe('Characters-API', () => {
   })
 
   describe('Post Character /api/characters/: ', () => {
-    it('should respond status 200 and error when no data sent', async () => {
+    it('should respond status 422 on validation error when no data provided', async () => {
       const res = await request(server).post(`/api/characters`)
         .set('authorization', 'Bearer ' + token)
         .send({})
-      expect(res.status).toEqual(200)
-      expect(res.body).toHaveProperty('name')
+      expect(res.status).toEqual(422)
       expect(res.body).toHaveProperty('message')
       expect(res.body).not.toHaveProperty('data')
       expect(res.body).not.toHaveProperty('status')
-      expect(res.body.name).toBe('ProcessError')
-      expect(res.body.message).toBe(`Character data must be provided.`)
+      expect(res.body.message).toBe(`Joi validation error: ValidationError: \"userName\" is required`)
     })
 
-    it('should respond status 200 and return object', async () => {
-      const res = await request(server).post(`/api/characters`)
-        .set('authorization', 'Bearer ' + token)
-        .send({ userName: 'Test name' })
-      expect(res.status).toEqual(200)
-      expect(res.body).toHaveProperty('data')
-      expect(res.body.message).toBe('Create character success.')
-      expect(res.body.status).toBe('Processed Successfully')
-      expect(res.body.data.userName).toBe('Test name')
-    })
     it('should respond status 200 and return object', async () => {
       const createCharacter = CreateCharacterMock()
       const res = await request(server).post(`/api/characters`)
@@ -165,13 +153,11 @@ describe('Characters-API', () => {
         const res = await request(server).put(`/api/characters/`)
           .set('authorization', 'Bearer ' + token)
           .send({})
-        expect(res.status).toEqual(200)
-        expect(res.body).toHaveProperty('name')
+        expect(res.status).toEqual(422)
         expect(res.body).toHaveProperty('message')
         expect(res.body).not.toHaveProperty('data')
         expect(res.body).not.toHaveProperty('status')
-        expect(res.body.name).toBe('ProcessError')
-        expect(res.body.message).toBe(`Character must have a userName.`)
+        expect(res.body.message).toBe(`Joi validation error: ValidationError: \"_id\" is required`)
       })
 
       it('should respond status 200 if character not found.', async () => {
@@ -213,7 +199,7 @@ describe('Characters-API', () => {
       updateCharacter = CreateCharacterMock()
       const result = await request(server).post(`/api/characters`)
         .set('authorization', 'Bearer ' + token)
-        .send({ data: newCharacter })
+        .send({ ...newCharacter })
       updateCharacter._id = result?.body?.data?._id
     })
 
@@ -225,7 +211,7 @@ describe('Characters-API', () => {
         expect(res.status).toEqual(422)
         expect(res.body).toHaveProperty('message')
         expect(res.body).not.toHaveProperty('data')
-        expect(res.body.message).toBe(`Invalid character _id format: notvalide!!@@!@!@!@!@!@!@!@`)
+        expect(res.body.message).toBe(`Joi validation error: ValidationError: \"_id\" with value \"notvalide!!@@!@!@!@!@!@!@!@\" fails to match the required pattern: /^[a-f\\d]{24}$/i`)
       })
 
       it('should respond status 200 if character not found.', async () => {

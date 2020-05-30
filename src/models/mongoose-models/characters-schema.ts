@@ -90,7 +90,7 @@ const CharacterSchema: Schema = new Schema({
   characterTraits: Object,
   characterNotes: Object,
   skillsModifiers: Object,
-  skillFeats: String,
+  skillFeats: Array,
   spells: Object,
   actions: {
     stride: String,

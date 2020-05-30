@@ -1,13 +1,10 @@
 import faker from 'faker';
 import getCharacterProperties from './character-properties';
-import { Character } from '../../src/models';
-import { ObjectID } from 'mongodb';
 
 const CreateCharacterMock = () => {
   const newCharacter = {
     created: new Date(),
     userName: faker.name.firstName(),
-    _id: new ObjectID(),
     basics: {
       name: faker.name.firstName(),
       player: faker.name.firstName(),
@@ -117,7 +114,7 @@ const CreateCharacterMock = () => {
       Stealth: 4,
       Thievery: 4,
     },
-    skillFeats: 'Cat Fall, Experienced Smuggler',
+    skillFeats:[ 'Cat Fall', 'Experienced Smuggler'],
     spells: {
       roll: '+5',
       DC: '15',
@@ -132,7 +129,7 @@ const CreateCharacterMock = () => {
     },
     deleted: 0
   }
-  return new Character(newCharacter)
+  return newCharacter
 }
 
 export default CreateCharacterMock

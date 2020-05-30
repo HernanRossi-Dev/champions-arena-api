@@ -6,6 +6,7 @@ export const DefaultCharacters: ICharacter[] = [
   {
     userName: 'DM',
     _id: new ObjectId(),
+    deleted: 0,
     basics: {
       name: 'Merisiel',
       player: 'DM',
@@ -147,11 +148,12 @@ export const DefaultCharacters: ICharacter[] = [
     characterTraits: {},
     characterNotes: {},
     spells: {},
-    skillFeats: 'Cat Fall, Experienced Smuggler',
+    skillFeats: ['Cat Fall', 'Experienced Smuggler'],
   },
   {
     userName: 'DM',
     _id: new ObjectId(),
+    deleted: 0,
     basics: {
       name: 'Ezren',
       player: 'DM',
@@ -287,11 +289,12 @@ export const DefaultCharacters: ICharacter[] = [
     },
     characterTraits: {},
     characterNotes: {},
-    skillFeats: 'Courtly Graces',
+    skillFeats: ['Courtly Graces'],
   },
   {
     userName: 'DM',
     _id: new ObjectId(),
+    deleted: 0,
     basics: {
       name: 'Fumbus',
       player: 'DM',
@@ -412,13 +415,14 @@ export const DefaultCharacters: ICharacter[] = [
       ranged: ['acid flask +4 (range 20 feet), Damage 1d4 persistent acid + splash 1 acid',
         'alchemists fire +4 (range 20 feet), Damage 1d8 fire + 1 persistent fire + splash 1 fire']
     },
-    skillFeats: 'Additional Lore, Alchemical Crafter',
+    skillFeats: ['Additional Lore', 'Alchemical Crafter'],
     characterNotes: {},
     characterTraits: {},
   },
   {
     userName: 'DM',
     _id: new ObjectId(),
+    deleted: 0,
     basics: {
       name: 'Kyra',
       player: 'DM',
@@ -546,7 +550,7 @@ export const DefaultCharacters: ICharacter[] = [
       Religion: '+5',
       Survival: '+5',
     },
-    skillFeats: 'Assurance (Athletics)',
+    skillFeats: ['Assurance (Athletics)'],
     actions: {
       stride: '20 feet',
       melee: ['scimitar +3 (forceful, sweep), Damage 1d6+2 slashing'],
@@ -558,6 +562,7 @@ export const DefaultCharacters: ICharacter[] = [
   {
     userName: 'DM',
     _id: new ObjectId(),
+    deleted: 0,
     basics: {
       name: 'Valeros',
       player: 'DM',
@@ -673,7 +678,7 @@ export const DefaultCharacters: ICharacter[] = [
         Warfare: '+2'
       },
     },
-    skillFeats: 'Assurance (Athletics)',
+    skillFeats: ['Assurance (Athletics)'],
     actions: {
       stride: '20 feet',
       melee: ['longsword +6 (versatile piercing), Damage 1d8+4 slashing',

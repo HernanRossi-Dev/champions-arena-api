@@ -43,22 +43,52 @@ export const deleteUserQuery = Joi.object({
 
 export const postCharacter = Joi.object({
   userName: Joi.string().required(),
-  name: Joi.string().email().required(),
-  basics: Joi.object().required(),
-  class: Joi.object().required(),
-  ancestry: Joi.object().required(),
-  background: Joi.object().required(),
+  basics: Joi.object({
+    name: Joi.string().required()
+  }).unknown().required(),
+  classProps: Joi.object().required(),
+  ancestryProps: Joi.object().required(),
+  backgroundProps: Joi.object().required(),
+  modifiers: Joi.object().required(),
+  mainStats: Joi.object().required(),
+  actions: Joi.object().optional(),
+  items: Joi.object().optional(),
+  appearance: Joi.object().optional(),
+  characterTraits: Joi.object().optional(),
+  characterNotes: Joi.object().optional(),
+  skillsModifiers: Joi.object().optional(),
+  skillFeats: Joi.array().optional(),
+  spells: Joi.object().optional(),
+  feats: Joi.object().optional(),
+  deleted: Joi.number().optional(),
+  created: Joi.date().optional(),
+  updated: Joi.date().optional(),
   _id: Joi.string().regex(objectIdRegex).optional(),
 })
 
 export const updateCharacter = Joi.object({
   _id: Joi.string().regex(objectIdRegex).required(),
-  userName: Joi.string().optional(),
-  name: Joi.string().optional(),
-  basics: Joi.string().optional(),
-  ancestry: Joi.object().optional(),
-  class: Joi.object().optional(),
-  background: Joi.object().optional(),
+  userName: Joi.string().required(),
+  basics: Joi.object({
+    name: Joi.string().required()
+  }).unknown().required(),
+  classProps: Joi.object().required(),
+  ancestryProps: Joi.object().required(),
+  backgroundProps: Joi.object().required(),
+  modifiers: Joi.object().required(),
+  mainStats: Joi.object().required(),
+  actions: Joi.object().optional(),
+  items: Joi.object().optional(),
+  appearance: Joi.object().optional(),
+  characterTraits: Joi.object().optional(),
+  characterNotes: Joi.object().optional(),
+  skillsModifiers: Joi.object().optional(),
+  skillFeats: Joi.array().optional(),
+  spells: Joi.object().optional(),
+  feats: Joi.object().optional(),
+  deleted: Joi.number().optional(),
+  created: Joi.date().optional(),
+  updated: Joi.date().optional(),
 })
 
 export const fetchCharacterByQuery = Joi.object({

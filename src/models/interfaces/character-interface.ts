@@ -92,7 +92,7 @@ export default interface ICharacter extends IBase{
     backstory?: string,
   }
   skillsModifiers?: object
-  skillFeats?: string
+  skillFeats?: string[]
   spells?: object
   actions?: {
     stride: string,
