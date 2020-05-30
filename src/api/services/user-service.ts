@@ -1,9 +1,9 @@
 import { ObjectID } from 'mongodb'
-import { SendTempPassword, processFindUserFilter, userDupeCheck, insertDefaultCharacters, logger } from '../../utils'
+import { SendTempPassword, processFindUserFilter, insertDefaultCharacters, logger } from '../../utils'
 import { NotFoundError, MongoDBError } from '../../errors'
 import { UserDB, CharacterDB } from '../data-access'
 import { ActionResult, IUserQueryType, IUserFilter, ICharFilter, User, DeleteUserQueryT } from '../../models'
-import { UserUtils } from '../../utils/data-processing-utils/'
+import { userDupeCheck, prepareUserUpdate } from '../../utils/data-processing-utils/user-utils'
 
 const getUserById = async (_id: ObjectID): Promise<ActionResult> => {
   const userDetails = await UserDB.getUserById(_id)
@@ -42,9 +42,8 @@ const createUser = async (user: User): Promise<ActionResult> => {
 }
 
 const updateUser = async (user: User): Promise<ActionResult> => {
-  if (!ObjectID.isValid(user._id)) throw new MongoDBError('Invalid search id.')
   const searchId = new ObjectID(user._id)
-  const updateUser: User = UserUtils.prepareUserUpdate(user)
+  const updateUser = prepareUserUpdate(user)
   const result = await UserDB.updateUser(searchId, updateUser)
   const modifiedCount = result.nModified
   if (!modifiedCount) {

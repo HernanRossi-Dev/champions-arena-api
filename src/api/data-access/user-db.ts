@@ -19,8 +19,8 @@ const updateUser = async (_id: ObjectID, user: IUser) => {
   return await UserModel.updateOne({ _id }, user, { upsert: true })
 }
 
-const deleteUser = async (id: ObjectID, userName: string) => {
-  return await UserModel.deleteOne({ id, userName })
+const deleteUser = async (_id: ObjectID, userName: string) => {
+  return await UserModel.deleteOne({$and: [{_id}, {userName}]})
 }
 
 export default {

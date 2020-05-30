@@ -12,7 +12,7 @@ jest.mock('../../src/utils/data-processing-utils/auth-utils', () => ({
 jest.mock('../../src/utils/data-processing-utils/user-utils', () => ({
   userDupeCheck: jest.fn().mockImplementation(() => { return false }),
   isUser: jest.fn().mockImplementation(() => { return true }),
-  prepareUserUpdate: jest.fn().mockImplementation(() => {})
+  prepareUserUpdate: jest.requireActual('../../src/utils/data-processing-utils/user-utils').prepareUserUpdate
 }))
 
 import faker from 'faker'
@@ -64,11 +64,10 @@ describe('Users-API', () => {
       it('should respond status 422 when invalid _id provided', async () => {
         const _id = 'notvalide!!@@!@!@!@!@!@!@!@'
         const res = await request(server).get(`/api/users/${_id}`)
-        console.log('Get resp one', res.body)
         expect(res.status).toEqual(422)
         expect(res.body).toHaveProperty('message')
         expect(res.body).not.toHaveProperty('data')
-        expect(res.body.message).toBe(`Invalid user _id format.`)
+        expect(res.body.message).toBe(`Joi validation error: ValidationError: \"_id\" with value \"notvalide!!@@!@!@!@!@!@!@!@\" fails to match the required pattern: /^[a-f\\d]{24}$/i`)
       })
 
       it('should respond status 200 when user not found', async () => {
@@ -124,12 +123,13 @@ describe('Users-API', () => {
   })
 
   describe('Post User /api/users/ ', () => {
-    it('should respond status 401 and error when no data sent', async () => {
+    it('should respond status 422 and error when no data sent', async () => {
       const res = await request(server).post(`/api/users`)
         .set('authorization', 'Bearer ' + token)
         .send({})
-      expect(res.status).toEqual(401)
-      expect(res.body).toEqual({})
+      expect(res.status).toEqual(422)
+      expect(res.body).toHaveProperty('message')
+      expect(res.body.message).toBe('Joi validation error: ValidationError: "userName" is required')
     })
 
 
@@ -169,12 +169,11 @@ describe('Users-API', () => {
         expect(res.body.message).toBe('Joi validation error: ValidationError: "_id" is required')
       })
 
-      it('should respond status 200 when user not found', async () => {
+      it('should respond status 200 when email or userName not provided', async () => {
         const _id = new ObjectID()
         const res = await request(server).put(`/api/users/`)
           .set('authorization', 'Bearer ' + token)
           .send({ _id })
-        console.log("res: ", res.body)
         expect(res.body).toHaveProperty('message')
         expect(res.body.message).toBe('Joi validation error: ValidationError: "value" must contain at least one of [userName, email]')
       })
@@ -185,92 +184,112 @@ describe('Users-API', () => {
         const res = await request(server).put(`/api/users/`)
           .set('authorization', 'Bearer ' + token)
           .send({ _id, email })
-        // expect(res.body).toHaveProperty('message')
-        // expect(res.body.message).toBe('Joi validation error: ValidationError: "value" must contain at least one of [userName, email]')
-        // expect(res.status).toEqual(200)
-        // expect(res.body).toHaveProperty('name')
-        // expect(res.body).toHaveProperty('message')
-        // expect(res.body).not.toHaveProperty('data')
-        // expect(res.body).not.toHaveProperty('status')
-        // expect(res.body.name).toBe('ProcessError')
-        // expect(res.body.message).toBe(`Character data must be provided.`)
+        expect(res.body).toHaveProperty('message')
+        expect(res.body).toHaveProperty('errors')
+        expect(res.body).toHaveProperty('data')
+        expect(res.body.message).toEqual(`Failed to update user: ${_id}`)
+        expect(res.body.data).toHaveProperty('modifiedCount')
+        expect(res.status).toEqual(200)
+        expect(res.body.data.modifiedCount).toEqual(0)
+        expect(res.body.errors.length).toBeGreaterThan(0)
+        expect(res.body.status).toEqual('Processed with Errors')
       })
 
-      it('should respond status 200 if user not found.', async () => {
-        const newUser = 'ChangeDaUser'
-        const id = new ObjectID()
-        updateUser.userName = 'NewUserName'
+      it('should respond status 200 and return success if found.', async () => {
         const res = await request(server).put(`/api/users/`)
           .set('authorization', 'Bearer ' + token)
           .send({ ...updateUser })
-        // expect(res.status).toEqual(200)
-        // expect(res.body).toHaveProperty('data')
-        // expect(res.body.data).toHaveProperty('nModified')
-        // expect(res.body.message).toBe(`Failed to update character: ${id}`)
-        // expect(res.body.status).toBe('Processed')
-        // expect(res.body.data.nModified).toBe(0)
-        // expect(res.body.errors.length).toBeGreaterThan(0)
+        const fetchUser = await request(server).get(`/api/users/${updateUser._id}`)
+        expect(res.status).toEqual(200)
+        expect(res.body).toHaveProperty('data')
+        expect(res.body.data).toHaveProperty('modifiedCount')
+        expect(res.body.message).toBe('Update user success.')
+        expect(res.body.status).toBe('Processed Successfully')
+        expect(res.body.data.modifiedCount).toBe(1)
       })
 
-      it('should respond status 200 and return user if found.', async () => {
+      it('should update user email but not userName.', async () => {
         const newUserEmail = 'thisIsnewEmail@fake.com'
-        const id = updateUser._id
         updateUser.email = newUserEmail
+        const newUserName = 'ThisShouldNotChange'
+        const oldUserName = updateUser.userName
+        updateUser.userName = newUserName
         const res = await request(server).put(`/api/users/`)
           .set('authorization', 'Bearer ' + token)
           .send({ ...updateUser })
-        // expect(res.status).toEqual(200)
-        // expect(res.body).toHaveProperty('data')
-        // expect(res.body.data).toHaveProperty('nModified')
-        // expect(res.body.message).toBe('Update character success.')
-        // expect(res.body.status).toBe('Processed')
-        // expect(res.body.data.nModified).toBe(1)
+        expect(res.status).toEqual(200)
+        expect(res.body).toHaveProperty('data')
+        expect(res.body.data).toHaveProperty('modifiedCount')
+        expect(res.body.message).toBe('Update user success.')
+        expect(res.body.status).toBe('Processed Successfully')
+        expect(res.body.data.modifiedCount).toBe(1)
+        const fetchUser = await request(server).get(`/api/users/${updateUser._id}`)
+        expect(fetchUser.status).toEqual(200)
+        expect(fetchUser.body).toHaveProperty('data')
+        expect(fetchUser.body.data).toHaveProperty('email')
+        expect(fetchUser.body.data).toHaveProperty('userName')
+        expect(fetchUser.body.data.email).toBe(newUserEmail)
+        expect(fetchUser.body.data.userName).toBe(oldUserName)
       })
     })
   })
 
-  // describe('Delete User', () => {
-  //   beforeAll(async () => {
-  //     updateCharacter = CreateCharacterMock()
-  //     const result = await request(server).post(`/api/characters`)
-  //       .set('authorization', 'Bearer ' + token)
-  //       .send({ data: newCharacter })
-  //     updateCharacter._id = result?.body?.data?._id
-  //   })
+  describe('Delete User', () => {
+    beforeEach(async () => {
+      updateUser = getNewUser()
+      const result = await request(server).post(`/api/users`)
+        .set('authorization', 'Bearer ' + token)
+        .send({ ...updateUser })
+      updateUser._id = result?.body?.data?._id
+    })
 
-  //   describe('Update Character put /api/characters/:id, ', () => {
-  //     it('should respond status 200 when character not found', async () => {
-  //       const id = 'notvalide!!@@!@!@!@!@!@!@!@'
-  //       const res = await request(server).delete(`/api/characters/${id}`)
-  //         .set('authorization', 'Bearer ' + token)
-  //       expect(res.status).toEqual(422)
-  //       expect(res.body).toHaveProperty('message')
-  //       expect(res.body).not.toHaveProperty('data')
-  //       expect(res.body.message).toBe(`Invalid character id format: notvalide!!@@!@!@!@!@!@!@!@`)
-  //     })
+    describe('Delete user /api/users/?userName=&_id=, ', () => {
+      it('should respond status 422 when parameters invalid', async () => {
+        const id = 'notvalide!!@@!@!@!@!@!@!@!@'
+        const res = await request(server).delete(`/api/users/?userName=${updateUser.userName}&_id=${id}`)
+          .set('authorization', 'Bearer ' + token)
+        expect(res.status).toEqual(422)
+        expect(res.body).toHaveProperty('message')
+        expect(res.body).not.toHaveProperty('data')
+        expect(res.body.message).toBe(`Joi validation error: ValidationError: \"_id\" with value \"notvalide!!@@!@!@!@!@!@!@!@\" fails to match the required pattern: /^[a-f\\d]{24}$/i`)
+      })
 
-  //     it('should respond status 200 if character not found.', async () => {
-  //       const id = new ObjectID()
-  //       const res = await request(server).delete(`/api/characters/${id}`)
-  //         .set('authorization', 'Bearer ' + token)
-  //       expect(res.status).toEqual(200)
-  //       expect(res.body).toHaveProperty('data')
-  //       expect(res.body.data).toHaveProperty('deletedCount')
-  //       expect(res.body.message).toBe(`Failed to delete character: ${id}`)
-  //       expect(res.body.status).toBe('Processed')
-  //       expect(res.body.data.deletedCount).toBe(0)
-  //     })
+      it('should respond status 200 when user not found', async () => {
+        const res = await request(server).delete(`/api/users/?userName=${updateUser.userName}&_id=${new ObjectID()}`)
+          .set('authorization', 'Bearer ' + token)
+        expect(res.status).toEqual(200)
+        expect(res.body.status).toEqual('Processed with Errors')
+        expect(res.body).toHaveProperty('message')
+        expect(res.body).toHaveProperty('data')
+        expect(res.body.data).toHaveProperty('deletedCount')
+        expect(res.body.data.deletedCount).toBe(0)
+        expect(res.body.errors.length).toBeGreaterThan(0)
+      })
 
-  //     it('should respond status 200 if character found.', async () => {
-  //       const id = updateCharacter._id
-  //       const res = await request(server).delete(`/api/characters/${id}`)
-  //         .set('authorization', 'Bearer ' + token)
-  //       expect(res.status).toEqual(200)
-  //       expect(res.body).toHaveProperty('data')
-  //       expect(res.body.data).toHaveProperty('deletedCount')
-  //       expect(res.body.message).toBe(`Delete character success: ${id}`)
-  //       expect(res.body.status).toBe('Processed')
-  //       expect(res.body.data.deletedCount).toBe(1)
-  //     })
-  //   })
+      it('should delete user if found and not characters if flag not set', async () => {
+        const res = await request(server).delete(`/api/users/?userName=${updateUser.userName}&_id=${updateUser._id}`)
+          .set('authorization', 'Bearer ' + token)
+        expect(res.status).toEqual(200)
+        expect(res.body.status).toEqual('Processed Successfully')
+        expect(res.body).toHaveProperty('message')
+        expect(res.body).toHaveProperty('data')
+        expect(res.body.data).toHaveProperty('deletedCount')
+        expect(res.body.data.deletedCount).toBe(1)
+        expect(res.body.errors.length).toBe(0)
+      })
+
+      it('should delete user if found and not characters if flag not set', async () => {
+        const res = await request(server).delete(`/api/users/?userName=${updateUser.userName}&_id=${updateUser._id}&deleteCharacters=true`)
+          .set('authorization', 'Bearer ' + token)
+        expect(res.status).toEqual(200)
+        expect(res.body.status).toEqual('Processed Successfully')
+        expect(res.body).toHaveProperty('message')
+        expect(res.body).toHaveProperty('data')
+        expect(res.body.data).toHaveProperty('deletedCount')
+        expect(res.body.data.deletedCount).toBe(1)
+        expect(res.body.errors.length).toBe(0)
+        expect(res.body.message).toBe(`Delete User Success: ${updateUser.userName}. User characters deleted.`)
+      })     
+    })
+  })
 })

@@ -75,7 +75,7 @@ const CreateCharacterMock = () => {
       size: 'Medium',
       speed: 120,
       languages: ['Common'],
-      ancestryTraits:['Unknown'],
+      ancestryTraits: ['Unknown'],
       attributes: {}
     },
     backgroundProps: {
@@ -89,21 +89,21 @@ const CreateCharacterMock = () => {
       class: getCharacterProperties.getClass(),
       keyAbility: ['DEX'],
       baseHP: 8,
-      proficiencies: {sword: '+2'},
-      savingThrows: {ranged: '+2'},
-      skills: {sneak: 'master'},
-      weapons: {bow: 'trained'},
-      armor: {heavy: 'trained'},
+      proficiencies: { sword: '+2' },
+      savingThrows: { ranged: '+2' },
+      skills: { sneak: 'master' },
+      weapons: { bow: 'trained' },
+      armor: { heavy: 'trained' },
       signatureSkills: ['Elbow drop'],
       classFeatures: ['Unknown'],
       items: ['Magic bag'],
-      spells: {'magic missile': 'Big damage'}
+      spells: { 'magic missile': 'Big damage' }
     },
     characterTraits: {},
     characterNotes: {
       backstory: 'From the mean streets.'
     },
-     skillsModifiers: {
+    skillsModifiers: {
       Acrobatics: 4,
       Athletics: 1,
       Crafting: 2,
@@ -130,6 +130,7 @@ const CreateCharacterMock = () => {
       ancestry: 'Natural Ambition',
       class: 'Reactive Shield, Sudden Charge',
     },
+    deleted: 0
   }
   return new Character(newCharacter)
 }

@@ -104,6 +104,7 @@ export class Character implements ICharacter {
     ranged: string[],
   }
   feats?: object
+  deleted: number
 
   constructor(character: ICharacter) {
     if (!character) throw new ProcessError('Character data must be provided.')
@@ -127,6 +128,7 @@ export class Character implements ICharacter {
     this.spells = character.spells ? character.spells : {}
     this.actions = character.actions ? character.actions : { stride: '', melee: [], ranged: [] }
     this.feats = character.feats ? character.feats : {}
+    this.deleted = character.deleted ? character.deleted : 0
   }
 
   public getProperties(): ICharacter {
@@ -149,7 +151,8 @@ export class Character implements ICharacter {
       skillFeats: this.skillFeats,
       spells: this.spells,
       actions: this.actions,
-      feats: this.feats
+      feats: this.feats,
+      deleted: this.deleted
     }
   }
 }

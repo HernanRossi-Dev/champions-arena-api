@@ -99,5 +99,6 @@ export default interface ICharacter extends IBase{
     melee: string[],
     ranged: string[],
   }
-  feats?: object
+  feats?: object,
+  deleted: number
 }

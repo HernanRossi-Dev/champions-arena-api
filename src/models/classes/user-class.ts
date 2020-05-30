@@ -25,7 +25,7 @@ export class User implements IUser {
     this.isGuest = user.isGuest || false
   }
 
-  public getProperties(): IUser {
+  getProperties(): IUser {
     return {
       userName: this.userName,
       firstName: this.firstName,
@@ -39,7 +39,7 @@ export class User implements IUser {
     }
   }
 
-  public async setInsertValues(): Promise<void> {
+  async setInsertValues(): Promise<void> {
     this.password = await bcrypt.hash(this.password, 10)
   }
 }

@@ -98,6 +98,7 @@ const CharacterSchema: Schema = new Schema({
     ranged: Array,
   },
   feats: Object,
+  deleted: Number
 }, { typeKey: '$type' })
 
 export interface ICharacterDocument extends ICharacter, Document {

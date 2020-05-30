@@ -1,5 +1,7 @@
-import * as UserUtils from './user-utils'
+import {prepareUserUpdate, isUser, userDupeCheck} from './user-utils'
 
 export {
-  UserUtils
+  prepareUserUpdate,
+  isUser,
+  userDupeCheck
 }
