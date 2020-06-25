@@ -6,5 +6,5 @@ export default interface IUser extends IBase {
   lastName?: string
   email: string
   password?: string
-  isGuest?: boolean
+  isGuest: boolean
 }
