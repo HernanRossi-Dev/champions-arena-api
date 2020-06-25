@@ -11,7 +11,7 @@ export class User implements IUser {
   updated?: Date
   email: string
   password?: string
-  isGuest?: boolean
+  isGuest: boolean
 
   constructor(user: IUser) {
     this.userName = user.userName
