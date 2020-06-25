@@ -7,7 +7,7 @@ const validateUser = async (email: string, password: string): Promise<boolean> =
   const result = await UserDB.getUserByQuery(filter)
   const savedPass = result?.password
   if ( savedPass ) {
-    return bcrypt.compare(password, savedPass)
+    return await bcrypt.compare(password, savedPass)
   }
   return false
 }

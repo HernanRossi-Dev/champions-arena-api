@@ -7,11 +7,11 @@ const router = Router()
 
 router.get('/:_id', joiValidation(JoiSchemas.findById, 'params'), UserController.getUserParam)
 
+router.post('/', joiValidation(JoiSchemas.postUser, 'body'), UserController.postUser)
+
 router.use(jwtCheck)
 
 router.get('/', joiValidation(JoiSchemas.fetchUserByQuery, 'query'), UserController.getUserQuery)
-
-router.post('/', joiValidation(JoiSchemas.postUser, 'body'), UserController.postUser)
 
 router.put('/', joiValidation(JoiSchemas.updateUser, 'body'), UserController.putUser)
 
