@@ -5,7 +5,6 @@ import { userFullName, isUser, userDupeCheck } from './data-processing-utils/use
 import { validateUser } from './data-processing-utils/auth-utils'
 import { insertDefaultCharacters, isCharacter } from './data-processing-utils/character-utils'
 import logger from './logger'
-import { SecretClient } from './secrets-client'
 
 export {
   processFindCharacterFilter,
@@ -19,5 +18,4 @@ export {
   insertDefaultCharacters,
   isCharacter,
   logger,
-  SecretClient
 }
